@@ -3,7 +3,7 @@
 import MyProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/myProfileSheet";
 import UsersProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/usersProfileSheet";
 import { useEffect, useState } from "react";
-
+import MyFriendSheet from "@/CustomComponent/ApplicationComponents/Sheets/myFriendsSheet";
 
 const MySheetsProviders = () => { 
     const [isMounted, setIsMounted] = useState(false)
@@ -19,6 +19,7 @@ const MySheetsProviders = () => {
         <>
         <MyProfileSheet/>
         <UsersProfileSheet/>
+        <MyFriendSheet/>
         </>
     );
 }

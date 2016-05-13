@@ -1,7 +1,7 @@
 import { UsersResponse } from '@/CustomComponent/ApplicationComponents/Modals/findNewFriendModal';
 import {create} from 'zustand';
 
-export type SheetType = "my-profile" | "users-profile";
+export type SheetType = "my-profile" | "users-profile" | "my-friends";
 
 
 interface SheetStore {

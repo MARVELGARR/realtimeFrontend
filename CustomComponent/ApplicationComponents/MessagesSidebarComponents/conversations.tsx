@@ -98,6 +98,11 @@ const Conversations = () => {
   }
 const conversations = data?.pages.flatMap((page) => page.conversations) || [];
 
+
+const Friends = conversations.filter((convo)=>{
+  
+})
+
 const {user} = useUserSession()
 
 const currentUserId = user?.id as string
