@@ -11,7 +11,7 @@ const App = () => {
     })
     if(isLoading){
         return (
-            <div className="">Loading...</div>
+            <div className=""></div>
         )
     }
     return (
