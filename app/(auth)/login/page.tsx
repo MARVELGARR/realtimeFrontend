@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
 import useLogin from "@/hooks/authHoks/useLogin"
 import { toast } from "@/hooks/use-toast"
-import googleAuth from "@/actions/api-actions/googleAuth"
+import googleAuth from "@/actions/api-actions/authActions/googleAuth"
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -36,15 +36,15 @@ export default function LoginPage() {
     loginuser(data).then((data)=>{
         toast({
             title: "Login successfull",
-            description: JSON.stringify(data.message),
+            description: `${data}`,
             variant: "default"
         })
     }).catch((error)=>{
-        console.error(error)
         toast({
-            title: "Login successfull",
-            description: JSON.stringify(error),
-            variant: "default"
+            title: "Login Failed",
+            description: `${error}`,
+            variant: "destructive",
+            duration: 5000
         })
     })
   }
@@ -95,7 +95,7 @@ export default function LoginPage() {
               <Button type="submit" className="px-6 py-2 mt-4" disabled={isLoggingIn}>
                 {isLoggingIn ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> : "Login"}
               </Button>
-              <a href="#" className="text-sm text-blue-600 hover:underline">
+              <a href="/reset-password" className="text-sm text-blue-600 hover:underline">
                 Forgot password?
               </a>
             </div>

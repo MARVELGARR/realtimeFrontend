@@ -29,11 +29,12 @@ const login = async(data: LoginFormData): Promise<loginResponds> => {
         })
         if(res.ok){
             const data = await res.json()
-            return data
+            return data.message
         }
         else{
             const errorDetail = await res.json()
-            return errorDetail
+            console.error(errorDetail)
+            throw new Error(`${errorDetail.error}`) 
         }
     }
     catch(error){

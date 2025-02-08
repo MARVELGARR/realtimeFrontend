@@ -1,4 +1,5 @@
-import login from "@/actions/api-actions/login";
+
+import login from "@/actions/api-actions/authActions/login";
 import { LoginFormData } from "@/app/(auth)/login/page";
 import { useMutation } from "@tanstack/react-query";
 

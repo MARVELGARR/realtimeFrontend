@@ -1,5 +1,5 @@
 
-import registerNewUser from "@/actions/api-actions/registerNewUser";
+import registerNewUser from "@/actions/api-actions/authActions/registerNewUser";
 import { RegistrationFormData } from "@/components/myComponents/registrationForm/stepped-sign-up-form";
 import { useMutation,  } from "@tanstack/react-query";
 

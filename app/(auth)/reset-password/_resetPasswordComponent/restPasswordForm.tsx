@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Mail } from "lucide-react"
+import { QueryClient, useMutation } from "@tanstack/react-query"
+import resetPassword from "@/actions/api-actions/authActions/resetPassword"
+import { toast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   email: z.string().email({
@@ -15,8 +19,13 @@ const formSchema = z.object({
   }),
 })
 
+export type EmailFormType = z.infer<typeof formSchema>
+
+const queryClient = new QueryClient()
+
 export function ResetPasswordForm() {
-  const [isLoading, setIsLoading] = useState(false)
+
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -25,14 +34,31 @@ export function ResetPasswordForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    // Here you would typically send a request to your API
-    console.log(values)
-    setTimeout(() => {
-      setIsLoading(false)
-      // Show success message or handle errors
-    }, 2000)
+
+  const {mutateAsync: sendingEmail, isPending: isSendingEmail, error: isSendingEmailError } = useMutation({
+    mutationKey: ['forgotPassword'],
+    mutationFn: (data: EmailFormType)=>resetPassword(data)
+  })
+
+  async function onSubmit(values: EmailFormType) {
+    sendingEmail(values).then((data)=>{
+      toast({
+        title: "Email sent",
+        variant: "default",
+        description: JSON.stringify(data),
+        duration: 500
+      })
+      queryClient.invalidateQueries({ queryKey: ["forgotPassword"] })
+      router.push('/passwordVerification')
+    }).catch((error)=>{
+      toast({
+        title: "Email sent",
+        variant: "default",
+        description: JSON.stringify(error),
+        duration: 500
+      })
+    })
+
   }
 
   return (
@@ -61,8 +87,8 @@ export function ResetPasswordForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send Reset Link"}
+          <Button type="submit" className="w-full" disabled={isSendingEmail}>
+            {isSendingEmail ? "Sending..." : "Send Reset Link"}
           </Button>
         </form>
       </Form>

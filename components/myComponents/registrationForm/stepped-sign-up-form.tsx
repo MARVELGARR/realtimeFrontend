@@ -11,12 +11,12 @@ import { Icons } from "@/components/icons"
 import { PersonalInfoStep } from "./personal-info-step"
 import { ContactDetailsStep } from "./contact-details-step"
 import { AccountSetupStep } from "./account-setup-step"
-import googleAuth from "@/actions/api-actions/googleAuth"
 import useRegister from "@/hooks/authHoks/useRegister"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { QueryClient } from "@tanstack/react-query"
 import Cookies from "cookies-js"
+import googleAuth from "@/actions/api-actions/authActions/googleAuth"
 
 const formSchema = z.object({
   firstname: z.string().min(2, "First name must be at least 2 characters"),
@@ -84,7 +84,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     }).catch((error)=>{
       toast({
         title: "Registration failed",
-        description: JSON.stringify(error),
+        description: `${error}`,
         variant: "destructive",
         duration: 500
       })
