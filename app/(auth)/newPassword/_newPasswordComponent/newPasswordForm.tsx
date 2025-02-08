@@ -75,6 +75,7 @@ export function NewPasswordForm({token}:{token: string}) {
           title: "Password reset successfull",
           variant: "default",
           description: `${data}`,
+          duration: 5000
         });
         queryClient.invalidateQueries({ queryKey: ["newPasword"] });
         router.push("/login");
@@ -84,6 +85,7 @@ export function NewPasswordForm({token}:{token: string}) {
           title: "Password reset successfull",
           variant: "destructive",
           description: `${error}`,
+          duration: 5000
         });
       });
     }

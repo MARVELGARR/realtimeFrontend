@@ -86,7 +86,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         title: "Registration failed",
         description: `${error}`,
         variant: "destructive",
-        duration: 500
+        duration: 5000
       })
     })
     console.log(values)

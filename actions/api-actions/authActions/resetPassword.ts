@@ -15,11 +15,11 @@ const resetPassword = async (email: EmailFormType) => {
         })
         if(res.ok){
             const data = await res.json()
-            return data
+            return data.message
         }
         else{
             const errorDetails =await res.json()
-            throw new Error(`${errorDetails}`) 
+            throw new Error(`${errorDetails.error}`) 
         }
     }
     catch(error){

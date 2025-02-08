@@ -18,11 +18,11 @@ const registerNewUser = async(data: RegistrationFormData): Promise<RegistrationR
         })
         if(res.ok){
             const newUser = await res.json()
-            return newUser
+            return newUser.message
         }
         else{
             const errorDetails =  await res.json()
-            throw new Error(`${errorDetails}`) 
+            throw new Error(`${errorDetails.error}`) 
         }
     }
     catch(error){
