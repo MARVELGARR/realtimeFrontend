@@ -1,4 +1,4 @@
-import { Loader2, Github, SunMedium, LucideProps, Moon, Twitter, Type, User } from "lucide-react"
+import { Loader2, Github, SunMedium, Moon, Twitter, Type, User } from "lucide-react"
 import { type LucideIcon } from "lucide-react"
 import { Google } from "./vendor/google"
 

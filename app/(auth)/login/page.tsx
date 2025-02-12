@@ -39,6 +39,7 @@ export default function LoginPage() {
             description: `${data}`,
             variant: "default"
         })
+        router.push('/App')
     }).catch((error)=>{
         toast({
             title: "Login Failed",

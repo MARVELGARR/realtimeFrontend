@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -35,7 +34,7 @@ export function ResetPasswordForm() {
   })
 
 
-  const {mutateAsync: sendingEmail, isPending: isSendingEmail, error: isSendingEmailError } = useMutation({
+  const {mutateAsync: sendingEmail, isPending: isSendingEmail, } = useMutation({
     mutationKey: ['forgotPassword'],
     mutationFn: (data: EmailFormType)=>resetPassword(data)
   })
@@ -66,7 +65,7 @@ export function ResetPasswordForm() {
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Reset Password</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Enter your email address and we'll send you a link to reset your password.
+          Enter your email address and we &apos ll send you a link to reset your password.
         </p>
       </div>
       <Form {...form}>

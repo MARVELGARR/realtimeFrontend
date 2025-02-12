@@ -14,7 +14,7 @@ export function EmailSentConfirmation() {
       </CardHeader>
       <CardContent className="text-center">
         <p className="text-gray-600 dark:text-gray-400">
-          We've sent an email to your inbox with further instructions. Please check your email and follow the link to
+          We have sent an email to your inbox with further instructions. Please check your email and follow the link to
           complete the process.
         </p>
       </CardContent>
