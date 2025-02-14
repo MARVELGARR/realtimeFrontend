@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TanstackProvider } from "@/providers/tanstack";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/providers/next-theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +30,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-gray-400 antialiased`}
       >
-        <Toaster />
-        <TanstackProvider>
-          <div className="h-[4rem] w-full bg-inherit">Header</div>
-          {children}
-          </TanstackProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+
+          <Toaster />
+          <TanstackProvider>
+            {children}
+            </TanstackProvider>
+          </ThemeProvider>
       </body>
     </html>
   );
