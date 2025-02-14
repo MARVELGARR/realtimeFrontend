@@ -43,7 +43,7 @@ export function ResetPasswordForm() {
     sendingEmail(values).then((data)=>{
       toast({
         title: "Email sent",
-        variant: "default",
+        variant: "success",
         description: JSON.stringify(data),
         duration: 500
       })
@@ -51,8 +51,8 @@ export function ResetPasswordForm() {
       router.push('/passwordVerification')
     }).catch((error)=>{
       toast({
-        title: "Email sent",
-        variant: "default",
+        title: "Email not sent",
+        variant: "destructive",
         description: JSON.stringify(error),
         duration: 500
       })

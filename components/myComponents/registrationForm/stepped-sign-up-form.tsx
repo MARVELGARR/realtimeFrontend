@@ -75,7 +75,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       toast({
         title: "Congratulations! you have been registered",
         description: data.message,
-        variant: "default",
+        variant: "success",
         duration: 5000
       })
       queryClient.invalidateQueries({ queryKey: ["register"] })

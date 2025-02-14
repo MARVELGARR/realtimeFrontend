@@ -1,13 +1,29 @@
-type CurrentUserProp = {
+type UserProfile = {
+    id: string;
+    bio: string;
+    firstName: string;
+    lastName: string;
+    nickname: string | null;
+    phoneNumber: string | null;
+    gender: "MALE" | "FEMALE" | "OTHER"; // Adjust if there are more options
+    birthDay: string | null;
+    createdAt: string;
+    updatedAt: string;
+    profilePicture: string;
+    userId: string;
+  };
+  
+  type User = {
     id: string;
     email: string;
     name: string;
-    image: string | null;
-    profile: string | null;
-};
+    image: string;
+    profile: UserProfile;
+  };
+  
   
 
-const getCurrentUser = async (): Promise<CurrentUserProp> => {
+const getCurrentUser = async (): Promise<User> => {
 
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user`, {

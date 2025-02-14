@@ -37,7 +37,7 @@ export default function LoginPage() {
         toast({
             title: "Login successfull",
             description: `${data}`,
-            variant: "default"
+            variant: "success"
         })
         router.push('/App')
     }).catch((error)=>{

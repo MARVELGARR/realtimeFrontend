@@ -150,10 +150,10 @@ export function AppSidebar() {
         onClick={
           ()=>toggleSidebar()
         }
-        className="w-[3.3rem] h-[3.3rem] cursor-pointer hover:bg-white bg-inherit"
+        className="w-[3.3rem] h-[2.3rem] cursor-pointer hover:bg-white bg-inherit"
         asChild
       >
-        <MenuIcon className="w-fyll h-full text-black"/>
+        <MenuIcon color="black" className={`${isCollapsed ? " w-5 h-5" : "w-7 h-7 hover:bg-white" }`}/>
       </Button>
     )
   }

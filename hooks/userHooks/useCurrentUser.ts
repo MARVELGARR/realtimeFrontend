@@ -9,10 +9,16 @@ const useCurrentUser = () => {
     })
     const currentUserProfilePic = currentUser?.image
     const currentUserId = currentUser?.id
-    const currentName = currentUser?.name
-    const currentProfile = currentUser?.profile
+    const currentUserName = currentUser?.name
+    const currentUserProfile = currentUser?.profile
+    const currentUserBio = currentUserProfile?.bio
+    const currentUserPhoneNumber = currentUserProfile?.phoneNumber
+    const currentUserNickname = currentUserProfile?.nickname
     const currentUserEmail = currentUser?.email
-    return {currentUserProfilePic, currentUserId, currentName, currentProfile, currentUserEmail, isGettingCurentUser, errorGettingCurrentUser };
+
+
+
+    return {currentUserProfilePic, currentUserPhoneNumber, currentUserNickname, currentUserId, currentUserBio, currentUserName, currentUserProfile, currentUserEmail, isGettingCurentUser, errorGettingCurrentUser };
 }
  
 export default useCurrentUser;

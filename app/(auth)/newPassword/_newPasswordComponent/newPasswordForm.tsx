@@ -72,7 +72,7 @@ export function NewPasswordForm({token}:{token: string}) {
       .then((data) => {
         toast({
           title: "Password reset successfull",
-          variant: "default",
+          variant: "success",
           description: `${data}`,
           duration: 5000
         });
@@ -81,7 +81,7 @@ export function NewPasswordForm({token}:{token: string}) {
       })
       .catch((error) => {
         toast({
-          title: "Password reset successfull",
+          title: "Password reset unsuccessfull",
           variant: "destructive",
           description: `${error}`,
           duration: 5000

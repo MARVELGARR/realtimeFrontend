@@ -1,5 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BellRing, Database, Info, Key, Keyboard, LaptopMinimal, MessagesSquare, PenTool, User } from "lucide-react";
+import ProfileBioComponent from "../AppComponent/profileComponent/profileComponent";
+import ProfileAccountComponent from "../AppComponent/profileComponent/profileAccountComponent";
 
 const ProfileComponent = () => {
   return (
@@ -23,18 +25,21 @@ const ProfileComponent = () => {
       </TabsList>
 
 
-      <div className="">
+      <div className="w-full px-4">
 
         <TabsContent value="general">
             Make changes to your account here.
         </TabsContent>
-        <TabsContent value="account"></TabsContent>
+        <TabsContent value="account">
+
+          <ProfileAccountComponent/>
+        </TabsContent>
         <TabsContent value="chats"></TabsContent>
         <TabsContent value="notification"></TabsContent>
         <TabsContent value="personalization"></TabsContent>
         <TabsContent value="shortcuts"></TabsContent>
         <TabsContent value="help"></TabsContent>
-        <TabsContent value="profile"></TabsContent>
+        <TabsContent className="w-full" value="profile"><ProfileBioComponent/></TabsContent>
       </div>
 
     </Tabs>
