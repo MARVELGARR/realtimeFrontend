@@ -1,3 +1,16 @@
+import { AccountFormType } from "@/components/myComponents/AppComponent/profileComponent/accountForm.tsx";
+
+type PrivacyProp = {
+
+    id: string
+    profileId: string,
+    disappearingMessages: AccountFormType["disappearing"],
+    lastSeen: AccountFormType["lastSeen"]
+    precense: AccountFormType['online'],
+    readReciept: boolean
+        
+}
+
 type UserProfile = {
     id: string;
     bio: string;
@@ -11,6 +24,7 @@ type UserProfile = {
     updatedAt: string;
     profilePicture: string;
     userId: string;
+    privacy: PrivacyProp
   };
   
   type User = {

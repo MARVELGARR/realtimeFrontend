@@ -9,7 +9,7 @@ import ProfileHelpComponent from "../AppComponent/profileComponent/profileHelpCo
 import ProfileShortcutsComponent from "../AppComponent/profileComponent/profileShortcutsComponent";
 import ProfileStorageComponent from "../AppComponent/profileComponent/profileStorageComponent";
 
-const ProfileComponent = () => {
+const ProfileComponent = ({currentProfileId}: {currentProfileId: string}) => {
   return (
     <Tabs defaultValue="profile" className="w-[40rem] h-[35rem] flex gap-4 items-start">
       <TabsList className="flex flex-col h-full justify-between ">
@@ -33,7 +33,7 @@ const ProfileComponent = () => {
 
         <TabsContent value="account">
 
-          <ProfileAccountComponent/>
+          <ProfileAccountComponent currentProfileId={currentProfileId}/>
         </TabsContent>
         <TabsContent value="chats">
             <ProfileChatComponent/>

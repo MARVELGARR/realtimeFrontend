@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 // Routes that require authentication
 export const config = {
   matcher: 
-    "/App/:path*",
+    "/Ap/:path*"
   
 };
 

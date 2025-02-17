@@ -21,7 +21,7 @@ export default function RootLayout({
       
         <SidebarProvider>
           
-          <div className="flex h-screen w-full">
+          <div className="flex h-screen w-full bg-background">
             <AppSidebar />
             {children}
           </div>

@@ -14,29 +14,83 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
+import useUpdateUserPrivacy from "@/hooks/userHooks/useUpdateUserPrivacy";
+import { QueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import useCurrentUser from "@/hooks/userHooks/useCurrentUser";
+import {
+  SelectContent,
+  SelectItem,
+  Select,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useDebounce from "@/hooks/utilityHooks/useDebounce";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 
 const FormSchema = z.object({
-  lastSeen: z.enum(["everyone", "my-contacts", "nobody"]).optional(),
-  online: z.enum(["everyone", "nobody"]).optional(),
+  lastSeen: z.enum(["EVERYONE", "MYCONTACTS", "NOBODY"]).optional(),
+  online: z.enum(["EVERYONE", "NOBODY"]).optional(),
   readreceipt: z.boolean().default(false).optional(),
   disappearing: z.enum(["OFF", "DAYS90", "DAYS7", "H24"]).optional(),
 });
 
 export type AccountFormType = z.infer<typeof FormSchema>;
 
-export function AccountForm() {
+const queryClient = new QueryClient();
+
+export function AccountForm({
+  currentProfileId,
+}: {
+  currentProfileId: string;
+}) {
+  const { currentUserProfile, currentProfilePrivacy } = useCurrentUser();
+
   const form = useForm<AccountFormType>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {},
+    defaultValues: {
+      disappearing: currentProfilePrivacy?.disappearingMessages,
+      lastSeen: currentProfilePrivacy?.lastSeen,
+      online: currentProfilePrivacy?.precense,
+      readreceipt: currentProfilePrivacy?.readReciept
+
+    },
   });
 
-  function onSubmit(data: AccountFormType) {}
+  const debouncedData = useDebounce(form.watch, 500)
+
+  const { updatingUserPrivacy, isUpdatingUserPrivacy } = useUpdateUserPrivacy(
+    currentProfileId as string
+  );
+
+  async function onSubmit(data: AccountFormType) {
+    console.log(data)
+    updatingUserPrivacy(data)
+    .then((data) => {
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        toast({
+          title: "Privacy update",
+          variant: "success",
+          description: `${data.message}`,
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Privacy update",
+          variant: "destructive",
+          description: `${error.error}`,
+        });
+      });
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <div>
           <div className="space-y-4">
+          <ScrollArea className="h-[25rem] ">
+
             <FormField
               control={form.control}
               name="lastSeen"
@@ -54,13 +108,13 @@ export function AccountForm() {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="everyone" />
+                          <RadioGroupItem value="EVERYONE" />
                         </FormControl>
                         <FormLabel className="font-normal">Everyone</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="my-contacts" />
+                          <RadioGroupItem value="MYCONTACTS" />
                         </FormControl>
                         <FormLabel className="font-normal">
                           My contacts
@@ -68,7 +122,7 @@ export function AccountForm() {
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="nobody" />
+                          <RadioGroupItem value="NOBODY" />
                         </FormControl>
                         <FormLabel className="font-normal">Nobody</FormLabel>
                       </FormItem>
@@ -96,13 +150,13 @@ export function AccountForm() {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="everyone" />
+                          <RadioGroupItem value="EVERYONE" />
                         </FormControl>
                         <FormLabel className="font-normal">Everyone</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="nobody" />
+                          <RadioGroupItem value="NOBODY" />
                         </FormControl>
                         <FormLabel className="font-normal">Nobody</FormLabel>
                       </FormItem>
@@ -133,6 +187,37 @@ export function AccountForm() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="disappearing"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a verified time " />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="OFF">OFF</SelectItem>
+                      <SelectItem value="DAYS90">90 Days</SelectItem>
+                      <SelectItem value="DAYS7">7 Days</SelectItem>
+                      <SelectItem value="H24">24 Hr</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    You can Select how long you conversations last
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            <Button disabled={isUpdatingUserPrivacy} type='submit' variant={"ghost"} className='bg-blue-300'>Update</Button>
+              </ScrollArea>
           </div>
         </div>
       </form>
