@@ -190,12 +190,7 @@ export function AppSidebar() {
   ]
 
   const itemsGroup3 = [
-    {
-      title: "Settings",
-      url: `${BaseUrl}/settings`,
-      icon: Settings,
-      isActive: pathname === "/settings",
-    },
+    
     {
       title: "Profile",
       url: "#",
