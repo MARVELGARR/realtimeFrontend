@@ -1,10 +1,13 @@
 "use client"
 
+
+
 import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Send } from "lucide-react"
+import { MessageForm } from "@/components/myComponents/chat/messageForm"
 
 type Message = {
   id: string
@@ -24,18 +27,6 @@ export function ChatView() {
   const [messages, setMessages] = useState<Message[]>(mockMessages)
   const [newMessage, setNewMessage] = useState("")
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const message: Message = {
-        id: Date.now().toString(),
-        sender: "You",
-        content: newMessage,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      }
-      setMessages([...messages, message])
-      setNewMessage("")
-    }
-  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -56,17 +47,8 @@ export function ChatView() {
       </ScrollArea>
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center">
-          <Input
-            type="text"
-            placeholder="Type a message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-            className="flex-1 mr-2"
-          />
-          <Button onClick={handleSendMessage}>
-            <Send className="h-4 w-4" />
-          </Button>
+          
+            <MessageForm />
         </div>
       </div>
     </div>

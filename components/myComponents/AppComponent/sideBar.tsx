@@ -205,8 +205,8 @@ export function AppSidebar() {
 
 
   return (
-    <Sidebar collapsible="icon" className=" bg-gray-400">
-      <SidebarContent className={cn(isCollapsed ? " w-fit" : "w-full" , " bg-gray-300 text-primary  h-full flex items-center flex-col justify-between ")}>
+    <Sidebar collapsible="icon" className=" border-none bg-inherit">
+      <SidebarContent className={cn(isCollapsed ? " w-[4rem]" : "w-full" , "  text-primary  h-full flex items-center flex-col justify-between ")}>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
