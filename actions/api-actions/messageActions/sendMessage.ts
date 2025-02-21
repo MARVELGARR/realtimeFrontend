@@ -1,21 +1,30 @@
 import { MessageFormData } from "@/components/myComponents/chat/messageForm";
 import axios from "axios";
 
-const sendMessage = async(messageId: string, message: MessageFormData) => {
+const sendMessage = async( message: MessageFormData, conversationId?: string) => {
 
     try{
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1//send-message`, message, {
-            params: { messageId },
-            withCredentials: true
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${conversationId}`, {
+            
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(message),
+            credentials: "include",
         })
-        if(res.status === 200){
-            const data = res.data;
+        if(res.ok){
+            const data = await res.json();
             return data;
+        }
+        else{
+            const errorDetails = await res.json();
+            throw new Error(`${errorDetails}`);
         }
     }
     catch(error){
         console.error(error);
-        throw error;
+        throw new Error(`${error}`) ;
     }
 }
  

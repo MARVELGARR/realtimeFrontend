@@ -2,7 +2,6 @@
 import { ChatList } from "./_ChatComponents/chat-list";
 import { ChatView } from "./_ChatComponents/chat-view";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   ResizableHandle,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/resizable";
 
 export default function Home() {
+
 
   return (
     <main className="w-full h-full">
@@ -23,9 +23,10 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={75}>
-          <ChatView />
+          <ChatView/>
         </ResizablePanel>
       </ResizablePanelGroup>
+
     </main>
   );
 }

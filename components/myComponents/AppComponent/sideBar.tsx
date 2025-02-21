@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Sidebar,
@@ -24,6 +24,7 @@ import useCurrentUser from "@/hooks/userHooks/useCurrentUser"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import ProfileComponent from "../profileComponent/profileComponent"
 import { cn } from "@/lib/utils"
+import userSession from "@/store/userSession"
 
 const renderSidebarTrigger = () => {
   const {toggleSidebar} = useSidebar()
@@ -46,7 +47,10 @@ const renderSidebarTrigger = () => {
 
 const renderMenuItem = (item: any) => {
   const { state } = useSidebar();
-  const { currentUserProfilePic, currentProfileId } = useCurrentUser();
+  const { currentUserProfilePic, currentUserId, currentProfileId, userSessionData  } = useCurrentUser();
+
+  localStorage.setItem("userId", currentUserId as string)
+  
   const isCollapsed = state === "collapsed";
   const isAvatarOrSettings = item.isAvatar || item.title === "Settings";
 

@@ -27,7 +27,7 @@ type UserProfile = {
     privacy: PrivacyProp
   };
   
-  type User = {
+  export type User = {
     id: string;
     email: string;
     name: string;
@@ -37,7 +37,7 @@ type UserProfile = {
   
   
 
-const getCurrentUser = async (): Promise<User> => {
+const getCurrentUser: () => Promise<User> = async () => {
 
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user`, {

@@ -39,7 +39,6 @@ export default function LoginPage() {
             description: `${data}`,
             variant: "success"
         })
-        localStorage.setItem("userId", data.user.id as string)
         router.push('/App/chat')
     }).catch((error)=>{
         toast({

@@ -7,6 +7,7 @@ const useCurrentUser = () => {
         queryKey: ["currentUser"],
         queryFn: getCurrentUser
     })
+    const userSessionData = currentUser
     const currentUserProfilePic = currentUser?.image
     const currentUserId = currentUser?.id
     const currentUserName = currentUser?.name
@@ -17,10 +18,9 @@ const useCurrentUser = () => {
     const currentUserPhoneNumber = currentUserProfile?.phoneNumber
     const currentUserNickname = currentUserProfile?.nickname
     const currentUserEmail = currentUser?.email
-
     
 
-    return {currentUserProfilePic, currentProfilePrivacy, currentProfileId, currentUserPhoneNumber, currentUserNickname, currentUserId, currentUserBio, currentUserName, currentUserProfile, currentUserEmail, isGettingCurentUser, errorGettingCurrentUser };
+    return {currentUserProfilePic, userSessionData, currentProfilePrivacy, currentProfileId, currentUserPhoneNumber, currentUserNickname, currentUserId, currentUserBio, currentUserName, currentUserProfile, currentUserEmail, isGettingCurentUser, errorGettingCurrentUser };
 }
  
 export default useCurrentUser;
