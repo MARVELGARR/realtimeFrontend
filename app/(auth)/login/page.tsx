@@ -12,6 +12,7 @@ import { Icons } from "@/components/icons"
 import useLogin from "@/hooks/authHoks/useLogin"
 import { toast } from "@/hooks/use-toast"
 import googleAuth from "@/actions/api-actions/authActions/googleAuth"
+import Cookies from "cookies-js"
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -34,6 +35,7 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     loginuser(data).then((data)=>{
+        Cookies.set("user", JSON.stringify(data.user))
         toast({
             title: "Login successfull",
             description: `${data}`,
@@ -53,7 +55,8 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
         setIsLoading(true)
-        await googleAuth()
+          await googleAuth()
+
       } catch (error) {
         toast({
             title: "failed login",

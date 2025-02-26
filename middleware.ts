@@ -10,10 +10,10 @@ export const config = {
 
 // Middleware function
 export default async function middleware(request: NextRequest) {
-  const token = request.cookies.get("sessionID")?.value;
+  const sessionData = request.cookies.get("sessionData")?.value;
 
 
-  if (!token || token === null || token === "null") {
+  if (!sessionData || sessionData === null || sessionData === "null") {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }

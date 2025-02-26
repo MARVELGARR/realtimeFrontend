@@ -1,7 +1,11 @@
 import { MessageFormData } from "@/components/myComponents/chat/messageForm";
-import axios from "axios";
+
+
 
 const sendMessage = async( message: MessageFormData, conversationId?: string) => {
+    if(!conversationId){
+        console.log(`is ${conversationId}`)
+    }
 
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${conversationId}`, {
@@ -14,7 +18,9 @@ const sendMessage = async( message: MessageFormData, conversationId?: string) =>
             credentials: "include",
         })
         if(res.ok){
+            
             const data = await res.json();
+            
             return data;
         }
         else{

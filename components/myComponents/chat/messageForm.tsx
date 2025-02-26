@@ -43,7 +43,9 @@ export function MessageForm({
     },
   });
 
-  const {sendingMessage} = useMessageHook(conversationId!);
+  const answer = conversationId ? conversationId : ""
+
+  const {sendingMessage} = useMessageHook(answer!, reciepientId!);
 
   // 2. Define a submit handler.
   function onSubmit(values: MessageFormData) {
@@ -53,16 +55,16 @@ export function MessageForm({
     };
 
     sendingMessage(responseData).then((res) => {
+      queryclient.invalidateQueries({queryKey: ["send-message", { reciepientId }]})
       toast({
         title: "message sent",
         description: `${res.message}`,
         variant: "success"
       })
-      queryclient.invalidateQueries({queryKey: ["conversation", { reciepientId }]})
     }).catch((error)=>{
       toast({
         title: "message not sent",
-        description: `${error}`,
+        description: `${error.error}`,
         variant: `destructive`
       })
       

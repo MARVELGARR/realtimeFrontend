@@ -1,15 +1,11 @@
 'use client'
 
-const App = () => {
-
-
-  
+const Page = () => {
     
     return (
-        <>
-        
-        </>
+
+        <div className=""></div>
     );
 }
  
-export default App;
+export default Page;

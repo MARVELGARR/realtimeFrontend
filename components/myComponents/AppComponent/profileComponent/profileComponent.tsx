@@ -4,7 +4,7 @@ import Editor from "../../utilityComponent/editor";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import LogoutButton from "../../utilityComponent/logoutButton";
-import useCurrentUser from "@/hooks/userHooks/useCurrentUser";
+import { useSession } from "@/providers/sessionProvider";
 
 const ProfileBioComponent = () => {
 
@@ -14,7 +14,15 @@ const ProfileBioComponent = () => {
         setSelectMap(id)
     };
 
-    const {currentUserBio, currentUserNickname, currentUserPhoneNumber, currentUserName,currentUserProfilePic, isGettingCurentUser} = useCurrentUser()
+
+    const {currentUser} = useSession()
+
+    const currentUserBio = currentUser?.profile.bio
+    const currentUserNickname = currentUser?.profile.nickname
+    const currentUserPhoneNumber = currentUser?.profile.phoneNumber
+    const currentUserName = currentUser?.name
+    const currentUserProfilePic = currentUser?.image
+
 
 
     return (

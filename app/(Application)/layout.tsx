@@ -5,6 +5,7 @@ import type React from "react"; // Import React
 import { AppSidebar } from "@/components/myComponents/AppComponent/sideBar";
 import { Card } from "@/components/ui/card";
 import { MessageCircleCodeIcon } from "lucide-react";
+import { SessionProvider } from "@/providers/sessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,8 @@ export default function RootLayout({
 }) {
   return (
     <div className={inter.className}>
+      <SessionProvider>
+        
       <SidebarProvider>
         <div className="flex flex-col  w-full">
           <div className="w-full h-[2rem] text-red-300 ">
@@ -31,6 +34,7 @@ export default function RootLayout({
           </div>
         </div>
       </SidebarProvider>
+      </SessionProvider>
     </div>
   );
 }

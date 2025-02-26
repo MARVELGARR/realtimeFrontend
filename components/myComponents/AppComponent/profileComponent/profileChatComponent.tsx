@@ -12,12 +12,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import clearAllChat from "@/actions/api-actions/userAction/clearAllChat";
-import useCurrentUser from "@/hooks/userHooks/useCurrentUser";
 import { toast } from "@/hooks/use-toast";
+import { useSession } from "@/providers/sessionProvider";
 
 const ProfileChatComponent = () => {
 
-    const {currentUserId} = useCurrentUser()
+
+    const {currentUser} = useSession()
+    const currentUserId = currentUser?.id
 
     const handleClear = async () =>{
         await clearAllChat(currentUserId as string).then((data)=>{

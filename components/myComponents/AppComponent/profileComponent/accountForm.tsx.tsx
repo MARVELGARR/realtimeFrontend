@@ -17,7 +17,6 @@ import { Switch } from "@/components/ui/switch";
 import useUpdateUserPrivacy from "@/hooks/userHooks/useUpdateUserPrivacy";
 import { QueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
-import useCurrentUser from "@/hooks/userHooks/useCurrentUser";
 import {
   SelectContent,
   SelectItem,
@@ -28,6 +27,7 @@ import {
 import useDebounce from "@/hooks/utilityHooks/useDebounce";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/providers/sessionProvider";
 
 const FormSchema = z.object({
   lastSeen: z.enum(["EVERYONE", "MYCONTACTS", "NOBODY"]).optional(),
@@ -45,7 +45,12 @@ export function AccountForm({
 }: {
   currentProfileId: string;
 }) {
-  const { currentUserProfile, currentProfilePrivacy } = useCurrentUser();
+
+
+  const {currentUser} = useSession()
+  
+  const currentUserProfile =currentUser?.profile
+  const currentProfilePrivacy = currentUser?.profile.privacy
 
   const form = useForm<AccountFormType>({
     resolver: zodResolver(FormSchema),

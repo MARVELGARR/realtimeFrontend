@@ -14,17 +14,16 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Archive, MessageCircleMore, Phone, Settings, Star, Binoculars, User,  MenuIcon } from "lucide-react"
+import { Archive, MessageCircleMore, Phone, Settings, Star, Binoculars, User,  MenuIcon, Loader2 } from "lucide-react"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { IconWithIndicator } from "./icons-with-indicators"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import useCurrentUser from "@/hooks/userHooks/useCurrentUser"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import ProfileComponent from "../profileComponent/profileComponent"
 import { cn } from "@/lib/utils"
-import userSession from "@/store/userSession"
+import { useSession } from "@/providers/sessionProvider"
 
 const renderSidebarTrigger = () => {
   const {toggleSidebar} = useSidebar()
@@ -47,12 +46,13 @@ const renderSidebarTrigger = () => {
 
 const renderMenuItem = (item: any) => {
   const { state } = useSidebar();
-  const { currentUserProfilePic, currentUserId, currentProfileId, userSessionData  } = useCurrentUser();
-
-  localStorage.setItem("userId", currentUserId as string)
+  const {currentUser, isGettingCurentUser} = useSession()
   
-  const isCollapsed = state === "collapsed";
-  const isAvatarOrSettings = item.isAvatar || item.title === "Settings";
+  const currentUserProfilePic = currentUser?.image
+  const currentProfileId  = currentUser?.profile.id
+
+  const isCollapsed = React.useMemo(() => state === "collapsed", [state]);
+  const isAvatarOrSettings = React.useMemo(() => item.isAvatar || item.title === "Settings", [item]);
 
   return (
     <SidebarMenuItem className="w-full flex flex-col items-center" key={item.title}>
@@ -72,7 +72,7 @@ const renderMenuItem = (item: any) => {
                           className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}
                         >
                           <AvatarImage src={currentUserProfilePic!} alt="" />
-                          <AvatarFallback>YOU</AvatarFallback>
+                          {isGettingCurentUser ? (<AvatarFallback>YOU</AvatarFallback>) : (<Loader2/>)}
                         </Avatar>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
