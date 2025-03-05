@@ -7,9 +7,7 @@ const ChatPageHeader = () => {
             <strong className="">Chats</strong>
             <div className=" flex items-center gap-2">
                 <CreateNewChat/>
-                <FilterDropdown selectedFilter={""} onFilterChange={function (filterId: string): void {
-                    throw new Error("Function not implemented.");
-                } }/>
+                <FilterDropdown />
             </div>
         </div>
     );

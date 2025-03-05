@@ -9,50 +9,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Users, UserPlus, Star, MessageCircle, UsersRound, Filter } from "lucide-react"
+import ZustanFilterStore, { zustandFilterProps } from "@/store/useSearchFilter"
+import { useEffect } from "react"
 
 interface FilterOption {
-  id: string
-  label: string
+  id: zustandFilterProps["id"]
+  label: zustandFilterProps["label"]
   icon: React.ReactNode
 }
 
 const filterOptions: FilterOption[] = [
   { id: "all", label: "All", icon: <Users className="mr-2 h-4 w-4" /> },
-  { id: "contacts", label: "Contacts", icon: <Users className="mr-2 h-4 w-4" /> },
-  { id: "non-contacts", label: "Non-Contacts", icon: <UserPlus className="mr-2 h-4 w-4" /> },
-  { id: "favorites", label: "Favorites", icon: <Star className="mr-2 h-4 w-4" /> },
-  { id: "unread", label: "Unread", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
+  { id: "contact", label: "Contact", icon: <Users className="mr-2 h-4 w-4" /> },
+  { id: "non-contact", label: "Non-Contact", icon: <UserPlus className="mr-2 h-4 w-4" /> },
+  { id: "favourites", label: "Favourites", icon: <Star className="mr-2 h-4 w-4" /> },
+  { id: "unreads", label: "Unreads", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
   { id: "groups", label: "Groups", icon: <UsersRound className="mr-2 h-4 w-4" /> },
 ]
 
-interface FilterDropdownProps {
-  selectedFilter: string
-  onFilterChange: (filterId: string) => void
-}
 
-export const FilterDropdown: React.FC<FilterDropdownProps> = ({ selectedFilter, onFilterChange }) => {
-  const selectedOption = filterOptions.find((option) => option.id === selectedFilter) || filterOptions[0]
 
+export const FilterDropdown: React.FC = () => {
+  const {filters, setFilter} = ZustanFilterStore()
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="w-full justify-start">
           <Filter className="mr-2 h-4 w-4" />
-          {selectedOption.label}
+          {filters.label}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Filter by</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {filterOptions.map((option) => (
-          <DropdownMenuItem key={option.id} onSelect={() => onFilterChange(option.id)}>
+          <DropdownMenuItem key={option.id} onSelect={()=> setFilter({id: option.id, label: option.label})} >
             {option.icon}
             <span>{option.label}</span>
-            {selectedFilter === option.id && (
-              <span className="absolute right-2 flex h-3 w-3 items-center justify-center">
-                <span className="h-2 w-2 rounded-full bg-primary"></span>
-              </span>
-            )}
+            
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

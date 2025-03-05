@@ -1,4 +1,5 @@
 
+import { zustandFilterProps } from "@/store/useSearchFilter";
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
@@ -127,13 +128,26 @@ const fetchSearchResults = async (searchTerm: string, page = 1, limit = 10): Pro
     }
 };
 
-export const useSearchQuery = (searchTerm: string, page:number, limit: number ) => {
+export const useSearchQuery = (searchTerm: string, page:number, limit: number, filter: zustandFilterProps ) => {
 
     const { data, isLoading } = useQuery({
-        queryKey: ["search", searchTerm, page, limit],
-        queryFn: () => fetchSearchResults(searchTerm, page, limit),
-        enabled: !!searchTerm,
-        select: (data) => data,
+      queryKey: ["search", searchTerm, page, limit],
+      queryFn: () => fetchSearchResults(searchTerm, page, limit),
+      select: (data) => data,
     });
-    return { data, isLoading };
-};
+
+    let filterData = data
+    
+    
+    if(filter.id === "groups"){
+      const groupConvo = filterData?.conversations.map((convo)=>{
+        return convo.type === "GROUP"
+      })
+      return { groupConvo, isLoading }
+    }
+
+    else{
+
+      return { data, isLoading };
+    }
+  };

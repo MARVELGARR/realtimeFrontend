@@ -2,9 +2,7 @@ import { ApiResponse } from "@/actions/api-actions/userAction/getSearch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/providers/sessionProvider";
-import useStore from "@/store/userSession";
 import { QueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 
 
 type Conversation = ApiResponse['conversations'][0];
@@ -13,9 +11,6 @@ interface ConversatonListItemProps{
     conversation: Conversation
     className?: string
 }
-
-
-const queryClient = new QueryClient()
 
 const ConversatonListItem = ({conversation, className}:ConversatonListItemProps) => {
 
@@ -46,7 +41,7 @@ const ConversatonListItem = ({conversation, className}:ConversatonListItemProps)
                 <div className="flex flex-col justify-start -space-y-1">
                     <h3 className="font-bold">{recepientData?.name}</h3>
                     <p className="font-thin text-sm">
-                        {recepientData?.profile?.bio || recepientData?.profile?.phoneNumber}
+                        
                     </p>
                 </div>
             </div>

@@ -1,5 +1,20 @@
 import { LoginFormData } from "@/app/(auth)/login/page"
 
+interface profile{
+        bio: string;
+        birthDay: Date;
+        nickname: string;
+        phoneNumber: string;
+        gender: string;
+        profilePicture: string;
+        privacy: {
+          disappearingMessages: boolean;
+          lastSeen: boolean;
+          precense: boolean;
+          readReciept: boolean;
+        };
+    
+}
 type loginUserRes = {
     email: string | null;
     password: string | null;
@@ -7,6 +22,7 @@ type loginUserRes = {
     id: string;
     emailVerified: boolean | null;
     image: string | null;
+    profile: profile
     createdAt: Date;
     updatedAt: Date
 }

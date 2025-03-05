@@ -46,10 +46,10 @@ const renderSidebarTrigger = () => {
 
 const renderMenuItem = (item: any) => {
   const { state } = useSidebar();
-  const {currentUser, isGettingCurentUser} = useSession()
-  
-  const currentUserProfilePic = currentUser?.image
-  const currentProfileId  = currentUser?.profile.id
+  const { currentUser, isGettingCurentUser } = useSession();
+
+  const currentUserProfilePic = currentUser?.image;
+  const currentProfileId = currentUser?.profile?.id;
 
   const isCollapsed = React.useMemo(() => state === "collapsed", [state]);
   const isAvatarOrSettings = React.useMemo(() => item.isAvatar || item.title === "Settings", [item]);
@@ -68,15 +68,13 @@ const renderMenuItem = (item: any) => {
                   {item.isAvatar ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger className="-ml-2">
-                        <Avatar
-                          className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}
-                        >
+                        <Avatar className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}>
                           <AvatarImage src={currentUserProfilePic!} alt="" />
-                          {isGettingCurentUser ? (<AvatarFallback>YOU</AvatarFallback>) : (<Loader2/>)}
+                          {isGettingCurentUser ? <Loader2 /> : <AvatarFallback>YOU</AvatarFallback>}
                         </Avatar>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <ProfileComponent currentProfileId={currentProfileId!} />
+                        {currentProfileId && <ProfileComponent currentProfileId={currentProfileId} />}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   ) : (
@@ -91,9 +89,7 @@ const renderMenuItem = (item: any) => {
                     <>
                       <span className="ml-4 flex-grow">{item.title}</span>
                       {item.indicator !== undefined && (
-                        <span
-                          className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}
-                        >
+                        <span className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}>
                           {item.indicator}
                         </span>
                       )}
@@ -115,9 +111,7 @@ const renderMenuItem = (item: any) => {
                     <>
                       <span className="ml-4 flex-grow">{item.title}</span>
                       {item.indicator !== undefined && (
-                        <span
-                          className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}
-                        >
+                        <span className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}>
                           {item.indicator}
                         </span>
                       )}
@@ -138,7 +132,6 @@ const renderMenuItem = (item: any) => {
 
 
 
-
 export function AppSidebar() {
 
   // Mock state for unread counts (you would typically fetch this from an API)
@@ -148,6 +141,7 @@ export function AppSidebar() {
   
   const pathname = usePathname()
 
+  const { isGettingCurentUser } = useSession();
 
   const BaseUrl = `http://localhost:3001`
 
@@ -206,6 +200,8 @@ export function AppSidebar() {
 
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
+
+
 
 
   return (

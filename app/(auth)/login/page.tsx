@@ -13,6 +13,8 @@ import useLogin from "@/hooks/authHoks/useLogin"
 import { toast } from "@/hooks/use-toast"
 import googleAuth from "@/actions/api-actions/authActions/googleAuth"
 import Cookies from "cookies-js"
+import { QueryClient } from "@tanstack/react-query"
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage"
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -20,6 +22,10 @@ const schema = z.object({
 })
 
 export type LoginFormData = z.infer<typeof schema>
+
+
+const queryClient = new QueryClient()
+const {setItem} = useSessionStorage("loggedInUser")
 
 export default function LoginPage() {
   const router = useRouter()
@@ -41,6 +47,8 @@ export default function LoginPage() {
             description: `${data}`,
             variant: "success"
         })
+        setItem(data.user)
+        queryClient.invalidateQueries({ queryKey: ['currentUser']})
         router.push('/App/chat')
     }).catch((error)=>{
         toast({

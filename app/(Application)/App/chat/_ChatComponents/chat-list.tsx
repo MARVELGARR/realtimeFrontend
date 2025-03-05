@@ -8,16 +8,15 @@ import ChatPageHeader from "./chatPageHeader";
 import useDebounce from "@/hooks/utilityHooks/useDebounce";
 import ConversatonListItem from "@/components/myComponents/conversations/conversationListItem";
 import { Loader2 } from "lucide-react";
+import ZustanFilterStore from "@/store/useSearchFilter";
 
 export function ChatList() {
   const [searchWord, setSearchWord] = useState("");
-
+  const filterState = ZustanFilterStore((state)=>state.filters)
   const debouncedResult = useDebounce(searchWord, 500);
-  const { data, isLoading } = useSearchQuery(debouncedResult, 1, 10);
+  const { data, isLoading } = useSearchQuery(debouncedResult, 1, 10, filterState);
 
-  if (isLoading) {
-    return <Loader2 className="w-5 g-5" />;
-  }
+
 
   const render = (filterData: ApiResponse) => {
     if (!filterData) {
@@ -32,7 +31,9 @@ export function ChatList() {
       return <div className="">There is no conversation</div>;
     }
 
-    if (filterData.totalResults > 0 && filterData.conversations.length > 0 ) {
+    
+
+    if (filterData.conversations.length > 0 ) {
       return (
         <>
           <div className="">
@@ -56,6 +57,7 @@ export function ChatList() {
       </div>
       <ScrollArea className="flex-1">
         <div className="space-y-2">{render(data!)}</div>
+        {isLoading && (<Loader2 className="w-3 h-3"/>) }
       </ScrollArea>
     </div>
   );

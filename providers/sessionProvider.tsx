@@ -16,16 +16,16 @@ export type SessionContextProp = {
 const SessionContext = createContext<SessionContextProp | null>(null);
 
 export const SessionProvider = ({ children }: SessionProviderProps) => {
-  const { data: currentUser, isLoading: isGettingCurentUser, error: errorGettingCurrentUser } = useQuery({
+  const { data: currentUser, isLoading: isGettingCurentUser, isSuccess, error: errorGettingCurrentUser } = useQuery({
     queryKey: ["currentUser"],
-    queryFn: getCurrentUser,
-    staleTime: 5 * 60 * 1000, // Cache the data for 5 minutes
-    
+    queryFn: getCurrentUser, 
+    initialData: window.sessionStorage.getItem("currentUser") ? JSON.parse(window.sessionStorage.getItem("currentUser") as string) : undefined,
   });
 
-  console.log("Current User:", currentUser);
-  console.log("Is Loading:", isGettingCurentUser);
-  console.log("Error:", errorGettingCurrentUser);
+  if(isSuccess){
+    window.sessionStorage.setItem("currentUser", JSON.stringify(currentUser))
+  }
+
 
   return (
     <SessionContext.Provider
