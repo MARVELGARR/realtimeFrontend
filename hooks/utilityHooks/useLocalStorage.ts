@@ -6,7 +6,7 @@ const useLocalStorage = (key: string) => {
     const setItem = (item: unknown) =>{
         try{
 
-            window.localStorage.setItem(key, JSON.stringify(item))
+           localStorage.setItem(key, JSON.stringify(item))
         }catch(error){
             console.log(error)
         }
@@ -14,7 +14,7 @@ const useLocalStorage = (key: string) => {
 
     const getItem = () =>{
         try{
-           const item = window.localStorage.getItem(key)
+           const item = localStorage.getItem(key)
            if(item){
                 return JSON.parse(item)
            }
@@ -25,7 +25,7 @@ const useLocalStorage = (key: string) => {
 
     const removeItem = () =>{
         try{
-            const item = window.localStorage.getItem(key)
+            const item = localStorage.getItem(key)
             if(item){
                 window.localStorage.removeItem(key)
             }

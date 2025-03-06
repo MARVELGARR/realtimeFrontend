@@ -4,6 +4,7 @@ import "./globals.css";
 import { TanstackProvider } from "@/providers/tanstack";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/next-theme";
+import { SessionProvider } from "@/providers/sessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased`}
       >
+
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -37,9 +39,12 @@ export default function RootLayout({
             disableTransitionOnChange
           >
 
+
           <Toaster />
           <TanstackProvider>
+            <SessionProvider>
             {children}
+            </SessionProvider>
             </TanstackProvider>
           </ThemeProvider>
       </body>

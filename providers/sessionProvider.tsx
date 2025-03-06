@@ -1,5 +1,6 @@
 'use client';
 import getCurrentUser, { User } from "@/actions/api-actions/userAction/getCurrentUser";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext } from "react";
 
@@ -22,11 +23,14 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     initialData: window.sessionStorage.getItem("currentUser") ? JSON.parse(window.sessionStorage.getItem("currentUser") as string) : undefined,
   });
 
+
+  const {setItem} = useSessionStorage("currentUser")
+
   if(isSuccess){
-    window.sessionStorage.setItem("currentUser", JSON.stringify(currentUser))
+    setItem(currentUser as User)
   }
 
-
+  
   return (
     <SessionContext.Provider
       value={{
@@ -34,6 +38,8 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
         isGettingCurentUser,
         errorGettingCurrentUser,
       }}
+
+      
     >
       {children}
     </SessionContext.Provider>

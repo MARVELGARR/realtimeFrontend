@@ -1,29 +1,30 @@
-const useSessionStorage = (key: string) => {
+const useSessionStorage = <T>(key: string) => {
 
-    const setItem = (item: unknown) =>{
+    const setItem = (item: T) =>{
         try{
-            window.sessionStorage.setItem(key, JSON.stringify(item))
+            sessionStorage.setItem(key, JSON.stringify(item))
         }catch(error){
             console.log(error)
         }
     }
 
-    const getItem = () =>{
+    const getItem = () : T | null =>{
         try{
-            const item = window.sessionStorage.getItem(key)
+            const item = sessionStorage.getItem(key)
             if(item){
-                return JSON.parse(item)
+                return JSON.parse(item) as T
             }
         }catch(error){
             console.log(error)
         }
+        return null;
     }
 
     const removeSession = () =>{
         try{
-            const item = window.sessionStorage.getItem(key)
+            const item = sessionStorage.getItem(key)
             if(item){
-                window.sessionStorage.removeItem(key)
+                sessionStorage.removeItem(key)
             }
             else{
                 console.log("item not in session storage")

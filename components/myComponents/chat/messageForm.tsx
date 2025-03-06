@@ -15,14 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import useMessageHook from "@/hooks/messageHooks/useMessageHook";
 import { toast } from "@/hooks/use-toast";
-import { QueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   message: z.string(),
   reciepientId: z.string().optional(),
 });
 
-const queryclient = new QueryClient()
 
 export type MessageFormData = z.infer<typeof formSchema>;
 
@@ -55,7 +53,6 @@ export function MessageForm({
     };
 
     sendingMessage(responseData).then((res) => {
-      queryclient.invalidateQueries({queryKey: ["send-message", { reciepientId }]})
       toast({
         title: "message sent",
         description: `${res.message}`,
@@ -64,7 +61,7 @@ export function MessageForm({
     }).catch((error)=>{
       toast({
         title: "message not sent",
-        description: `${error.error}`,
+        description: `${error}`,
         variant: `destructive`
       })
       

@@ -21,13 +21,30 @@ export interface Message {
     user: User;
 }
 
+export interface recepientProfile{
+    id: string;
+    bio?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    nickname?: string | null;
+    phoneNumber?: string | null;
+    gender: "DIRECT" | "GROUP";
+    birthDay?: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+    profilePicture?: string ;
+    
+}
 export interface Participant {
     id: string;
-    createdAt: string;
-    updatedAt: string;
-    userId: string;
-    conversationId: string;
-    groupId: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      user: {
+        id: string,
+        image?: string | null;
+        name?: string | null;
+        profile?: recepientProfile 
+      };
 }
 
 export interface Conversation {
@@ -38,6 +55,11 @@ export interface Conversation {
     messages: Message[];
     participants: Participant[];
 }
+
+
+
+
+
 
 
 const getConversationsWithrecepientId = async (recepientId: string):Promise<Conversation> => {

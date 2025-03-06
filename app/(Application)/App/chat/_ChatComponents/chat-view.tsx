@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import getConversationsWithrecepientId from "@/actions/api-actions/messageActions/getConversation"
 import { useSearchParams } from "next/navigation"
 import { useSession } from "@/providers/sessionProvider"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -26,19 +27,30 @@ export function ChatView() {
     console.log(recepientId)
   },[recepientId])
 
+  
   const { currentUser, isGettingCurentUser } = useSession()
-
+  const recepientName = data?.participants.find((user)=>user.user.id !== currentUser?.id)?.user.name
+  const recepientProfilePic = data?.participants.find((user)=>user.user.id !== currentUser?.id)?.user.image
   const currentUserId = currentUser?.id
 
-  if (!recepientId || isLoading ||isGettingCurentUser) {
+  if ( isLoading ||isGettingCurentUser) {
     return <div>Loading...</div>
+  }
+  if(!recepientId){
+    return (
+      <div className="w-full h-full flex justify-center items-center ">No Chat history</div>
+    )
   }
 
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold">Chat with {recepientId}</h2>
+      <div className="p-4 border-b border-gray-200 flex gap-[3rem] item-center">
+        <Avatar>
+          <AvatarImage src={recepientProfilePic!} className=''/>
+          <AvatarFallback>{`g${recepientName ? recepientName[0] + recepientName[-1] : ''} f`}</AvatarFallback>
+        </Avatar>
+        <h2 className="text-xl font-semibold">{recepientName}</h2>
       </div>
       <ScrollArea className="flex-1 p-4">
         {data?.messages?.length ? (

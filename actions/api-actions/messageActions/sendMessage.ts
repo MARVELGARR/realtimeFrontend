@@ -25,7 +25,7 @@ const sendMessage = async( message: MessageFormData, conversationId?: string) =>
         }
         else{
             const errorDetails = await res.json();
-            throw new Error(`${errorDetails}`);
+            throw new Error(`${errorDetails.error}`);
         }
     }
     catch(error){
