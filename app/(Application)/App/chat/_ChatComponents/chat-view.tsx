@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageForm } from "@/components/myComponents/chat/messageForm"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -8,6 +8,7 @@ import getConversationsWithrecepientId from "@/actions/api-actions/messageAction
 import { useSearchParams } from "next/navigation"
 import { useSession } from "@/providers/sessionProvider"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Message from "@/components/myComponents/chat/message"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -52,19 +53,10 @@ export function ChatView() {
         </Avatar>
         <h2 className="text-xl font-semibold">{recepientName}</h2>
       </div>
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4 w-full">
         {data?.messages?.length ? (
           data.messages.map((message) => (
-            <div key={message.id} className={`mb-4 ${message.userId === currentUserId ? "text-right" : "text-left"}`}>
-              <div
-                className={`inline-block p-2 rounded-lg ${
-                  message.userId === currentUserId ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                <p>{message.content}</p>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">{message.updatedAt}</p>
-            </div>
+            <Message key={message.id} message={message} recepientId={recepientId as string} currentUserId={currentUserId as string}/>
           ))
         ) : (
           <div className="w-full h-full">No messages yet start! new chat</div>
@@ -76,4 +68,6 @@ export function ChatView() {
     </div>
   )
 }
+
+
 

@@ -15,9 +15,6 @@ const useMessageHook = (conversationId?: string, reciepientId?:string) => {
         }
     })
 
-
-
-
     return {sendingMessage, isSendingMessage};
 }
  
