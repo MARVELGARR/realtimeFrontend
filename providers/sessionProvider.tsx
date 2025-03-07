@@ -20,7 +20,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   const { data: currentUser, isLoading: isGettingCurentUser, isSuccess, error: errorGettingCurrentUser } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser, 
-    initialData: window.sessionStorage.getItem("currentUser") ? JSON.parse(window.sessionStorage.getItem("currentUser") as string) : undefined,
+    
   });
 
 

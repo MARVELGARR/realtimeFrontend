@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { ChatList } from "./_ChatComponents/chat-list";
 import { ChatView } from "./_ChatComponents/chat-view";
 
@@ -23,7 +24,10 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={75}>
-          <ChatView/>
+          <Suspense fallback={<div>Loading...</div>}>
+          
+            <ChatView/>
+          </Suspense>
         </ResizablePanel>
       </ResizablePanelGroup>
 
