@@ -69,8 +69,8 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
 
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
-          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-0": " tight-0"}`}>
-            <DropdownMenuMessageOptions onOpenChange={handleDropdownOpenChange} />
+          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-0 ": " tight-0"}`}>
+            <DropdownMenuMessageOptions recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
         <div

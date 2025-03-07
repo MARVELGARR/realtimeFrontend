@@ -2,17 +2,43 @@
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import useDeleteHook from "@/hooks/messageHooks/useDeleteHooks"
+import { toast } from "@/hooks/use-toast"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
+import Link from "next/link"
 
 interface DropdownMenuMessageOptionsProps {
   onOpenChange?: (open: boolean) => void
+  messageId: string,
+  recepientId: string
 }
 
-export function DropdownMenuMessageOptions({ onOpenChange }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientId }: DropdownMenuMessageOptionsProps) {
+  
+  const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
+  
   // Function to handle item clicks
   const handleItemClick = (action: string) => {
-    console.log(`Action clicked: ${action}`)
-    // Implement your action logic here
+    
+    switch (action) {
+      case "delete":
+        DeleteMessage(messageId).then((data)=>{
+          toast({
+            title: "message deleted",
+            variant: "success"
+          })
+        }).catch(()=>{
+          toast({
+            title: "message failed to delete",
+            variant: "destructive"
+          })
+        })
+        break;
+      
+      default:
+        break;
+    }
+
   }
 
   return (
@@ -38,9 +64,10 @@ export function DropdownMenuMessageOptions({ onOpenChange }: DropdownMenuMessage
           <p className="">Star</p>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("delete")}>
-          <Trash className="w-4 h-4" />
-          <p className="">Delete</p>
+        <DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
+            <Trash  color="red" className={`w-4 h-4 ${isDeletingMessage ? " ": ""}`} />
+            <p className="">Delete</p>
+
         </DropdownMenuItem>
 
         <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
