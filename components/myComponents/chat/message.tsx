@@ -62,7 +62,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
   return (
     <div
       ref={containerRef}
-      className={`mb-4 w-full ml-8 ${message.userId === currentUserId ? "jutify-end" : "justify-start"} flex items-center gap-2 w-full  relative`}
+      className={`mb-4 w-full ml-8 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -71,6 +71,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
           <DropdownMenuMessageOptions onOpenChange={handleDropdownOpenChange} />
         </div>
       )}
+
       <div key={message.id} className={``}>
         <div
           className={`inline-block p-2 rounded-lg ${
