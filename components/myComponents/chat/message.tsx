@@ -62,17 +62,17 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
   return (
     <div
       ref={containerRef}
-      className={`mb-4 w-full ml-8 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`}
+      className={`mb-4 w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {isHovered && (
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
-          <DropdownMenuMessageOptions onOpenChange={handleDropdownOpenChange} />
-        </div>
-      )}
 
-      <div key={message.id} className={``}>
+      <div key={message.id} className={`w-fit`}>
+        {isHovered && (
+          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-0": " tight-0"}`}>
+            <DropdownMenuMessageOptions onOpenChange={handleDropdownOpenChange} />
+          </div>
+        )}
         <div
           className={`inline-block p-2 rounded-lg ${
             message.userId === currentUserId ? "bg-blue-500 text-white" : "bg-gray-200"
