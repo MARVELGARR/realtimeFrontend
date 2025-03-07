@@ -143,7 +143,7 @@ export function AppSidebar() {
 
   const { isGettingCurentUser } = useSession();
 
-  const BaseUrl = `http://localhost:3001`
+  const BaseUrl = `https://realtime-frontend-olive.vercel.app/`
 
   const itemsGroup1 = [
     {
