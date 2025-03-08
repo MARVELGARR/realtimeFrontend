@@ -1,8 +1,7 @@
 const deleteMessage = async (messageId: string) => {
-    encodeURIComponent
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/delete-message${encodeURIComponent(messageId)}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/delete-message/${encodeURIComponent(messageId)}`, {
             method: "DELETE",
             headers: {
                 'Content-type': "application/json"
