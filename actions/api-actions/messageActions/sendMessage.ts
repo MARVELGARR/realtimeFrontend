@@ -8,7 +8,7 @@ const sendMessage = async( message: MessageFormData, conversationId?: string) =>
     }
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${conversationId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${encodeURIComponent(conversationId!)}`, {
             
             method: "POST",
             headers: {
