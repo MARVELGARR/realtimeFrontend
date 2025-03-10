@@ -9,11 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface NewChatSearchProps {
-  initialSearch: UserSearchResponse
   onUserSelect?: (user: any) => void
 }
 
-const NewChatSearch = ({ initialSearch, onUserSelect }: NewChatSearchProps) => {
+const NewChatSearch = ({onUserSelect }: NewChatSearchProps) => {
   const [searchQuery, setSearchQuery] = useState("")
   const debouncedValue = useDebounce(searchQuery, 500)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -22,10 +21,6 @@ const NewChatSearch = ({ initialSearch, onUserSelect }: NewChatSearchProps) => {
     queryKey: ["users", debouncedValue],
     queryFn: ({ pageParam }) => getSearchUsers(debouncedValue, String(pageParam), "5"),
     initialPageParam: 1,
-    initialData: {
-      pages: [initialSearch],
-      pageParams: [1],
-    },
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.hasNextPage) {
         return lastPage.pagination.currentPage + 1
