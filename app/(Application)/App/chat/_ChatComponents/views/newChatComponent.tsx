@@ -19,7 +19,7 @@ const NewChatSearch = ({onUserSelect }: NewChatSearchProps) => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
     queryKey: ["users", debouncedValue],
-    queryFn: ({ pageParam }) => getSearchUsers(debouncedValue, String(pageParam), "5"),
+    queryFn: ({ pageParam }) => getSearchUsers(debouncedValue, String(pageParam), "1"),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.hasNextPage) {
