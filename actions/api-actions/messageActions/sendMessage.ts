@@ -3,9 +3,7 @@ import { MessageFormData } from "@/components/myComponents/chat/messageForm";
 
 
 const sendMessage = async( message: MessageFormData, conversationId?: string) => {
-    if(!conversationId){
-        console.log(`is ${conversationId}`)
-    }
+
 
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message/${encodeURIComponent(conversationId!)}`, {
