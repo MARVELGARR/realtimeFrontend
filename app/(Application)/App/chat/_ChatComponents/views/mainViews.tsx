@@ -1,3 +1,5 @@
+"use client"
+
 import { DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import type { MenuItem } from "@/components/myComponents/utilityComponent/types"
 import NewChatSearch from "./newChatComponent"
@@ -8,26 +10,24 @@ interface MainViewProps {
   onUserSelect?: (user: any) => void
 }
 
-export const MainView = async ({ items, onItemClick, onUserSelect }: MainViewProps) => {
-  // Fetch initial users for server-side rendering
-
+export const MainView = ({ items, onItemClick, onUserSelect }: MainViewProps) => {
   return (
     <DropdownMenuGroup>
-      <NewChatSearch  onUserSelect={onUserSelect} />
+      <NewChatSearch onUserSelect={onUserSelect} />
 
       {items.map((item) => (
-            <DropdownMenuItem
-              key={item.id}
-              onSelect={(event) => {
-                event.preventDefault()
-                onItemClick(item)
-              }}
-              className="py-3 cursor-pointer"
-            >
-              {item.icon}
-              {item.label}
-            </DropdownMenuItem>
-          ))}
+        <DropdownMenuItem
+          key={item.id}
+          onSelect={(event) => {
+            event.preventDefault()
+            onItemClick(item)
+          }}
+          className="py-3 cursor-pointer"
+        >
+          {item.icon}
+          {item.label}
+        </DropdownMenuItem>
+      ))}
     </DropdownMenuGroup>
   )
 }
