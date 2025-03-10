@@ -12,7 +12,6 @@ interface DropdownMenuMessageOptionsProps {
   messageId: string,
   recepientId: string
   isMyMessage: boolean
-  currentUserId: string
 }
 
 export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
