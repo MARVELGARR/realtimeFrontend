@@ -2,11 +2,11 @@ import { MessageFormData } from "@/components/myComponents/chat/messageForm";
 
 
 
-const sendMessage = async( message: MessageFormData, conversationId?: string) => {
+const sendMessage = async( message: MessageFormData, conversationId?: string | undefined) => {
 
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${encodeURIComponent(conversationId!)}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-message${conversationId ? conversationId : undefined}`, {
             
             method: "POST",
             headers: {
