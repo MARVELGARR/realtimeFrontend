@@ -1,4 +1,4 @@
-import { DropdownMenuGroup } from "@/components/ui/dropdown-menu"
+import { DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import type { MenuItem } from "@/components/myComponents/utilityComponent/types"
 import NewChatSearch from "./newChatComponent"
 import PhoneAndGroup from "./phoneAndGroup"
@@ -18,7 +18,19 @@ export const MainView = async ({ items, onItemClick, onUserSelect }: MainViewPro
     <DropdownMenuGroup>
       <NewChatSearch initialSearch={initialUsers} onUserSelect={onUserSelect} />
 
-      <PhoneAndGroup items={items} onItemClick={onItemClick} />
+      {items.map((item) => (
+            <DropdownMenuItem
+              key={item.id}
+              onSelect={(event) => {
+                event.preventDefault()
+                onItemClick(item)
+              }}
+              className="py-3 cursor-pointer"
+            >
+              {item.icon}
+              {item.label}
+            </DropdownMenuItem>
+          ))}
     </DropdownMenuGroup>
   )
 }

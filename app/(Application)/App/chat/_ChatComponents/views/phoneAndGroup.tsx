@@ -9,19 +9,7 @@ const PhoneAndGroup = ({ items, onItemClick }:MainViewProps) => {
 
     return (
         <>
-          {items.map((item) => (
-            <DropdownMenuItem
-              key={item.id}
-              onSelect={(event) => {
-                event.preventDefault()
-                onItemClick(item)
-              }}
-              className="py-3 cursor-pointer"
-            >
-              {item.icon}
-              {item.label}
-            </DropdownMenuItem>
-          ))}
+          
         </>
     );
 }
