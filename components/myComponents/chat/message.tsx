@@ -59,6 +59,9 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
     }
   }
 
+  const isMyMessage = message.userId === currentUserId
+
+
   return (
     <div
       ref={containerRef}
@@ -70,7 +73,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
           <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-2 ": " -right-2"}`}>
-            <DropdownMenuMessageOptions recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
+            <DropdownMenuMessageOptions isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
         <div

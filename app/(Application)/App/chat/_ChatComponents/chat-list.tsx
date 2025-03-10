@@ -19,16 +19,19 @@ export function ChatList() {
 
 
   const render = (filterData: ApiResponse) => {
-    if (!filterData) {
+    if (!filterData && isLoading === false) {
       return <div className="">No result</div>;
+    }
+    if(isLoading){
+      return <div className="w-full flex items-center ">Fetching Conversations</div>
     }
 
     if (!filterData.conversations) {
-      return <div className="">No conversation</div>;
+      return <div className="w-full flex items-center ">No conversation</div>;
     }
 
     if (filterData.conversations.length < 1) {
-      return <div className="">There is no conversation</div>;
+      return <div className="w-full flex items-center ">There is no conversation</div>;
     }
 
     
@@ -36,8 +39,8 @@ export function ChatList() {
     if (filterData.conversations.length > 0 ) {
       return (
         <>
-          <div className="">
-            <strong className="font-bold">Conversations</strong>
+          <div className="w-full flex items-center ">
+            <strong className="font-bold ">Conversations</strong>
           </div>
           <div className="">
             {filterData.conversations.map((conversation, index) => (

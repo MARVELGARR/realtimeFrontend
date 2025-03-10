@@ -11,11 +11,15 @@ interface DropdownMenuMessageOptionsProps {
   onOpenChange?: (open: boolean) => void
   messageId: string,
   recepientId: string
+  isMyMessage: boolean
+  currentUserId: string
 }
 
-export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientId }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
+
+  
   
   // Function to handle item clicks
   const handleItemClick = (action: string) => {
@@ -64,11 +68,10 @@ export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientI
           <p className="">Star</p>
         </DropdownMenuItem>
 
-        <DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
+        {isMyMessage && (<DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
             <Trash  color="red" className={`w-4 h-4 ${isDeletingMessage ? " ": ""}`} />
             <p className="">Delete</p>
-
-        </DropdownMenuItem>
+        </DropdownMenuItem>)}
 
         <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
           <Check className="w-4 h-4" />
