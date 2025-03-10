@@ -1,79 +1,133 @@
-"use client";
+"use client"
 
-import getSearchUsers from "@/actions/api-actions/userAction/getSearchUsers";
-import { SearchBar } from "@/components/myComponents/utilityComponent/SearchBar";
-import useDebounce from "@/hooks/utilityHooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react"
+import getSearchUsers, { type UserSearchResponse } from "@/actions/api-actions/userAction/getSearchUsers"
+import { SearchBar } from "@/components/myComponents/utilityComponent/SearchBar"
+import useDebounce from "@/hooks/utilityHooks/useDebounce"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
 
-const NewChatSearch = ({ initialSearch }: { initialSearch: any }) => {
-  const [users, setUsers] = useState(initialSearch);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+interface NewChatSearchProps {
+  initialSearch: UserSearchResponse
+  onUserSelect?: (user: any) => void
+}
 
-  const debouncedValue = useDebounce(searchQuery, 500);
+const NewChatSearch = ({ initialSearch, onUserSelect }: NewChatSearchProps) => {
+  const [searchQuery, setSearchQuery] = useState("")
+  const debouncedValue = useDebounce(searchQuery, 500)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  const loadMoreUsers = async () => {
-    if (loading || !hasMore) return;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
+    queryKey: ["users", debouncedValue],
+    queryFn: ({ pageParam }) => getSearchUsers(debouncedValue, String(pageParam), "5"),
+    initialPageParam: 1,
+    initialData: {
+      pages: [initialSearch],
+      pageParams: [1],
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination.hasNextPage) {
+        return lastPage.pagination.currentPage + 1
+      }
+      return undefined
+    },
+  })
 
-    setLoading(true);
-    const nextPage = page + 1;
-
-    const {data: newUsers, isLoading: isGettingUsers} = useQuery({
-        queryKey: ["user", {debouncedValue, nextPage}],
-        queryFn: ()=> getSearchUsers(debouncedValue, nextPage.toString(), "5")
-    })
-
-    if (newUsers.length === 0) {
-      setHasMore(false);
-    } else {
-      setUsers((prev: any) => [...prev, ...newUsers]);
-      setPage(nextPage);
-    }
-    setLoading(false);
-  };
-
-  // Infinite scroll logic
-  const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
-    ) {
-      loadMoreUsers();
-    }
-  };
-
+  // Handle intersection observer for infinite scrolling
   useEffect(() => {
-    setUsers(initialSearch); // Reset when search changes
-    setPage(1);
-    setHasMore(true);
-  }, [debouncedValue]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 0.5 },
+    )
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore]);
+    const currentContainer = containerRef.current
+    if (currentContainer) {
+      observer.observe(currentContainer)
+    }
+
+    return () => {
+      if (currentContainer) {
+        observer.unobserve(currentContainer)
+      }
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  // Extract all users from all pages
+  const allUsers = data?.pages.flatMap((page) => page.users) || []
+
+  const handleUserClick = (user: any) => {
+    if (onUserSelect) {
+      onUserSelect(user)
+    }
+  }
 
   return (
-    <div>
+    <div className="space-y-2">
       <SearchBar
         placeholder="Search users..."
         value={searchQuery}
         onChange={(value: string) => setSearchQuery(value)}
       />
-      <div>
-        {users.map((user: any) => (
-          <div key={user.id} className="p-2 border-b">
-            {user.name}
-          </div>
-        ))}
-        {loading && <p>Loading more users...</p>}
-        {!hasMore && <p>No more users to load!</p>}
+
+      {isError && (
+        <div className="p-4 text-red-500">
+          Error loading users: {error instanceof Error ? error.message : "Unknown error"}
+        </div>
+      )}
+
+      <div className="max-h-60 overflow-y-auto">
+        {isLoading ? (
+          Array(3)
+            .fill(0)
+            .map((_, i) => (
+              <div key={i} className="flex items-center gap-2 p-2 border-b">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+              </div>
+            ))
+        ) : (
+          <>
+            {allUsers.length === 0 ? (
+              <div className="p-4 text-center text-gray-500">No users found</div>
+            ) : (
+              allUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center gap-2 p-2 border-b hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleUserClick(user)}
+                >
+                  <Avatar>
+                    <AvatarImage src={user.profile?.profilePicture || user.image || undefined} alt={user.name} />
+                    <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {/* Loading indicator and intersection observer target */}
+            <div ref={containerRef} className="h-4">
+              {isFetchingNextPage && (
+                <div className="py-2 text-center text-sm text-gray-500">Loading more users...</div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default NewChatSearch;
+export default NewChatSearch
+
