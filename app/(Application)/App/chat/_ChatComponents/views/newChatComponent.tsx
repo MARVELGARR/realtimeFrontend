@@ -17,6 +17,8 @@ const NewChatSearch = ({onUserSelect }: NewChatSearchProps) => {
   const debouncedValue = useDebounce(searchQuery, 500)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  const urlSearchParams = new URLSearchParams()
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
     queryKey: ["users", debouncedValue],
     queryFn: ({ pageParam }) => getSearchUsers(debouncedValue, String(pageParam), "1"),
@@ -55,11 +57,11 @@ const NewChatSearch = ({onUserSelect }: NewChatSearchProps) => {
   // Extract all users from all pages
   const allUsers = data?.pages.flatMap((page) => page.users) || []
 
-  const handleUserClick = (user: any) => {
-    if (onUserSelect) {
-      onUserSelect(user)
+    const handleUserClick = (user: any) => {
+        const params = new URLSearchParams(window.location.search);
+        params.set("recepientId", user.id!);
+        window.history.replaceState({}, "", `?${params.toString()}`);
     }
-  }
 
   return (
     <div className="space-y-2">
