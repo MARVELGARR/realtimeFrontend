@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchBar } from "@/components/myComponents/utilityComponent/SearchBar";
-import { ApiResponse, useSearchQuery } from "@/actions/api-actions/userAction/getSearch";
+import {  ConversationResponse, useSearchQuery } from "@/actions/api-actions/userAction/getSearch";
 import ChatPageHeader from "./chatPageHeader";
 import useDebounce from "@/hooks/utilityHooks/useDebounce";
 import ConversatonListItem from "@/components/myComponents/conversations/conversationListItem";
 import { Loader2 } from "lucide-react";
 import ZustanFilterStore from "@/store/useSearchFilter";
+import GroupListItem from "@/components/myComponents/conversations/groupListItems";
 
 export function ChatList() {
   const [searchWord, setSearchWord] = useState("");
@@ -18,7 +19,7 @@ export function ChatList() {
 
 
 
-  const render = (filterData: ApiResponse) => {
+  const render = (filterData: ConversationResponse) => {
     if (!filterData && isLoading === false) {
       return <div className="">No result</div>;
     }
@@ -26,30 +27,41 @@ export function ChatList() {
       return <div className="w-full flex items-center ">Fetching Conversations</div>
     }
 
-    if (!filterData.conversations) {
-      return <div className="w-full flex items-center ">No conversation</div>;
-    }
-
-    if (filterData.conversations.length < 1) {
+    if (filterData.directConversations.length < 1) {
       return <div className="w-full flex items-center ">There is no conversation</div>;
     }
 
-    
+
     
 
-    if (filterData.conversations.length > 0 ) {
+    if (filterData.directConversations.length > 0 ) {
       return (
         <>
           <div className="w-full flex items-center ">
             <strong className="font-bold ">Conversations</strong>
           </div>
           <div className="">
-            {filterData.conversations.map((conversation, index) => (
-              <ConversatonListItem key={index} conversation={conversation} />
+            {filterData.directConversations.map((convo) => (
+              <ConversatonListItem key={convo.id} conversation={convo} />
             ))}
           </div>
         </>
       );
+    }
+
+    if(filterState.id === "groups"){
+      <>
+          <div className="w-full flex items-center ">
+            <strong className="font-bold ">Groups</strong>
+          </div>
+          <div className="">
+            {filterData.groupConversations.map((convo) => {
+              return (
+                <GroupListItem key={convo?.id} conversation={convo}/>
+              )
+            })}
+          </div>
+        </>
     }
   };
 
