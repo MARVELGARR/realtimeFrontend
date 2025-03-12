@@ -1,6 +1,7 @@
 
 import { ConversationResponse } from "@/actions/api-actions/userAction/getSearch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUrlState } from "@/hooks/utilityHooks/use-url-state";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/providers/sessionProvider";
 import { useSearchParams } from "next/navigation";
@@ -24,18 +25,15 @@ const ConversatonListItem = ({conversation, className}:ConversatonListItemProps)
         <div className="">fetching..</div>
     }
     const recepientData = conversation.participants.find((recepient)=>recepient.userId !== currentUserId)?.user 
-    const initialRecepientId = recepientData?.id
+    const newRecepientId = conversation.participants.find((recepient)=>recepient.userId !== currentUserId)?.user.id
+    const initialRecepientId = searchParams.get("recepientId")
+
+    const [recepientId, setRecepientId] = useUrlState("recepientId", initialRecepientId)
 
 
-    const handleClick = () => {
-        const params = new URLSearchParams(window.location.search);
-        params.set("recepientId", initialRecepientId!);
-        window.history.replaceState({}, "", `?${params.toString()}`);
-    }
-    const recepientId = searchParams.get("recepientId")
 
     return (
-        <div className={cn(`cursor-pointer ${recepientId === initialRecepientId ? "border-2 border-black rounded" : ""} `, className)} onClick={handleClick}>
+        <div className={cn(`cursor-pointer ${recepientId === initialRecepientId ? "border-2 border-black rounded" : ""} `, className)} onClick={()=>setRecepientId(newRecepientId as string)}>
             
             <div className="w-full flex place-items-start gap-3">
                 <Avatar className="w-[2.7rem] h-[2.7rem]">
