@@ -20,9 +20,10 @@ interface MessageProps {
   currentUserId: string
   recepientId: string
   message: MessageType
+  currentProfileId: string
 }
 
-const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }) => {
+const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUserId, recepientId }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -60,6 +61,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
   }
 
   const isMyMessage = message.userId === currentUserId
+  const messageContent = message.content
 
 
   return (
@@ -73,7 +75,7 @@ const Message: React.FC<MessageProps> = ({ message, currentUserId, recepientId }
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
           <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-2 ": " -right-2"}`}>
-            <DropdownMenuMessageOptions isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
+            <DropdownMenuMessageOptions currentProfileId={currentProfileId} messageContent={messageContent} isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
         <div

@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import useDeleteHook from "@/hooks/messageHooks/useDeleteHooks"
+import useStarHook from "@/hooks/messageHooks/useStarHook"
+import useUnStarMssage from "@/hooks/messageHooks/useUnStarHooks"
 import { toast } from "@/hooks/use-toast"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
 import Link from "next/link"
@@ -12,13 +14,45 @@ interface DropdownMenuMessageOptionsProps {
   messageId: string,
   recepientId: string
   isMyMessage: boolean
+  messageContent: string
+  currentProfileId: string
 }
 
-export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
+/**
+ * DropdownMenuMessageOptions component provides a dropdown menu with various options for a chat message.
+ * 
+ * @param {Object} props - The properties object.
+ * @param {function} props.onOpenChange - Callback function to handle the change in dropdown open state.
+ * @param {string} props.currentProfileId - The ID of the current user's profile.
+ * @param {string} props.messageContent - The content of the message.
+ * @param {string} props.messageId - The ID of the message.
+ * @param {string} props.recepientId - The ID of the message recipient.
+ * @param {boolean} props.isMyMessage - Flag indicating if the message is sent by the current user.
+ * 
+ * @returns {JSX.Element} The rendered DropdownMenuMessageOptions component.
+ */
+export function DropdownMenuMessageOptions({ onOpenChange, currentProfileId, messageContent, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
+  const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
+  const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(recepientId as string)
 
-  
+  const staringData = {messageId, currentProfileId}
+
+
+  const copyText = () =>{
+    navigator.clipboard.writeText(messageContent).then(() => {
+      toast({
+      title: "Text copied to clipboard",
+      variant: "success"
+      });
+    }).catch(() => {
+      toast({
+      title: "Failed to copy text",
+      variant: "destructive"
+      });
+    });
+  }
   
   // Function to handle item clicks
   const handleItemClick = (action: string) => {
@@ -37,7 +71,22 @@ export function DropdownMenuMessageOptions({ onOpenChange, messageId, recepientI
           })
         })
         break;
-      
+      case "copy":
+        copyText()
+        break
+      case "star":
+        staringMessage(staringData).then((data)=>{
+          toast({
+            title: "message liked",
+            variant: "success"
+          })
+        }).catch(()=>{
+          toast({
+            title: "message failed to like",
+            variant: "destructive"
+          })
+        })
+
       default:
         break;
     }

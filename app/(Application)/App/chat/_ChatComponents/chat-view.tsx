@@ -33,6 +33,7 @@ export function ChatView() {
   const recepientName = data?.participants.find((user)=>user.user.id !== currentUser?.id)?.user.name
   const recepientProfilePic = data?.participants.find((user)=>user.user.id !== currentUser?.id)?.user.image
   const currentUserId = currentUser?.id
+  const profileId = currentUser?.profile.id
 
   if ( isLoading ||isGettingCurentUser) {
     return <div>Loading...</div>
@@ -56,7 +57,7 @@ export function ChatView() {
       <ScrollArea className="flex-1 p-4 w-full">
         {data?.messages?.length ? (
           data.messages.map((message) => (
-            <Message key={message.id} message={message} recepientId={recepientId as string} currentUserId={currentUserId as string}/>
+            <Message key={message.id} message={message} recepientId={recepientId as string} currentProfileId={profileId as string} currentUserId={currentUserId as string}/>
           ))
         ) : (
           <div className="w-full h-full">No messages yet start! new chat</div>
