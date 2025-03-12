@@ -45,7 +45,7 @@ const ConversatonListItem = ({conversation, className}:ConversatonListItemProps)
                 <div className="flex flex-col justify-start -space-y-1">
                     <h3 className="font-bold">{recepientData?.name}</h3>
                     <p className="font-thin text-sm">
-                     {conversation.messages[1].content}
+                     {conversation.messages[1]?.content || ""}
                     </p>
                 </div>
             </div>
