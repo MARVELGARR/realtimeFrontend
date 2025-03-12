@@ -113,7 +113,7 @@ export function ChatList() {
                 ))}
               </div>
             </>
-          ) : filterState.id === "non-contact" ? (
+          ) : filterState.id === "contact" ? (
             <>
               <div className="w-full flex justify-center items-center">
                 <strong className="font-bold">Friends</strong>
