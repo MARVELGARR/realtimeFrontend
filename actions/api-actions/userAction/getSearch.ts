@@ -128,12 +128,12 @@ const fetchSearchResults = async (searchTerm: string, page = 1, limit = 10): Pro
 
 export const useSearchQuery = (searchTerm: string, page:number, limit: number, filter: zustandFilterProps ) => {
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, isError } = useQuery({
       queryKey: ["search", searchTerm, page, limit],
       queryFn: () => fetchSearchResults(searchTerm, page, limit),
       select: (data) => data,
     });    
 
-    return { data, isLoading };
+    return { data, isLoading, isError };
 
   };
