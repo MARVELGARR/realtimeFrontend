@@ -10,6 +10,8 @@ import ConversatonListItem from "@/components/myComponents/conversations/convers
 import { Loader2 } from "lucide-react";
 import ZustanFilterStore from "@/store/useSearchFilter";
 import GroupListItem from "@/components/myComponents/conversations/groupListItems";
+import FriendListConvo from "@/components/myComponents/conversations/friendListConvo";
+import FavouriteListConvo from "@/components/myComponents/conversations/favouriteListConvo";
 
 export function ChatList() {
   const [searchWord, setSearchWord] = useState("");
@@ -50,6 +52,25 @@ export function ChatList() {
               <GroupListItem key={convo?.id} conversation={convo} />
             ))}
           </div>
+
+          <div className="w-full flex items-center">
+            <strong className="font-bold">Friends</strong>
+          </div>
+          <div>
+            {filterData.friendConvo.map((convo) => (
+              <FriendListConvo className="" conversation={convo}/>
+            ))}
+          </div>
+
+          <div className="w-full flex items-center">
+            <strong className="font-bold">Friends</strong>
+          </div>
+          <div>
+            {filterData.favouriteConvo.map((convo) => (
+              <FavouriteListConvo className="" conversation={convo}/>
+            ))}
+          </div>
+          
             </>) : filterState.id == "groups" ? (
           <>
           <div className="w-full flex items-center">
@@ -58,6 +79,24 @@ export function ChatList() {
           <div>
             {filterData.groupConversations.map((convo) => (
               <GroupListItem key={convo?.id} conversation={convo} />
+            ))}
+          </div>
+        </>): filterState.id === "non-contact" ? (<>
+          <div className="w-full flex items-center">
+            <strong className="font-bold">Friends</strong>
+          </div>
+          <div>
+            {filterData.friendConvo.map((convo) => (
+              <FriendListConvo className="" conversation={convo}/>
+            ))}
+          </div>
+        </>) : filterState.id === "favourites" ? (<>
+          <div className="w-full flex items-center">
+            <strong className="font-bold">Friends</strong>
+          </div>
+          <div>
+            {filterData.favouriteConvo.map((convo) => (
+              <FavouriteListConvo className="" conversation={convo}/>
             ))}
           </div>
         </>): (<></>)}

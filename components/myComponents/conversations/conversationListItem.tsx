@@ -23,7 +23,7 @@ const ConversatonListItem = ({conversation, className}:ConversatonListItemProps)
     if(isGettingCurentUser){
         <div className="">fetching..</div>
     }
-    const recepientData =conversation.participants.find((recepient)=>recepient.userId !== currentUserId)?.user 
+    const recepientData = conversation.participants.find((recepient)=>recepient.userId !== currentUserId)?.user 
     const initialRecepientId = recepientData?.id
 
 
