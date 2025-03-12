@@ -33,7 +33,8 @@ export function ChatList() {
     if (filterData.directConversations.length > 0) {
       return (
         <>
-          <div className="w-full flex items-center">
+          {filterState.id === "all" ? (<>
+            <div className="w-full flex items-center">
             <strong className="font-bold">Conversations</strong>
           </div>
           <div>
@@ -41,13 +42,16 @@ export function ChatList() {
               <ConversatonListItem key={convo.id} conversation={convo} />
             ))}
           </div>
-        </>
-      );
-    }
-
-    if (filterState.id === "groups") {
-      return (
-        <>
+          <div className="w-full flex items-center">
+            <strong className="font-bold">Groups</strong>
+          </div>
+          <div>
+            {filterData?.groupConversations.map((convo) => (
+              <GroupListItem key={convo?.id} conversation={convo} />
+            ))}
+          </div>
+            </>) : filterState.id == "groups" ? (
+          <>
           <div className="w-full flex items-center">
             <strong className="font-bold">Groups</strong>
           </div>
@@ -56,9 +60,11 @@ export function ChatList() {
               <GroupListItem key={convo?.id} conversation={convo} />
             ))}
           </div>
+        </>): (<></>)}
         </>
       );
     }
+
 
     return null;
   };
