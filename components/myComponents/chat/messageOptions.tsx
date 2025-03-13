@@ -7,8 +7,10 @@ import useDeleteHook from "@/hooks/messageHooks/useDeleteHooks"
 import useStarHook from "@/hooks/messageHooks/useStarHook"
 import useUnStarMssage from "@/hooks/messageHooks/useUnStarHooks"
 import { toast } from "@/hooks/use-toast"
+import { useSelection } from "@/store/useMessageSelection"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 interface DropdownMenuMessageOptionsProps {
   onOpenChange?: (open: boolean) => void
@@ -33,6 +35,9 @@ interface DropdownMenuMessageOptionsProps {
  * 
  * @returns {JSX.Element} The rendered DropdownMenuMessageOptions component.
  */
+
+
+
 export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  currentProfileId, messageContent, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
@@ -40,6 +45,8 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
   const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(recepientId as string)
 
   const staringData = {messageId, currentProfileId}
+
+  const {setSelections} = useSelection()
 
 
   const copyText = () =>{
@@ -102,6 +109,8 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
           })
         })
         break
+        case "select":
+          setSelections(messageId)
       default:
         break;
     }
@@ -126,10 +135,10 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
           <p className="">Edit</p>
         </DropdownMenuItem>
 
-       {isMessageLiked ? (<DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
+       {isMessageLiked ? (<DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("unStar")}>
           <Star fill="orange" className={`w-4 h-4`} />
-          <p className="">Star</p>
-        </DropdownMenuItem>): (<DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("unStar")}>
+          <p className="">Unstar</p>
+        </DropdownMenuItem>): (<DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
           <Star fill="white" className={`w-4 h-4`} />
           <p className="">Star</p>
         </DropdownMenuItem>) }

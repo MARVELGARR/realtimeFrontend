@@ -9,6 +9,8 @@ import { useSearchParams } from "next/navigation"
 import { useSession } from "@/providers/sessionProvider"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Message from "@/components/myComponents/chat/message"
+import { Trash2Icon } from "lucide-react"
+import { useSelection } from "@/store/useMessageSelection"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -35,6 +37,8 @@ export function ChatView() {
   const currentUserId = currentUser?.id
   const profileId = currentUser?.profile.id
 
+  const {selections} = useSelection()
+
   if ( isLoading ||isGettingCurentUser) {
     return <div>Loading...</div>
   }
@@ -53,6 +57,9 @@ export function ChatView() {
           <AvatarFallback>{`g${recepientName ? recepientName[0] + recepientName[-1] : ''} f`}</AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-semibold">{recepientName}</h2>
+        {selections && selections?.length &&(<div className="">
+          <Trash2Icon className=""/>
+        </div>)}
       </div>
       <ScrollArea className="flex-1 p-4 w-full">
         {data?.messages?.length ? (
