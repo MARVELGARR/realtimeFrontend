@@ -11,6 +11,15 @@ export interface User {
     updatedAt: string;
 }
 
+export interface StarredMessage {
+    
+    id: string,
+    profileId: string,
+    messageId: string,
+    createdAt: string,
+    updatedAt: string
+}
+
 export interface Message {
     id: string;
     content: string;
@@ -19,6 +28,8 @@ export interface Message {
     userId: string;
     conversationId: string;
     user: User;
+    StarredMessage:StarredMessage
+
 }
 
 export interface recepientProfile{
