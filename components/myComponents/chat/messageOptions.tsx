@@ -1,5 +1,6 @@
 "use client"
 
+import unStarMessage from "@/actions/api-actions/messageActions/unStarMessage"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import useDeleteHook from "@/hooks/messageHooks/useDeleteHooks"
@@ -16,6 +17,7 @@ interface DropdownMenuMessageOptionsProps {
   isMyMessage: boolean
   messageContent: string
   currentProfileId: string
+  isMessageLiked: boolean
 }
 
 /**
@@ -31,7 +33,7 @@ interface DropdownMenuMessageOptionsProps {
  * 
  * @returns {JSX.Element} The rendered DropdownMenuMessageOptions component.
  */
-export function DropdownMenuMessageOptions({ onOpenChange, currentProfileId, messageContent, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  currentProfileId, messageContent, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
   const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
@@ -86,7 +88,20 @@ export function DropdownMenuMessageOptions({ onOpenChange, currentProfileId, mes
             variant: "destructive"
           })
         })
-
+        break
+      case "unStar":
+        unStarMessage(staringData).then((data)=>{
+          toast({
+            title: "message Unliked",
+            variant: "success"
+          })
+        }).catch(()=>{
+          toast({
+            title: "message failed to unlike",
+            variant: "destructive"
+          })
+        })
+        break
       default:
         break;
     }
@@ -111,10 +126,13 @@ export function DropdownMenuMessageOptions({ onOpenChange, currentProfileId, mes
           <p className="">Edit</p>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
-          <Star className="w-4 h-4" />
+       {isMessageLiked ? (<DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
+          <Star color="orange" className={`w-4 h-4`} />
           <p className="">Star</p>
-        </DropdownMenuItem>
+        </DropdownMenuItem>): (<DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("unStar")}>
+          <Star color="white" className={`w-4 h-4`} />
+          <p className="">Star</p>
+        </DropdownMenuItem>) }
 
         {isMyMessage && (<DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
             <Trash  color="red" className={`w-4 h-4 ${isDeletingMessage ? " ": ""}`} />

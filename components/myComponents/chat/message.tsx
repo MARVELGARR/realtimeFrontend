@@ -2,19 +2,11 @@
 
 import type React from "react"
 
-import type { User } from "@/actions/api-actions/messageActions/getConversation"
+import type { Message as ImportedMessageType, User } from "@/actions/api-actions/messageActions/getConversation"
 import { useRef, useState } from "react"
 import { DropdownMenuMessageOptions } from "./messageOptions"
 
-export interface MessageType {
-  id: string
-  content: string
-  createdAt: string
-  updatedAt: string
-  userId: string
-  conversationId: string
-  user: User
-}
+export type MessageType = ImportedMessageType
 
 interface MessageProps {
   currentUserId: string
@@ -63,6 +55,8 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
   const isMyMessage = message.userId === currentUserId
   const messageContent = message.content
 
+   const isMessageLiked = !message.StarredMessage ? false : (message.StarredMessage.profileId === currentProfileId)
+
 
   return (
     <div
@@ -74,8 +68,8 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
 
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
-          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-2 ": " -right-2"}`}>
-            <DropdownMenuMessageOptions currentProfileId={currentProfileId} messageContent={messageContent} isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
+          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-5 ": " -right-5"}`}>
+            <DropdownMenuMessageOptions isMessageLiked={isMessageLiked} currentProfileId={currentProfileId} messageContent={messageContent} isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
         <div
@@ -92,4 +86,3 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
 }
 
 export default Message
-
