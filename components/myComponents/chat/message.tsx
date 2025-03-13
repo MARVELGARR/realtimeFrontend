@@ -3,7 +3,7 @@
 import type React from "react"
 
 import type { Message as ImportedMessageType, User } from "@/actions/api-actions/messageActions/getConversation"
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { DropdownMenuMessageOptions } from "./messageOptions"
 
 export type MessageType = ImportedMessageType
@@ -55,7 +55,9 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
   const isMyMessage = message.userId === currentUserId
   const messageContent = message.content
 
-   const isMessageLiked = !message.StarredMessage ? false : (message.StarredMessage.profileId === currentProfileId)
+  const isMessageLiked = useMemo(() => {
+    return !message.StarredMessage ? false : message.StarredMessage.profileId === currentProfileId
+  }, [message.StarredMessage, currentProfileId])
 
 
   return (
@@ -68,7 +70,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
 
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
-          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-5 ": " -right-5"}`}>
+          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-5 ": " right-5"}`}>
             <DropdownMenuMessageOptions isMessageLiked={isMessageLiked} currentProfileId={currentProfileId} messageContent={messageContent} isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
           </div>
         )}

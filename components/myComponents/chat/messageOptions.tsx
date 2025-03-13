@@ -90,7 +90,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
         })
         break
       case "unStar":
-        unStarMessage(staringData).then((data)=>{
+        unStaringMessage(staringData).then((data)=>{
           toast({
             title: "message Unliked",
             variant: "success"
@@ -127,10 +127,10 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
         </DropdownMenuItem>
 
        {isMessageLiked ? (<DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
-          <Star color="orange" className={`w-4 h-4`} />
+          <Star fill="orange" className={`w-4 h-4`} />
           <p className="">Star</p>
         </DropdownMenuItem>): (<DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("unStar")}>
-          <Star color="white" className={`w-4 h-4`} />
+          <Star fill="white" className={`w-4 h-4`} />
           <p className="">Star</p>
         </DropdownMenuItem>) }
 
