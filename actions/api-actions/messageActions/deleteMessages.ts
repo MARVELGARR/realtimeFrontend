@@ -6,7 +6,7 @@ const deleteMessages = async (messageIds: string[]) => {
             headers: {
                 'Content-type': "application/json"
             },
-            body: JSON.stringify(messageIds),
+            body: JSON.stringify({messageIds}),
             credentials: "include"
         })
         if(res.ok){
