@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Message from "@/components/myComponents/chat/message"
 import { Trash2Icon } from "lucide-react"
 import { useSelection } from "@/store/useMessageSelection"
+import useDeleteMessages from "@/hooks/messageHooks/useDeleteMessages"
+import { toast } from "@/hooks/use-toast"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -38,6 +40,7 @@ export function ChatView() {
   const profileId = currentUser?.profile.id
 
   const {selections} = useSelection()
+  const {DeleteMessages, isDeletingMessages} = useDeleteMessages(recepientId as string)
 
   if ( isLoading ||isGettingCurentUser) {
     return <div>Loading...</div>
@@ -48,17 +51,34 @@ export function ChatView() {
     )
   }
 
+  const handleDeleteSelectedMessages = async () =>{
+    DeleteMessages(selections!).then(()=>{
+      toast({
+        title: "messages deleted",
+        variant: "success"
+      })
+    }).catch((error)=>{
+      toast({
+        title: "messages deleted",
+        variant: "destructive"
+      })
+    })
+  }
+
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="p-4 border-b border-gray-200 flex gap-[3rem] item-center">
-        <Avatar>
-          <AvatarImage src={recepientProfilePic!} className=''/>
-          <AvatarFallback>{`g${recepientName ? recepientName[0] + recepientName[-1] : ''} f`}</AvatarFallback>
-        </Avatar>
-        <h2 className="text-xl font-semibold">{recepientName}</h2>
+      <div className="p-4 border-b border-gray-200 flex justify-between item-center">
+        <div className="p-4 border-b border-gray-200 flex gap-[3rem] item-center">
+
+          <Avatar>
+            <AvatarImage src={recepientProfilePic!} className=''/>
+            <AvatarFallback>{`g${recepientName ? recepientName[0] + recepientName[-1] : ''} f`}</AvatarFallback>
+          </Avatar>
+          <h2 className="text-xl font-semibold">{recepientName}</h2>
+        </div>
         {selections && selections?.length &&(<div className="">
-          <Trash2Icon className=""/>
+          <Trash2Icon onClick={handleDeleteSelectedMessages} className=" bg-red-500"/>
         </div>)}
       </div>
       <ScrollArea className="flex-1 p-4 w-full">
