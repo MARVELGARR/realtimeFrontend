@@ -65,7 +65,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
   return (
     <div
       ref={containerRef}
-      className={cn(className,`mb-4 w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`)}
+      className={cn(className,` w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -73,7 +73,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
           <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-5 ": " right-5"}`}>
-            <DropdownMenuMessageOptions isMessageLiked={isMessageLiked} currentProfileId={currentProfileId} messageContent={messageContent} isMyMessage={isMyMessage} recepientId={recepientId}  messageId={message.id as string} onOpenChange={handleDropdownOpenChange} />
+            <DropdownMenuMessageOptions messages={message} isMessageLiked={isMessageLiked} currentProfileId={currentProfileId}  isMyMessage={isMyMessage} recepientId={recepientId}   onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
         <div

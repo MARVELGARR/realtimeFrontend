@@ -20,7 +20,7 @@ export function DeleteMessagesDemo({handleDeleteSelectedMessages, className}:Del
 
     return (
       <AlertDialog>
-        <AlertDialogTrigger asChild>
+        <AlertDialogTrigger className=" cursor-pointer" asChild>
             <Trash2Icon className=" text-red-500"/>
         </AlertDialogTrigger>
         <AlertDialogContent>

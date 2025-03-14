@@ -11,15 +11,23 @@ import { useSelection } from "@/store/useMessageSelection"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { PopoverDemo } from "../utilityComponent/messageInfo"
+import { Message } from "@/actions/api-actions/messageActions/getConversation"
+
+
+
+export type MessageType = Message
+
 
 interface DropdownMenuMessageOptionsProps {
   onOpenChange?: (open: boolean) => void
-  messageId: string,
+  // messageId: string,
   recepientId: string
   isMyMessage: boolean
-  messageContent: string
+  // messageContent: string
   currentProfileId: string
   isMessageLiked: boolean
+  messages: MessageType 
 }
 
 /**
@@ -38,15 +46,18 @@ interface DropdownMenuMessageOptionsProps {
 
 
 
-export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  currentProfileId, messageContent, messageId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLiked,  currentProfileId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
   const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
   const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(recepientId as string)
+  
+    const messageContent = messages.content
+    const messageId = messages.id
 
   const staringData = {messageId, currentProfileId}
 
-  const {setSelections} = useSelection()
+  const {setSelections, selections} = useSelection()
 
 
   const copyText = () =>{
@@ -149,14 +160,11 @@ export function DropdownMenuMessageOptions({ onOpenChange, isMessageLiked,  curr
         </DropdownMenuItem>)}
 
         <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
-          <Check className="w-4 h-4" />
+          <Check className={`w-4 h-4 ${selections?.includes(messageId)? " text-green-400 ": "" }`} />
           <p className="">Select</p>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("info")}>
-          <Info className="w-4 h-4" />
-          <p className="">Info</p>
-        </DropdownMenuItem>
+        <PopoverDemo messages={messages}  />
       </DropdownMenuContent>
     </DropdownMenu>
   )
