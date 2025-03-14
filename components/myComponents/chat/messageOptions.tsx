@@ -57,7 +57,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
 
   const staringData = {messageId, currentProfileId}
 
-  const {setSelections, selections} = useSelection()
+  const {setSelections, selections, removeSelections} = useSelection()
 
 
   const copyText = () =>{
@@ -122,6 +122,10 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
         break
         case "select":
           setSelections(messageId)
+          break
+        case "un-select":
+          removeSelections(messageId)
+          break
       default:
         break;
     }
@@ -131,7 +135,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
   return (
     <DropdownMenu onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <Button className="p-3" variant="outline">
+        <Button className="p-3 " variant="outline">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -159,12 +163,20 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
             <p className="">Delete</p>
         </DropdownMenuItem>)}
 
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
-          <Check className={`w-4 h-4 ${selections?.includes(messageId)? " text-green-400 ": "" }`} />
+        {selections?.includes(messageId) ? (<DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
+          <Check className={`w-4 h-4  " text-green-400 `} />
           <p className="">Select</p>
+        </DropdownMenuItem>): (
+          <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("un-select")}>
+          <Check className={`w-4 h-4 }`} />
+          <p className="">un-select</p>
         </DropdownMenuItem>
-
-        <PopoverDemo messages={messages}  />
+        )}
+        
+        <DropdownMenuItem asChild className="flex items-center gap-4" >
+          <PopoverDemo messages={messages}  />
+        </DropdownMenuItem>
+       
       </DropdownMenuContent>
     </DropdownMenu>
   )

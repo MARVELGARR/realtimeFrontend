@@ -1,4 +1,5 @@
 import { Message } from "@/actions/api-actions/messageActions/getConversation"
+import { Button } from "@/components/ui/button"
 
 import {
   Popover,
@@ -17,10 +18,10 @@ export function PopoverDemo({className, messages}:PopoverDemoProp) {
   return (
     <Popover >
       <PopoverTrigger asChild>
-        <div className="flex items-center gap-4">
+        <Button className="flex items-center gap-4">
           <Info className="w-4 h-4" />
           <p className="">Info</p>
-        </div>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className={cn(className,`w-80`)}>
   

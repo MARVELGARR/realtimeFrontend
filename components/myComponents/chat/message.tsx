@@ -6,6 +6,8 @@ import type { Message as ImportedMessageType, User } from "@/actions/api-actions
 import { useMemo, useRef, useState } from "react"
 import { DropdownMenuMessageOptions } from "./messageOptions"
 import { cn } from "@/lib/utils"
+import { useSelection } from "@/store/useMessageSelection"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type MessageType = ImportedMessageType
 
@@ -22,6 +24,8 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const {selections, removeSelections, setSelections} = useSelection()
 
   const handleMouseEnter = () => {
     timeoutRef.current = setTimeout(() => {
@@ -65,14 +69,20 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
   return (
     <div
       ref={containerRef}
-      className={cn(className,` w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`)}
+      className={cn(className,` px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"}  flex items-center gap-2 w-full  relative`)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
 
+    <Checkbox className={` absolute ${message.userId === currentUserId ? "-right-4" : "-left-4"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
+      checked ? removeSelections(message.id) : setSelections(message.id)
+    }} />
+
+
+
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
-          <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "left-5 ": " right-5"}`}>
+          <div className={`absolute   top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-9 ": " -right-9"}`}>
             <DropdownMenuMessageOptions messages={message} isMessageLiked={isMessageLiked} currentProfileId={currentProfileId}  isMyMessage={isMyMessage} recepientId={recepientId}   onOpenChange={handleDropdownOpenChange} />
           </div>
         )}
