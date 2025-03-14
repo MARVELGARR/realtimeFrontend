@@ -74,9 +74,9 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
       onMouseLeave={handleMouseLeave}
     >
 
-    <Checkbox className={` absolute ${message.userId === currentUserId ? "-right-4" : "-left-4"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
+    {(selections?.length ?? 0) > 1 ?(<Checkbox className={` absolute ${message.userId === currentUserId ? "-right-4" : "-left-4"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
       checked ? removeSelections(message.id) : setSelections(message.id)
-    }} />
+    }} />): (<></>)}
 
 
 
