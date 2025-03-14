@@ -13,6 +13,7 @@ import { Trash2Icon } from "lucide-react"
 import { useSelection } from "@/store/useMessageSelection"
 import useDeleteMessages from "@/hooks/messageHooks/useDeleteMessages"
 import { toast } from "@/hooks/use-toast"
+import { DeleteMessagesDemo } from "@/components/myComponents/utilityComponent/deleteMessagesDialog"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -39,7 +40,7 @@ export function ChatView() {
   const currentUserId = currentUser?.id
   const profileId = currentUser?.profile.id
 
-  const {selections} = useSelection()
+  const {selections, setSelections} = useSelection()
   const {DeleteMessages, isDeletingMessages} = useDeleteMessages(recepientId as string)
 
   if ( isLoading ||isGettingCurentUser) {
@@ -57,6 +58,7 @@ export function ChatView() {
         title: "messages deleted",
         variant: "success"
       })
+      setSelections("")
     }).catch((error)=>{
       toast({
         title: "messages deleted",
@@ -77,14 +79,14 @@ export function ChatView() {
           </Avatar>
           <h2 className="text-xl font-semibold">{recepientName}</h2>
         </div>
-        {selections && selections?.length &&(<div className="">
-          <Trash2Icon onClick={handleDeleteSelectedMessages} className=" text-red-500"/>
-        </div>)}
+        {selections && selections?.length > 0 &&(
+          <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
+        )}
       </div>
       <ScrollArea className="flex-1 p-4 w-full">
         {data?.messages?.length ? (
           data.messages.map((message) => (
-            <Message key={message.id} message={message} recepientId={recepientId as string} currentProfileId={profileId as string} currentUserId={currentUserId as string}/>
+            <Message className={selections?.includes(message.id) ? " bg-green-200/[20%] " : ""} key={message.id} message={message} recepientId={recepientId as string} currentProfileId={profileId as string} currentUserId={currentUserId as string}/>
           ))
         ) : (
           <div className="w-full h-full">No messages yet start! new chat</div>

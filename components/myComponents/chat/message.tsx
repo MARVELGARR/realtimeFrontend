@@ -5,6 +5,7 @@ import type React from "react"
 import type { Message as ImportedMessageType, User } from "@/actions/api-actions/messageActions/getConversation"
 import { useMemo, useRef, useState } from "react"
 import { DropdownMenuMessageOptions } from "./messageOptions"
+import { cn } from "@/lib/utils"
 
 export type MessageType = ImportedMessageType
 
@@ -13,9 +14,10 @@ interface MessageProps {
   recepientId: string
   message: MessageType
   currentProfileId: string
+  className?: string
 }
 
-const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUserId, recepientId }) => {
+const Message: React.FC<MessageProps> = ({ message, currentProfileId, className, currentUserId, recepientId }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -63,7 +65,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, currentUse
   return (
     <div
       ref={containerRef}
-      className={`mb-4 w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`}
+      className={cn(className,`mb-4 w-full px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"} flex items-center gap-2 w-full  relative`)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
