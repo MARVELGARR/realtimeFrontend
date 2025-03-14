@@ -78,7 +78,7 @@ export function ChatView() {
           <h2 className="text-xl font-semibold">{recepientName}</h2>
         </div>
         {selections && selections?.length &&(<div className="">
-          <Trash2Icon onClick={handleDeleteSelectedMessages} className=" bg-red-500"/>
+          <Trash2Icon onClick={handleDeleteSelectedMessages} className=" text-red-500"/>
         </div>)}
       </div>
       <ScrollArea className="flex-1 p-4 w-full">
