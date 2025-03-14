@@ -74,7 +74,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
       onMouseLeave={handleMouseLeave}
     >
 
-    {(selections?.length ?? 0) > 1 ?(<Checkbox className={` absolute ${message.userId === currentUserId ? "-right-4" : "-left-4"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
+    {(selections?.length ?? 0) > 1 ?(<Checkbox className={` absolute ${message.userId === currentUserId ? "-right-9" : "-left-9"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
       checked ? removeSelections(message.id) : setSelections(message.id)
     }} />): (<></>)}
 
@@ -82,7 +82,7 @@ const Message: React.FC<MessageProps> = ({ message, currentProfileId, className,
 
       <div key={message.id} className={`w-fit relative`}>
         {isHovered && (
-          <div className={`absolute   top-1/2 transform -translate-y-1/2 ${message.userId === currentUserId ? "-left-9 ": " -right-9"}`}>
+          <div className={`absolute    ${message.userId === currentUserId ? " -left-12 ": " -right-12"}`}>
             <DropdownMenuMessageOptions messages={message} isMessageLiked={isMessageLiked} currentProfileId={currentProfileId}  isMyMessage={isMyMessage} recepientId={recepientId}   onOpenChange={handleDropdownOpenChange} />
           </div>
         )}

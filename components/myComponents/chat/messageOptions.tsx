@@ -135,7 +135,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
   return (
     <DropdownMenu onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <Button className="p-3 " variant="outline">
+        <Button className="px-2 py-1 " variant="outline">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -163,10 +163,10 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
             <p className="">Delete</p>
         </DropdownMenuItem>)}
 
-        {selections?.includes(messageId) ? (<DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
-          <Check className={`w-4 h-4  " text-green-400 `} />
+        {!selections?.includes(messageId) ? (<DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
+          <Check className={`w-4 h-4 text-green-400 `} />
           <p className="">Select</p>
-        </DropdownMenuItem>): (
+        </DropdownMenuItem>) : (
           <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("un-select")}>
           <Check className={`w-4 h-4 }`} />
           <p className="">un-select</p>
