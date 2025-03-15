@@ -78,7 +78,7 @@ export function ChatView() {
           <p className=''> Selected: {selections.length}</p>
           </div></>):(<div className="p-4  border-gray-200 flex gap-[3rem] item-center">
 
-            <ProfilePicDropdown className=" cursor-pointer" recepientName={recepientName!} recepientProfilePic={recepientProfilePic!}/>
+            <ProfilePicDropdown recepientId={recepientId} className=" cursor-pointer" recepientName={recepientName!} recepientProfilePic={recepientProfilePic!}/>
 
           <h2 className="text-xl font-semibold">{recepientName}</h2>
         </div>)}
