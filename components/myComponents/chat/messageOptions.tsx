@@ -46,7 +46,7 @@ interface DropdownMenuMessageOptionsProps {
 
 
 
-export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLiked,  currentProfileId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentProfileId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
   const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
   const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
@@ -58,6 +58,8 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
   const staringData = {messageId, currentProfileId}
 
   const {setSelections, selections, removeSelections} = useSelection()
+
+  const isMessageLiked = messages.StarredMessage.messageId?.includes(messages.id)
 
 
   const copyText = () =>{
@@ -107,7 +109,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
           })
         })
         break
-      case "unStar":
+      case "un-Star":
         unStaringMessage(staringData).then((data)=>{
           toast({
             title: "message Unliked",
@@ -135,7 +137,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
   return (
     <DropdownMenu onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <Button className="px-2 py-1 " variant="outline">
+        <Button className="px-2  py-0 " variant="outline">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -150,13 +152,17 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
           <p className="">Edit</p>
         </DropdownMenuItem>
 
-       {isMessageLiked ? (<DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("unStar")}>
-          <Star fill="orange" className={`w-4 h-4`} />
+      {isMessageLiked ? (
+        <DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("un-Star")}>
+          <Star fill="orange" className={`w-4 h-4 text-orange`} />
           <p className="">Unstar</p>
-        </DropdownMenuItem>): (<DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
+        </DropdownMenuItem>
+      ) : (
+        <DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
           <Star fill="white" className={`w-4 h-4`} />
           <p className="">Star</p>
-        </DropdownMenuItem>) }
+        </DropdownMenuItem>
+      )}
 
         {isMyMessage && (<DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
             <Trash  color="red" className={`w-4 h-4 ${isDeletingMessage ? " ": ""}`} />
@@ -164,11 +170,11 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages, isMessageLi
         </DropdownMenuItem>)}
 
         {!selections?.includes(messageId) ? (<DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("select")}>
-          <Check className={`w-4 h-4 text-green-400 `} />
+          <Check className={`w-4 h-4  `} />
           <p className="">Select</p>
         </DropdownMenuItem>) : (
           <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("un-select")}>
-          <Check className={`w-4 h-4 }`} />
+          <Check className={`w-4 h-4 text-green-400 }`} />
           <p className="">un-select</p>
         </DropdownMenuItem>
         )}

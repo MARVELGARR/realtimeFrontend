@@ -1,102 +1,140 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import type { Message as ImportedMessageType, User } from "@/actions/api-actions/messageActions/getConversation"
-import { useMemo, useRef, useState } from "react"
-import { DropdownMenuMessageOptions } from "./messageOptions"
-import { cn } from "@/lib/utils"
-import { useSelection } from "@/store/useMessageSelection"
-import { Checkbox } from "@/components/ui/checkbox"
+import type {
+  Message as ImportedMessageType,
+  User,
+} from "@/actions/api-actions/messageActions/getConversation";
+import { useMemo, useRef, useState } from "react";
+import { DropdownMenuMessageOptions } from "./messageOptions";
+import { cn } from "@/lib/utils";
+import { useSelection } from "@/store/useMessageSelection";
+import { Checkbox } from "@/components/ui/checkbox";
 
-export type MessageType = ImportedMessageType
+export type MessageType = ImportedMessageType;
 
 interface MessageProps {
-  currentUserId: string
-  recepientId: string
-  message: MessageType
-  currentProfileId: string
-  className?: string
+  currentUserId: string;
+  recepientId: string;
+  message: MessageType;
+  currentProfileId: string;
+  className?: string;
 }
 
-const Message: React.FC<MessageProps> = ({ message, currentProfileId, className, currentUserId, recepientId }) => {
-  const [isHovered, setIsHovered] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+const Message: React.FC<MessageProps> = ({
+  message,
+  currentProfileId,
+  className,
+  currentUserId,
+  recepientId,
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const {selections, removeSelections, setSelections} = useSelection()
+  const { selections, removeSelections, setSelections } = useSelection();
 
   const handleMouseEnter = () => {
     timeoutRef.current = setTimeout(() => {
-      setIsHovered(true)
-      console.log("Hover event triggered!")
-    }, 1000) // 1-second delay
-  }
+      setIsHovered(true);
+      console.log("Hover event triggered!");
+    }, 1000); // 1-second delay
+  };
 
   const handleMouseLeave = (e: React.MouseEvent) => {
     // Check if the mouse is moving to the dropdown
-    if (containerRef.current && !containerRef.current.contains(e.relatedTarget as Node)) {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(e.relatedTarget as Node)
+    ) {
       if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+        clearTimeout(timeoutRef.current);
       }
 
       // Only close if dropdown is not open
       if (!isDropdownOpen) {
-        setIsHovered(false)
+        setIsHovered(false);
       }
     }
-  }
+  };
 
   // Handle dropdown state changes
   const handleDropdownOpenChange = (open: boolean) => {
-    setIsDropdownOpen(open)
+    setIsDropdownOpen(open);
 
     // If dropdown is closed and not hovering, hide the dropdown container
     if (!open && !isHovered) {
-      setIsHovered(false)
+      setIsHovered(false);
     }
-  }
+  };
 
-  const isMyMessage = message.userId === currentUserId
-  const messageContent = message.content
+  const isMyMessage = message.userId === currentUserId;
+  const messageContent = message.content;
 
   const isMessageLiked = useMemo(() => {
-    return !message.StarredMessage ? false : message.StarredMessage.profileId === currentProfileId
-  }, [message.StarredMessage, currentProfileId])
-
+    return !message.StarredMessage
+      ? false
+      : message.StarredMessage.profileId === currentProfileId;
+  }, [message.StarredMessage, currentProfileId]);
 
   return (
     <div
       ref={containerRef}
-      className={cn(className,` px-4 ${message.userId === currentUserId ? "justify-end" : "justify-start"}  flex items-center gap-2 w-full  relative`)}
+      className={cn(
+      className,
+      ` py-5 px-4 ${
+        message.userId === currentUserId ? "justify-end" : "justify-start"
+      }  flex items-center gap-2 w-full  relative`
+      )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-
-    {(selections?.length ?? 0) > 1 ?(<Checkbox className={` absolute ${message.userId === currentUserId ? "-right-9" : "-left-9"} `} id={message.id as string} checked={selections?.includes(message.id as string)} onCheckedChange={(checked) => {
-      checked ? removeSelections(message.id) : setSelections(message.id)
-    }} />): (<></>)}
-
-
+      {selections && selections.length > 0 ? (
+      <Checkbox
+        className={`absolute ${selections.includes(message.id)? "text-green-300": ""}  ${
+        message.userId === currentUserId ? "right-0" : "left-0"
+        } text-green-500`}
+        id={message.id as string}
+        checked={selections?.includes(message.id as string) as boolean}
+        onCheckedChange={(checked) => {
+        checked ? setSelections(message.id) : removeSelections(message.id);
+        }}
+      />
+      ) : (
+      <></>
+      )}
 
       <div key={message.id} className={`w-fit relative`}>
-        {isHovered && (
-          <div className={`absolute    ${message.userId === currentUserId ? " -left-12 ": " -right-12"}`}>
-            <DropdownMenuMessageOptions messages={message} isMessageLiked={isMessageLiked} currentProfileId={currentProfileId}  isMyMessage={isMyMessage} recepientId={recepientId}   onOpenChange={handleDropdownOpenChange} />
-          </div>
-        )}
+      {isHovered && (
         <div
-          className={`inline-block p-2 rounded-lg ${
-            message.userId === currentUserId ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
+        className={`absolute ${
+          message.userId === currentUserId ? "-left-11" : "-right-11"
+        }`}
         >
-          <p>{message.content}</p>
+        <DropdownMenuMessageOptions
+          messages={message}
+          isMessageLiked={isMessageLiked}
+          currentProfileId={currentProfileId}
+          isMyMessage={isMyMessage}
+          recepientId={recepientId}
+          onOpenChange={handleDropdownOpenChange}
+        />
         </div>
-        <p className="text-xs text-gray-500 mt-1">{message.updatedAt}</p>
+      )}
+      <div
+        className={`inline-block px-4 p-2 rounded-lg ${
+        message.userId === currentUserId
+          ? "bg-blue-500 text-white mr-4"
+          : "bg-gray-200 ml-4"
+        }`}
+      >
+        <p>{message.content}</p>
+      </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Message
+export default Message;

@@ -14,6 +14,8 @@ import { useSelection } from "@/store/useMessageSelection"
 import useDeleteMessages from "@/hooks/messageHooks/useDeleteMessages"
 import { toast } from "@/hooks/use-toast"
 import { DeleteMessagesDemo } from "@/components/myComponents/utilityComponent/deleteMessagesDialog"
+import { Button } from "@/components/ui/button"
+import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -40,7 +42,7 @@ export function ChatView() {
   const currentUserId = currentUser?.id
   const profileId = currentUser?.profile.id
 
-  const {selections, setSelections} = useSelection()
+  const {selections, setSelections, clearSelections } = useSelection()
   const {DeleteMessages, isDeletingMessages} = useDeleteMessages(recepientId as string)
 
   if ( isLoading ||isGettingCurentUser) {
@@ -71,19 +73,26 @@ export function ChatView() {
   return (
     <div className="w-full h-full flex flex-col">
       <div className="p-4 border-b border-gray-200 flex justify-between item-center">
-        <div className="p-4 border-b border-gray-200 flex gap-[3rem] item-center">
+        {selections && selections.length > 0 ? (<>
+        <div className="">
+          <p className=''> Selected: {selections.length}</p>
+          </div></>):(<div className="p-4  border-gray-200 flex gap-[3rem] item-center">
 
-          <Avatar>
-            <AvatarImage src={recepientProfilePic!} className=''/>
-            <AvatarFallback>{`g${recepientName ? recepientName[0] + recepientName[-1] : ''} f`}</AvatarFallback>
-          </Avatar>
+            <ProfilePicDropdown className=" cursor-pointer" recepientName={recepientName!} recepientProfilePic={recepientProfilePic!}/>
+
           <h2 className="text-xl font-semibold">{recepientName}</h2>
+        </div>)}
+        <div className="flex items-center gap-3">
+
+          {selections && selections?.length > 0 &&(
+            <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
+          )}
+          {selections && selections?.length > 0 &&(
+            <Button className=" h-8" onClick={clearSelections} variant={"outline"}>Cancel</Button>
+          )}
         </div>
-        {selections && selections?.length > 0 &&(
-          <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
-        )}
       </div>
-      <ScrollArea className="flex-1 p-4 w-full">
+      <ScrollArea className="flex-1 py-4 w-full">
         {data?.messages?.length ? (
           data.messages.map((message) => (
             <Message className={selections?.includes(message.id) ? " bg-green-200/[20%] " : ""} key={message.id} message={message} recepientId={recepientId as string} currentProfileId={profileId as string} currentUserId={currentUserId as string}/>

@@ -143,7 +143,10 @@ export function AppSidebar() {
 
   const { isGettingCurentUser } = useSession();
 
-  const BaseUrl = `https://realtime-frontend-olive.vercel.app`
+  const BaseUrl = process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:3001' 
+    : 'https://realtime-frontend-olive.vercel.app';
+
 
   const itemsGroup1 = [
     {
@@ -160,7 +163,7 @@ export function AppSidebar() {
       icon: Phone,
       indicator: missedCalls,
       color: "red" as const,
-      isActive: pathname === "App/phone",
+      isActive: pathname === "/App/phone",
     },
     {
       title: "Status",
@@ -168,7 +171,7 @@ export function AppSidebar() {
       icon: Binoculars,
       indicator: hasUnviewedStatus ? 0 : undefined,
       color: "green" as const,
-      isActive: pathname === "App/status",
+      isActive: pathname === "/App/status",
     },
   ]
 
@@ -177,13 +180,13 @@ export function AppSidebar() {
       title: "Favourite",
       url: `${BaseUrl}/App/favourite`,
       icon: Star,
-      isActive: pathname === "App/favourite",
+      isActive: pathname === "/App/favourite",
     },
     {
       title: "Archive",
       url: `${BaseUrl}/App/archive`,
       icon: Archive,
-      isActive: pathname === "App/archive",
+      isActive: pathname === "/App/archive",
     },
   ]
 

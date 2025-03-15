@@ -4,6 +4,7 @@ type useSelectionProp = {
     selections: string[] | null;
     setSelections: (selection: string) => void;
     removeSelections: (selection: string) => void;
+    clearSelections: ()=> void
 };
 
 export const useSelection = create<useSelectionProp>((set) => ({
@@ -16,4 +17,5 @@ export const useSelection = create<useSelectionProp>((set) => ({
         set((state) => ({
             selections: state.selections?.filter((s) => s !== selection) || null,
         })),
+    clearSelections: () => set(() => ({ selections: [] })),
 }));
