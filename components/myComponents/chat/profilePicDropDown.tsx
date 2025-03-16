@@ -53,7 +53,7 @@ export function ProfilePicDropdown({
           className="hover:bg-green-200"
           asChild
         >
-          <ProfileCardDialog recepientId={recepientId!} className=""/>
+          <ProfileCardDialog recepientId={recepientId!} className="" recepientName={recepientName}/>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleClick("un-friend")}

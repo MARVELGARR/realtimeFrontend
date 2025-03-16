@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils"
 import { CalendarIcon, Mail, Phone, User, UserPlus, UserMinus, UserX } from "lucide-react"
 import { format } from "date-fns"
 import useGetRecepientProfile from "@/hooks/chatJooks/useGetRecepientProfile"
+import useAddFriend from "@/hooks/interactionHooks/useAddfriend"
+import { toast } from "@/hooks/use-toast"
 
 type ProfileRecepient = {
   bio: string
@@ -39,13 +41,24 @@ type ProfileCardDialogProps = {
   isFriend?: boolean
 }
 
-export function ProfileCardDialog({ className, recepientName, recepientId, isFriend = false }: ProfileCardDialogProps) {
+export function ProfileCardDialog({ className, recepientName, recepientId,  }: ProfileCardDialogProps) {
   const { data, isGettingRecepientProfile } = useGetRecepientProfile(recepientId)
+  const {addingMessage, isAddingMessage} = useAddFriend()
 
-  const handleAddFriend = () => {
-    // Implement your add friend logic here
-    console.log(`Adding ${recepientName} as friend`)
-    // You would typically call an API endpoint here
+  const isFriend = data?.friend?.some((frnd)=>frnd.friendId === recepientId) 
+
+  const handleAddFriend = async() => {
+    addingMessage(recepientId).then(()=>{
+        toast({
+            title: "Friend Added",
+            variant:"success"
+        })
+    }).catch((error)=>{
+        toast({
+            title: "Friend request failed",
+            variant:"destructive"
+        })
+    })
   }
 
   const handleUnfriend = () => {
@@ -63,9 +76,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId, isFri
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="border-0 h-5 text-start align left p-0 w-full" variant="outline">
-          Profile
-        </Button>
+        <Button className=" w-full flex justify-start pl-2 py-4 align-left border-none  h-5 " variant="outline"> <span className="align-left">profile</span> </Button>
       </DialogTrigger>
       <DialogContent
         className={cn(className, "w-[425px] mx-auto top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2")}

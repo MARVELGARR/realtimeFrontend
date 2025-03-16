@@ -5,7 +5,14 @@ type getRecepientProfileProps ={
     image: string
     createdAt:string,
     updatedAt: string
+    friend: Friend[]
     profile: ProfileRecepient
+}
+type Friend={
+    
+    friendId: string,
+    userId:string
+    
 }
 
 type ProfileRecepient = {
