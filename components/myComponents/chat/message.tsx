@@ -11,6 +11,7 @@ import { DropdownMenuMessageOptions } from "./messageOptions";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/store/useMessageSelection";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Star } from "lucide-react";
 
 export type MessageType = ImportedMessageType;
 
@@ -71,13 +72,8 @@ const Message: React.FC<MessageProps> = ({
   };
 
   const isMyMessage = message.userId === currentUserId;
-  const messageContent = message.content;
 
-  const isMessageLiked = useMemo(() => {
-    return !message.StarredMessage
-      ? false
-      : message.StarredMessage.profileId === currentProfileId;
-  }, [message.StarredMessage, currentProfileId]);
+  const isMessageLiked = message.StarredMessage.some((msg)=>msg.messageId === message.id)
 
   return (
     <div
@@ -115,7 +111,7 @@ const Message: React.FC<MessageProps> = ({
         >
         <DropdownMenuMessageOptions
           messages={message}
-          isMessageLiked={isMessageLiked}
+          
           currentProfileId={currentProfileId}
           isMyMessage={isMyMessage}
           recepientId={recepientId}
@@ -124,13 +120,15 @@ const Message: React.FC<MessageProps> = ({
         </div>
       )}
       <div
-        className={`inline-block px-4 p-2 rounded-lg ${
+        className={`inline-block relative relative px-4 p-2 rounded-lg ${
         message.userId === currentUserId
           ? "bg-blue-500 text-white mr-4"
           : "bg-gray-200 ml-4"
         }`}
       >
         <p>{message.content}</p>
+
+        {isMessageLiked && (<Star fill="orange" className={`w-4 h-4 absolute ${isMyMessage ? " -right-2 -bottom-1" : " -left-2 -bottom-1"} text-orange`} />)}
       </div>
       </div>
     </div>

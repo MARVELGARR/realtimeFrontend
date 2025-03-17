@@ -1,12 +1,9 @@
-import { MessageFormData } from "@/components/myComponents/chat/messageForm";
 
-
-
-const addFriend = async( recepientId: string ) => {
+const unFriend = async( recepientId: string ) => {
 
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/add-friend`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/un-friend`, {
             
             method: "POST",
             headers: {
@@ -32,4 +29,4 @@ const addFriend = async( recepientId: string ) => {
     }
 }
  
-export default addFriend;
+export default unFriend;

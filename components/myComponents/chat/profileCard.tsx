@@ -12,6 +12,7 @@ import { format } from "date-fns"
 import useGetRecepientProfile from "@/hooks/chatJooks/useGetRecepientProfile"
 import useAddFriend from "@/hooks/interactionHooks/useAddfriend"
 import { toast } from "@/hooks/use-toast"
+import useUnFriend from "@/hooks/interactionHooks/useUnFriend"
 
 type ProfileRecepient = {
   bio: string
@@ -43,12 +44,13 @@ type ProfileCardDialogProps = {
 
 export function ProfileCardDialog({ className, recepientName, recepientId,  }: ProfileCardDialogProps) {
   const { data, isGettingRecepientProfile } = useGetRecepientProfile(recepientId)
-  const {addingMessage, isAddingMessage} = useAddFriend(recepientId)
+  const {addingFriend, isAddingFriend} = useAddFriend(recepientId)
+  const {removingFriend, isRemovingFriend} = useUnFriend(recepientId)
 
-  const isFriend = data?.Friends?.some((frnd)=>frnd.friendId === recepientId) 
+  const isFriend = data?.Friend?.some((frnd)=>frnd.friendId === recepientId) 
 
   const handleAddFriend = async() => {
-    addingMessage(recepientId).then(()=>{
+    addingFriend(recepientId).then(()=>{
         toast({
             title: "Friend Added",
             variant:"success"
@@ -61,10 +63,18 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
     })
   }
 
-  const handleUnfriend = () => {
-    // Implement your unfriend logic here
-    console.log(`Removing ${recepientName} from friends`)
-    // You would typically call an API endpoint here
+  const handleUnfriend = async() => {
+    removingFriend(recepientId).then(()=>{
+        toast({
+            title: "Friend removed",
+            variant:"success"
+        })
+    }).catch((error)=>{
+        toast({
+            title: "request to remove friend failed",
+            variant:"destructive"
+        })
+    })
   }
 
   const handleBlockUser = () => {
@@ -99,7 +109,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
                 </p>
               </div>
             </div>
-            {JSON.stringify(data.Friends)}
+            
             <Separator />
 
             <div className="space-y-4">
@@ -138,17 +148,17 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
               <div className="flex justify-between gap-2">
                 
                 {isGettingRecepientProfile ? (<>Loading</>) : isFriend ? (
-                  <Button variant="outline" className="flex-1 gap-2" onClick={handleUnfriend}>
+                  <Button variant="outline" className="flex-1 gap-2 cursor-pointer" onClick={handleUnfriend}>
                     <UserMinus className="h-4 w-4" />
                     Unfriend
                   </Button>
                 ) : (
-                  <Button disabled={isAddingMessage} variant="default" className="flex-1 gap-2 bg-green-500" onClick={handleAddFriend}>
+                  <Button  disabled={isAddingFriend} variant="default" className="flex-1 cursor-pointer gap-2 bg-green-500" onClick={handleAddFriend}>
                     <UserPlus className="h-4 w-4" />
                     Add Friend
                   </Button>
                 )}
-                <Button variant="destructive" className="flex-1 gap-2" onClick={handleBlockUser}>
+                <Button variant="destructive" className="flex-1 gap-2 cursor-pointer" onClick={handleBlockUser}>
                   <UserX className="h-4 w-4" />
                   Block
                 </Button>

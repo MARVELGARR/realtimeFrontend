@@ -9,8 +9,6 @@ import useUnStarMssage from "@/hooks/messageHooks/useUnStarHooks"
 import { toast } from "@/hooks/use-toast"
 import { useSelection } from "@/store/useMessageSelection"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
 import { PopoverDemo } from "../utilityComponent/messageInfo"
 import { Message } from "@/actions/api-actions/messageActions/getConversation"
 
@@ -26,7 +24,6 @@ interface DropdownMenuMessageOptionsProps {
   isMyMessage: boolean
   // messageContent: string
   currentProfileId: string
-  isMessageLiked: boolean
   messages: MessageType 
 }
 
@@ -59,7 +56,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
 
   const {setSelections, selections, removeSelections} = useSelection()
 
-  const isMessageLiked = messages.StarredMessage.messageId?.includes(messages.id)
+  const isMessageLiked = messages.StarredMessage.some((msg)=>msg.messageId === messageId)
 
 
   const copyText = () =>{
@@ -76,6 +73,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
     });
   }
   
+  console.log(isMessageLiked)
   // Function to handle item clicks
   const handleItemClick = (action: string) => {
     
@@ -142,25 +140,25 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex flex-col justify-start">
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("copy")}>
+        <DropdownMenuItem className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("copy")}>
           <Copy className="w-4 h-4" />
           <p className="">Copy</p>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-4" onClick={() => handleItemClick("edit")}>
+        <DropdownMenuItem className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("edit")}>
           <Edit className="w-4 h-4" />
           <p className="">Edit</p>
         </DropdownMenuItem>
-
       {isMessageLiked ? (
-        <DropdownMenuItem disabled={isUnStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("un-Star")}>
+        <DropdownMenuItem disabled={isUnStaringMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("un-Star")}>
           <Star fill="orange" className={`w-4 h-4 text-orange`} />
           <p className="">Unstar</p>
         </DropdownMenuItem>
       ) : (
-        <DropdownMenuItem disabled={isStaringMessage} className="flex items-center gap-4" onClick={() => handleItemClick("star")}>
+        <DropdownMenuItem disabled={isStaringMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("star")}>
           <Star fill="white" className={`w-4 h-4`} />
           <p className="">Star</p>
+          {isMessageLiked}
         </DropdownMenuItem>
       )}
 
