@@ -8,6 +8,7 @@ const useAddFriend = (recepientId:string) => {
         mutationFn: (recepientId: string)=> addFriend(recepientId),
         onSettled: () =>{
             queryClient.invalidateQueries({ queryKey: ["recepient-profile", {recepientId}] });
+            queryClient.invalidateQueries({ queryKey: ["conversation", {recepientId}] });
         }
     })
     return {addingMessage, isAddingMessage}
