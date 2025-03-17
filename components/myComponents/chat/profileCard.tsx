@@ -99,7 +99,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
                 </p>
               </div>
             </div>
-
+            {JSON.stringify(data.Friends)}
             <Separator />
 
             <div className="space-y-4">
