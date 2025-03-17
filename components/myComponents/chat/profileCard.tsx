@@ -45,7 +45,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
   const { data, isGettingRecepientProfile } = useGetRecepientProfile(recepientId)
   const {addingMessage, isAddingMessage} = useAddFriend(recepientId)
 
-  const isFriend = data?.friends?.some((frnd)=>frnd.friendId === recepientId) 
+  const isFriend = data?.Friends?.some((frnd)=>frnd.friendId === recepientId) 
 
   const handleAddFriend = async() => {
     addingMessage(recepientId).then(()=>{
