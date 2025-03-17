@@ -43,7 +43,7 @@ type ProfileCardDialogProps = {
 
 export function ProfileCardDialog({ className, recepientName, recepientId,  }: ProfileCardDialogProps) {
   const { data, isGettingRecepientProfile } = useGetRecepientProfile(recepientId)
-  const {addingMessage, isAddingMessage} = useAddFriend()
+  const {addingMessage, isAddingMessage} = useAddFriend(recepientId)
 
   const isFriend = data?.friend?.some((frnd)=>frnd.friendId === recepientId) 
 
@@ -142,7 +142,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
                     Unfriend
                   </Button>
                 ) : (
-                  <Button variant="default" className="flex-1 gap-2 bg-green-500" onClick={handleAddFriend}>
+                  <Button disabled={isAddingMessage} variant="default" className="flex-1 gap-2 bg-green-500" onClick={handleAddFriend}>
                     <UserPlus className="h-4 w-4" />
                     Add Friend
                   </Button>
