@@ -136,7 +136,8 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
             </div>
             <div className="flex flex-col gap-3 pt-2">
               <div className="flex justify-between gap-2">
-                {isFriend ? (
+                
+                {isGettingRecepientProfile ? (<>Loading</>) : isFriend ? (
                   <Button variant="outline" className="flex-1 gap-2" onClick={handleUnfriend}>
                     <UserMinus className="h-4 w-4" />
                     Unfriend
