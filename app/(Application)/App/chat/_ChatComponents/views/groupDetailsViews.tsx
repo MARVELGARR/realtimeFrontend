@@ -3,39 +3,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Upload } from "lucide-react"
+import { useState } from "react"
+import { SingleFileUploader } from "@/components/myComponents/utilityComponent/singleFileUploader"
 
-interface GroupDetailsViewProps {
-  groupName: string
-  setGroupName: (value: string) => void
-  groupImage: string | null
-  setGroupImage: (value: string | null) => void
-  disappearingMessages: boolean
-  setDisappearingMessages: (value: boolean) => void
-  handleCreateGroup: () => void
-}
-
-export const GroupDetailsView: React.FC<GroupDetailsViewProps> = ({
-  groupName,
-  setGroupName,
-  groupImage,
-  setGroupImage,
-  disappearingMessages,
-  setDisappearingMessages,
-  handleCreateGroup,
+export const GroupDetailsView = ({
+  
 }) => {
+  const [groupName, setGroupName] = useState("")
+  const [disappearingMessages, setDisappearingMessages] = useState(false)
+
+  
+
   return (
     <div className="space-y-4 p-2">
       <div className="flex items-center justify-center">
-        <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-          {groupImage ? (
-            <img
-              src={groupImage || "/placeholder.svg"}
-              alt="Group"
-              className="w-full h-full object-cover rounded-full"
-            />
-          ) : (
-            <Upload className="h-8 w-8 text-gray-400" />
-          )}
+        <div className="w-20 cursor-pointer h-20 bg-gray-200 rounded-full flex items-center justify-center">
+        <SingleFileUploader/>
         </div>
       </div>
       <Input type="text" placeholder="Group Name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
@@ -47,7 +30,7 @@ export const GroupDetailsView: React.FC<GroupDetailsViewProps> = ({
         />
         <label htmlFor="disappearing-messages">Enable disappearing messages</label>
       </div>
-      <Button onClick={handleCreateGroup} className="w-full">
+      <Button onClick={()=>{}} className="w-full">
         Create Group
       </Button>
     </div>

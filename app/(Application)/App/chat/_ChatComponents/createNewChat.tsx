@@ -23,9 +23,6 @@ export function CreateNewChat(): JSX.Element {
   const [phoneNumber, setPhoneNumber] = useState<string>("")
   const [open, setOpen] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const [groupName, setGroupName] = useState<string>("")
-  const [groupImage, setGroupImage] = useState<string | null>(null)
-  const [disappearingMessages, setDisappearingMessages] = useState<boolean>(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -63,9 +60,7 @@ export function CreateNewChat(): JSX.Element {
     }
   }
 
-  const handleUserSelect = (userId: string): void => {
-    setSelectedUsers(selectedUsers.map((user) => (user.id === userId ? { ...user, selected: !user.selected } : user)))
-  }
+
 
   const handleUserSelectFromSearch = (user: any): void => {
     // Check if user is already in selectedUsers
@@ -76,7 +71,7 @@ export function CreateNewChat(): JSX.Element {
       const newUser: User = {
         id: user.id,
         name: user.name,
-        selected: true,
+        image: user.profile?.profilePicture || user.image,
       }
       setSelectedUsers([...selectedUsers, newUser])
     }
@@ -103,21 +98,7 @@ export function CreateNewChat(): JSX.Element {
     setCurrentView("groupdetails")
   }
 
-  const handleCreateGroup = (): void => {
-    console.log("Group created:", {
-      groupName,
-      groupImage,
-      disappearingMessages,
-      members: selectedUsers.filter((u) => u.selected),
-    })
-    setOpen(false)
 
-    // Reset state after group creation
-    setSelectedUsers([])
-    setGroupName("")
-    setGroupImage(null)
-    setDisappearingMessages(false)
-  }
 
   const renderContent = () => {
     switch (currentView) {
@@ -128,23 +109,12 @@ export function CreateNewChat(): JSX.Element {
           <CreateNewGroupView
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            users={selectedUsers}
-            handleClearUsers={handleClearUsers}
-            handleUserSelect={handleUserSelect}
             handleNextInGroupCreation={handleNextInGroupCreation}
           />
         )
       case "groupdetails":
         return (
-          <GroupDetailsView
-            groupName={groupName}
-            setGroupName={setGroupName}
-            groupImage={groupImage}
-            setGroupImage={setGroupImage}
-            disappearingMessages={disappearingMessages}
-            setDisappearingMessages={setDisappearingMessages}
-            handleCreateGroup={handleCreateGroup}
-          />
+          <GroupDetailsView/>
         )
       default:
         return (
