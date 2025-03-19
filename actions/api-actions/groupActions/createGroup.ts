@@ -1,15 +1,21 @@
 
+export type newGroupDetailsProp = {
+    name: string,
+    participant: string[],
+    disappearingMessages: string,
+    groupImage: string[] 
+    
+}
 
-
-const createGroup = async() => {
+const createGroup = async(newGroupDetails:newGroupDetailsProp) => {
 
     try{
-        const res =  await fetch(``,{
+        const res =  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/createGroup`,{
             method: "POST",
             headers: {
                 "content-type": "application/json"
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({newGroupDetails}),
             credentials: "include"
         })
         if(res.ok){
