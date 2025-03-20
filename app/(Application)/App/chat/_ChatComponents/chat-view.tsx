@@ -54,7 +54,7 @@ export function ChatView() {
     return <div>Loading...</div>
   }
 
-  if(!recepientId){
+  if(!recepientId && !conversationId){
     return (
       <div className="w-full h-full flex justify-center items-center ">No Chat history</div>
     )
@@ -81,7 +81,7 @@ export function ChatView() {
     )
   }
 
-  if(recepientId && !conversationId){
+  if(recepientId){
     
   return (
     <div className="w-full h-full flex flex-col">
