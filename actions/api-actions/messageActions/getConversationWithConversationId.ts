@@ -1,14 +1,15 @@
 import axios from "axios";
 
-export interface User {
+export interface GroupMessageType {
     id: string;
-    name: string;
-    email: string;
-    emailVerified: string | null;
-    image: string;
-    password: string;
+    content: string;
     createdAt: string;
     updatedAt: string;
+    userId: string;
+    conversationId: string;
+    user: User;
+    StarredMessage:StarredMessage[]
+    
 }
 
 export interface StarredMessage { 
@@ -18,55 +19,62 @@ export interface StarredMessage {
     createdAt: string,
     updatedAt: string
 }
-
-export interface Message {
+type UserProfile = {
     id: string;
-    content: string;
+    bio?: string;
+    firstName?: string;
+    lastName?: string;
+    nickname?: string;
+    phoneNumber?: string | null;
+    gender?: "MALE" | "FEMALE" | "OTHER";
+    birthDay?: string | null;
+    createdAt: string;
+    updatedAt: string;
+    profilePicture?: string;
+    userId: string;
+};
+
+type User = {
+    id: string;
+    image?: string;
+    name: string;
+    profile?: UserProfile | null;
+};
+
+type Participant = {
+    id: string;
     createdAt: string;
     updatedAt: string;
     userId: string;
     conversationId: string;
+    groupId?: string | null;
     user: User;
-    StarredMessage:StarredMessage[]
+};
 
-}
-
-export interface recepientProfile{
+type Group = {
+    admin: User;
+    creator: User;
+    disappearingMessages: string;
+    groupImage?: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
     id: string;
-    bio?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    nickname?: string | null;
-    phoneNumber?: string | null;
-    gender: "DIRECT" | "GROUP";
-    birthDay?: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-    profilePicture?: string ;
-    
-}
-export interface Participant {
-    id: string;
-      createdAt: Date;
-      updatedAt: Date;
-      user: {
-        id: string,
-        image?: string | null;
-        name?: string | null;
-        profile?: recepientProfile 
-      };
-}
+};
 
-export interface Conversation {
+export type GroupConversationProp = {
     id: string;
     createdAt: string;
     updatedAt: string;
-    messages: Message[];
+    groupId: string;
+    messages: GroupMessageType[];
     participants: Participant[];
-}
+    group: Group;
+};
 
 
-const getConversationsWithrConversationId = async (conversationId: string):Promise<Conversation> => {
+
+const getConversationsWithrConversationId = async (conversationId: string):Promise<GroupConversationProp> => {
     try{
         const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/groupConversation${conversationId}`, {
            

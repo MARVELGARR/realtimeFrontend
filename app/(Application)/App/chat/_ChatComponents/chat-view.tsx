@@ -17,6 +17,7 @@ import { DeleteMessagesDemo } from "@/components/myComponents/utilityComponent/d
 import { Button } from "@/components/ui/button"
 import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
 import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
+import GroupChatView from "@/components/myComponents/conversations/groupChatView"
 
 export function ChatView() {
   const queryClient = useQueryClient()
@@ -77,7 +78,7 @@ export function ChatView() {
 
   if(conversationId && groupConversation){
     return (
-      <div className=""></div>
+      <GroupChatView groupConversation={groupConversation}  />
     )
   }
 
