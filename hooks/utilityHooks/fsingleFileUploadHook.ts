@@ -1,4 +1,4 @@
-import singlefileUpload from "@/actions/api-actions/fileUploadActions/singleFileUpload";
+import singlefileUpload from "@/actions/api-actions/authActions/fileUploadActions/singleFileUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useSingleFileUploadHook = () => {

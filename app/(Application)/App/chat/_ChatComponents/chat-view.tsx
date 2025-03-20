@@ -16,12 +16,14 @@ import { toast } from "@/hooks/use-toast"
 import { DeleteMessagesDemo } from "@/components/myComponents/utilityComponent/deleteMessagesDialog"
 import { Button } from "@/components/ui/button"
 import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
+import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
 
 export function ChatView() {
   const queryClient = useQueryClient()
 
   const queryParams = useSearchParams()
   const recepientId = queryParams.get("recepientId")
+  const conversationId = queryParams.get("conversationId")
 
   
   const { data, isLoading } = useQuery({
@@ -29,10 +31,11 @@ export function ChatView() {
     queryFn: () => getConversationsWithrecepientId(recepientId as string),
     enabled: !!recepientId,
   })
+
+  const {groupConversation, isLoadingGroupConversation} =useGroupConversation(conversationId as string)
   
   useEffect(()=>{
     queryClient.invalidateQueries({ queryKey: ["conversation", { recepientId: recepientId }] });
-    console.log(recepientId)
   },[recepientId])
 
   
@@ -42,12 +45,15 @@ export function ChatView() {
   const currentUserId = currentUser?.id
   const profileId = currentUser?.profile.id
 
+  
+
   const {selections, setSelections, clearSelections } = useSelection()
   const {DeleteMessages, isDeletingMessages} = useDeleteMessages(recepientId as string)
 
   if ( isLoading ||isGettingCurentUser) {
     return <div>Loading...</div>
   }
+
   if(!recepientId){
     return (
       <div className="w-full h-full flex justify-center items-center ">No Chat history</div>
@@ -69,7 +75,14 @@ export function ChatView() {
     })
   }
 
+  if(conversationId && groupConversation){
+    return (
+      <div className=""></div>
+    )
+  }
 
+  if(recepientId && !conversationId){
+    
   return (
     <div className="w-full h-full flex flex-col">
       <div className="p-4 border-b border-gray-200 flex justify-between item-center">
@@ -106,6 +119,7 @@ export function ChatView() {
       </div>
     </div>
   )
+  }
 }
 
 

@@ -88,7 +88,7 @@ interface Conversation {
 }
 
 // Group Conversation
-interface GroupConversation {
+interface GroupConversationProp {
   id: string;
   name: string;
   groupImage?: string;
@@ -97,6 +97,11 @@ interface GroupConversation {
   updatedAt: Date;
   creatorId: string;
   adminId: string;
+}
+
+interface GroupConversation{
+  id: string,
+  group: GroupConversationProp
 }
 
 // Conversation Response
