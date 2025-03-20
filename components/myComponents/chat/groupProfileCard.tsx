@@ -14,6 +14,7 @@ import useAddFriend from "@/hooks/interactionHooks/useAddfriend"
 import { toast } from "@/hooks/use-toast"
 import useUnFriend from "@/hooks/interactionHooks/useUnFriend"
 import useGetGroupProfile from "@/hooks/chatJooks/useGetGroupProfileHook"
+import GroupProfile from "@/components/group-profile"
 
 type ProfileRecepient = {
   bio: string
@@ -54,7 +55,7 @@ export function GroupProfileCardDialog({ className, groupName, groupId,  }: Grou
       <DialogContent
         className={cn(className, "w-[425px] mx-auto top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2")}
       >
-        
+        <GroupProfile/>
       </DialogContent>
     </Dialog>
   )
