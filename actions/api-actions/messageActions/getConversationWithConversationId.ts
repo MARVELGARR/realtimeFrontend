@@ -68,8 +68,8 @@ export interface Conversation {
 
 const getConversationsWithrConversationId = async (conversationId: string):Promise<Conversation> => {
     try{
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/groupConversation`, {
-            params: { conversationId: conversationId },
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/groupConversation${conversationId}`, {
+           
             withCredentials: true
         })
         if(res.status === 200){
