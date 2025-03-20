@@ -99,7 +99,9 @@ export function ChatList() {
                   </div>
                 </>
               ) : (
-                <></>
+                <div className="w-full flex justify-center items-center">
+                  <strong className="font-bold">No Favourites</strong>
+                </div>
               )}
             </>
           ) : filterState.id == "groups" ? (
