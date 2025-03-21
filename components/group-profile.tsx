@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 "use client";
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -91,6 +92,8 @@ export default function GroupProfile({groupId,className}:GroupProfileProps) {
           <TabsContent value="overview" className="mt-0 h-full">
             <GroupOverviewTab groupId={groupId} />
 =======
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 "use client"
 
 import { Tabs, TabsContent } from "@/components/ui/tabs"
@@ -114,6 +117,9 @@ export default function GroupProfile() {
         <Tabs defaultValue="overview" className="h-full">
           <TabsContent value="overview" className="mt-0 h-full">
             <GroupOverviewTab />
+<<<<<<< HEAD
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
+=======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
           </TabsContent>
 
@@ -121,16 +127,22 @@ export default function GroupProfile() {
             <GroupMembersTab />
           </TabsContent>
 <<<<<<< HEAD
+<<<<<<< HEAD
         </div>
       </Tabs>
     </div>
   );
 }
 =======
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
         </Tabs>
       </div>
     </div>
   )
 }
 
+<<<<<<< HEAD
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
+=======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1

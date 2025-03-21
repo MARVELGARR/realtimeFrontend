@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 "use client";
 import { Edit, LogOut, Video, Phone } from "lucide-react";
 
@@ -31,6 +32,8 @@ export function GroupOverviewTab({ groupId }: GroupOverviewTabProp) {
             alt="Group avatar"
           />
 =======
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 import { Edit, LogOut, Video, Phone } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -44,6 +47,9 @@ export function GroupOverviewTab() {
       <div className="flex flex-col items-center mb-6">
         <Avatar className="h-24 w-24 mb-4">
           <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Group avatar" />
+<<<<<<< HEAD
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
+=======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
           <AvatarFallback>BP</AvatarFallback>
         </Avatar>
@@ -57,6 +63,7 @@ export function GroupOverviewTab() {
 
       <div className="grid grid-cols-2 gap-4 mb-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Button
           variant="outline"
           className="flex items-center justify-center gap-2"
@@ -69,11 +76,16 @@ export function GroupOverviewTab() {
           className="flex items-center justify-center gap-2"
         >
 =======
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
         <Button variant="outline" className="flex items-center justify-center gap-2">
           <Video className="h-5 w-5" />
           <span>Video</span>
         </Button>
         <Button variant="outline" className="flex items-center justify-center gap-2">
+<<<<<<< HEAD
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
+=======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
           <Phone className="h-5 w-5" />
           <span>Voice</span>
@@ -90,10 +102,14 @@ export function GroupOverviewTab() {
           <div>
             <p className="text-sm text-muted-foreground">Description</p>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <p>
               A group for Blood Strike game players to coordinate matches and
               strategies.
             </p>
+=======
+            <p>A group for Blood Strike game players to coordinate matches and strategies.</p>
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
             <p>A group for Blood Strike game players to coordinate matches and strategies.</p>
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
@@ -106,9 +122,13 @@ export function GroupOverviewTab() {
         <div>
           <div className="flex justify-between items-center mb-2">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <p className="text-sm text-muted-foreground">
               Disappearing messages
             </p>
+=======
+            <p className="text-sm text-muted-foreground">Disappearing messages</p>
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
             <p className="text-sm text-muted-foreground">Disappearing messages</p>
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
@@ -116,6 +136,7 @@ export function GroupOverviewTab() {
           </div>
           <p>Off</p>
         </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
       </div>
 
@@ -125,6 +146,8 @@ export function GroupOverviewTab() {
   );
 }
 =======
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 
         <div>
           <div className="flex justify-between items-center mb-2">
@@ -170,4 +193,7 @@ export function GroupOverviewTab() {
   )
 }
 
+<<<<<<< HEAD
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
+=======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1

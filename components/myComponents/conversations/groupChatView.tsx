@@ -4,6 +4,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelection } from "@/store/useMessageSelection";
 import { DeleteMessagesDemo } from "../utilityComponent/deleteMessagesDialog";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import { ProfilePicDropdown } from "../chat/profilePicDropDown";
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
 import { ProfilePicDropdown } from "../chat/profilePicDropDown";
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
@@ -16,7 +20,10 @@ import { GroupMessageForm } from "../chat/groupMessageForm";
 import GroupMessage from "../chat/groupMessage";
 import { useSession } from "@/providers/sessionProvider";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { GroupProfilePicDropdown } from "../chat/GroupProfilePicDropdown";
+=======
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 
@@ -30,7 +37,11 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
     const groupName = groupConversation.group.name
     const groupImage = groupConversation.group.groupImage
 <<<<<<< HEAD
+<<<<<<< HEAD
     const groupId = groupConversation.groupId
+=======
+    const groupId = groupConversation.id
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
     const groupId = groupConversation.id
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
@@ -66,7 +77,11 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
             </div></>):(<div className="p-4  border-gray-200 flex gap-[3rem] item-center">
   
 <<<<<<< HEAD
+<<<<<<< HEAD
               <GroupProfilePicDropdown groupId={groupId} className=" cursor-pointer" groupName={groupName!} recepientProfilePic={groupImage!}/>
+=======
+              <ProfilePicDropdown recepientId={groupId} className=" cursor-pointer" recepientName={groupName!} recepientProfilePic={groupImage!}/>
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
               <ProfilePicDropdown recepientId={groupId} className=" cursor-pointer" recepientName={groupName!} recepientProfilePic={groupImage!}/>
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1

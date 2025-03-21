@@ -40,7 +40,11 @@ export function GroupMembersTab() {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div className="flex flex-col h-full  mx-auto">
+=======
+    <div className="flex flex-col h-full max-w-2xl mx-auto">
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 =======
     <div className="flex flex-col h-full max-w-2xl mx-auto">
 >>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
