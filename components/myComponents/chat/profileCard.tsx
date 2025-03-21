@@ -1,6 +1,5 @@
 "use client"
 
-
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -43,62 +42,81 @@ type ProfileCardDialogProps = {
   isFriend?: boolean
 }
 
-export function ProfileCardDialog({ className, recepientName, recepientId,  }: ProfileCardDialogProps) {
+export function ProfileCardDialog({ className, recepientName, recepientId }: ProfileCardDialogProps) {
   const { data, isGettingRecepientProfile } = useGetRecepientProfile(recepientId)
-  const {addingFriend, isAddingFriend} = useAddFriend(recepientId)
-  const {removingFriend, isRemovingFriend} = useUnFriend(recepientId)
+  const { addingFriend, isAddingFriend } = useAddFriend(recepientId)
+  const { removingFriend, isRemovingFriend } = useUnFriend(recepientId)
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
 
-  const isFriend = data?.Friend?.some((frnd)=>frnd.friendId === recepientId) 
+  const isFriend = data?.Friend?.some((frnd) => frnd.friendId === recepientId)
 
-  const handleAddFriend = async() => {
-    addingFriend(recepientId).then(()=>{
-        toast({
-            title: "Friend Added",
-            variant:"success"
-        })
-    }).catch((error)=>{
-        toast({
-            title: "Friend request failed",
-            variant:"destructive"
-        })
-    })
+  const handleAddFriend = async (event: React.MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    try {
+      await addingFriend(recepientId)
+      toast({
+        title: "Friend Added",
+        variant: "success",
+      })
+    } catch (error) {
+      toast({
+        title: "Friend request failed",
+        variant: "destructive",
+      })
+    }
   }
 
-  const handleUnfriend = async() => {
-    removingFriend(recepientId).then(()=>{
-        toast({
-            title: "Friend removed",
-            variant:"success"
-        })
-    }).catch((error)=>{
-        toast({
-            title: "request to remove friend failed",
-            variant:"destructive"
-        })
-    })
+  const handleUnfriend = async (event: React.MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    try {
+      await removingFriend(recepientId)
+      toast({
+        title: "Friend removed",
+        variant: "success",
+      })
+    } catch (error) {
+      toast({
+        title: "Request to remove friend failed",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleBlockUser = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent dialog from closing
-    console.log(`Blocking ${recepientName}`);
-    setIsDialogOpen(false); // Close the dialog after blocking
+    event.preventDefault()
+    event.stopPropagation()
+
+    console.log(`Blocking ${recepientName}`)
+    setIsDialogOpen(false)
     // You would typically call an API endpoint here
   }
-  const handleDialogClose = () => {
-    const dialog = document.querySelector("[data-state='open']");
-    if (dialog) {
-      (dialog as HTMLElement).click();
-    }
-  };
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button className=" w-full flex justify-start pl-2 py-4 align-left border-none  h-5 " variant="outline"> <span className="align-left">profile</span> </Button>
+        <Button
+          className="w-full flex justify-start pl-2 py-4 align-left border-none h-5"
+          variant="outline"
+          onClick={(e) => {
+            e.preventDefault()
+            setIsDialogOpen(true)
+          }}
+        >
+          <span className="align-left">profile</span>
+        </Button>
       </DialogTrigger>
       <DialogContent
         className={cn(className, "w-[425px] mx-auto top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2")}
+        onPointerDownOutside={(e) => {
+          e.preventDefault()
+        }}
+        onEscapeKeyDown={(e) => {
+          e.preventDefault()
+        }}
       >
         {isGettingRecepientProfile ? (
           <ProfileSkeleton />
@@ -118,7 +136,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
                 </p>
               </div>
             </div>
-            
+
             <Separator />
 
             <div className="space-y-4">
@@ -155,14 +173,25 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
             </div>
             <div className="flex flex-col gap-3 pt-2">
               <div className="flex justify-between gap-2">
-                
-                {isGettingRecepientProfile ? (<>Loading</>) : isFriend ? (
-                  <Button variant="outline" className="flex-1 gap-2 cursor-pointer" onClick={handleUnfriend}>
+                {isGettingRecepientProfile ? (
+                  <>Loading</>
+                ) : isFriend ? (
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-2 cursor-pointer"
+                    onClick={handleUnfriend}
+                    disabled={isRemovingFriend}
+                  >
                     <UserMinus className="h-4 w-4" />
                     Unfriend
                   </Button>
                 ) : (
-                  <Button  disabled={isAddingFriend} variant="default" className="flex-1 cursor-pointer gap-2 bg-green-500" onClick={handleAddFriend}>
+                  <Button
+                    disabled={isAddingFriend}
+                    variant="default"
+                    className="flex-1 cursor-pointer gap-2 bg-green-500"
+                    onClick={handleAddFriend}
+                  >
                     <UserPlus className="h-4 w-4" />
                     Add Friend
                   </Button>
@@ -238,5 +267,4 @@ function getInitials(name: string): string {
     .toUpperCase()
     .substring(0, 2)
 }
-
 

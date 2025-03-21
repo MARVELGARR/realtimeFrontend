@@ -39,7 +39,7 @@ export function GroupMembersTab() {
   const filteredMembers = members.filter((member) => member.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
   return (
-    <div className="flex flex-col h-full max-w-2xl mx-auto">
+    <div className="flex flex-col h-full w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold">Members ({members.length})</h2>
         <Dialog>
