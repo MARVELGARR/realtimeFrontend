@@ -12,12 +12,14 @@ type ProfilePicDropdownProps = {
   className?: string;
   recepientProfilePic?: string;
   recepientName: string;
+  recepientId: string;
 };
 
 export function ProfilePicDropdown({
   recepientName,
   className,
   recepientProfilePic,
+  recepientId
 }: ProfilePicDropdownProps) {
   const handleClick = (action: string) => {
     switch (action) {
@@ -50,7 +52,7 @@ export function ProfilePicDropdown({
           onClick={() => handleClick("profile")}
           className="hover:bg-green-200"
         >
-          Profile
+          <ProfileCardDialog recepientId={recepientId} recepientName={recepientName}/>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleClick("un-friend")}
@@ -72,6 +74,7 @@ export function ProfilePicDropdown({
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ProfileCardDialog } from "./profileCard";
 
 export function DisplaProfilePicDialog({
   recepientProfilePic,
@@ -98,3 +101,4 @@ export function DisplaProfilePicDialog({
     </Dialog>
   );
 }
+

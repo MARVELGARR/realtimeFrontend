@@ -12,6 +12,8 @@ type GroupProfile ={
 }
 
 export default function GroupProfile({groupId, className}:GroupProfile) {
+
+  
   return (
     <div className="flex h-screen bg-background">
       {/* Left sidebar with tab triggers */}

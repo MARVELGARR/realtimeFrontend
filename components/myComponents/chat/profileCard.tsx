@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -13,6 +13,7 @@ import useGetRecepientProfile from "@/hooks/chatJooks/useGetRecepientProfile"
 import useAddFriend from "@/hooks/interactionHooks/useAddfriend"
 import { toast } from "@/hooks/use-toast"
 import useUnFriend from "@/hooks/interactionHooks/useUnFriend"
+import React from "react"
 
 type ProfileRecepient = {
   bio: string
@@ -77,14 +78,22 @@ export function ProfileCardDialog({ className, recepientName, recepientId,  }: P
     })
   }
 
-  const handleBlockUser = () => {
-    // Implement your block user logic here
-    console.log(`Blocking ${recepientName}`)
+  const handleBlockUser = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent dialog from closing
+    console.log(`Blocking ${recepientName}`);
+    setIsDialogOpen(false); // Close the dialog after blocking
     // You would typically call an API endpoint here
   }
+  const handleDialogClose = () => {
+    const dialog = document.querySelector("[data-state='open']");
+    if (dialog) {
+      (dialog as HTMLElement).click();
+    }
+  };
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className=" w-full flex justify-start pl-2 py-4 align-left border-none  h-5 " variant="outline"> <span className="align-left">profile</span> </Button>
       </DialogTrigger>
