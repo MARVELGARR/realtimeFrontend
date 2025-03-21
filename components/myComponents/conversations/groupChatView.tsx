@@ -3,7 +3,6 @@ import { GroupConversationProp } from "@/actions/api-actions/messageActions/getC
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelection } from "@/store/useMessageSelection";
 import { DeleteMessagesDemo } from "../utilityComponent/deleteMessagesDialog";
-import { ProfilePicDropdown } from "../chat/profilePicDropDown";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";

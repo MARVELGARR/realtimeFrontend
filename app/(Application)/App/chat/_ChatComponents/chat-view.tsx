@@ -15,9 +15,9 @@ import useDeleteMessages from "@/hooks/messageHooks/useDeleteMessages"
 import { toast } from "@/hooks/use-toast"
 import { DeleteMessagesDemo } from "@/components/myComponents/utilityComponent/deleteMessagesDialog"
 import { Button } from "@/components/ui/button"
-import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
 import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
 import GroupChatView from "@/components/myComponents/conversations/groupChatView"
+import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
 
 export function ChatView() {
   const queryClient = useQueryClient()
