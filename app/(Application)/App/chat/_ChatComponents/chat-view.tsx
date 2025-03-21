@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button"
 import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
 import GroupChatView from "@/components/myComponents/conversations/groupChatView"
 import { ProfilePicDropdown } from "@/components/myComponents/chat/profilePicDropDown"
+import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
+import GroupChatView from "@/components/myComponents/conversations/groupChatView"
 
 export function ChatView() {
   const queryClient = useQueryClient()

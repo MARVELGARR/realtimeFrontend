@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -89,13 +90,47 @@ export default function GroupProfile({groupId,className}:GroupProfileProps) {
         <div className="flex-1 p-6 overflow-auto w-[40rem]">
           <TabsContent value="overview" className="mt-0 h-full">
             <GroupOverviewTab groupId={groupId} />
+=======
+"use client"
+
+import { Tabs, TabsContent } from "@/components/ui/tabs"
+
+import { GroupOverviewTab } from "./group-overview-tab"
+import { GroupMembersTab } from "./group-members-tab"
+import { SidebarTabs } from "./sidebar-tabs"
+
+export default function GroupProfile() {
+  return (
+    <div className="flex h-screen bg-background">
+      {/* Left sidebar with tab triggers */}
+      <div className="w-64 border-r shrink-0">
+        <Tabs defaultValue="overview" orientation="vertical" className="h-full">
+          <SidebarTabs />
+        </Tabs>
+      </div>
+
+      {/* Right content area with tab content */}
+      <div className="flex-1 p-6 overflow-auto">
+        <Tabs defaultValue="overview" className="h-full">
+          <TabsContent value="overview" className="mt-0 h-full">
+            <GroupOverviewTab />
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
           </TabsContent>
 
           <TabsContent value="members" className="mt-0 h-full">
             <GroupMembersTab />
           </TabsContent>
+<<<<<<< HEAD
         </div>
       </Tabs>
     </div>
   );
 }
+=======
+        </Tabs>
+      </div>
+    </div>
+  )
+}
+
+>>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
