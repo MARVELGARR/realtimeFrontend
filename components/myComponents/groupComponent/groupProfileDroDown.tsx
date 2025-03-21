@@ -1,3 +1,4 @@
+
 import GroupProfile from "@/components/group-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -9,15 +10,15 @@ import {
 type ProfilePicDropdownProps = {
   className?: string;
   recepientProfilePic?: string;
-  recepientName: string;
-  recepientId: string
+  groupName: string;
+  groupId: string
 };
 
-export function ProfilePicDropdown({
-  recepientName,
+export function GroupProfilePicDropdown({
+  groupName,
   className,
   recepientProfilePic,
-  recepientId
+  groupId,
 }: ProfilePicDropdownProps) {
   const handleClick = (action: string) => {
     switch (action) {
@@ -36,16 +37,14 @@ export function ProfilePicDropdown({
         <Avatar className="cursor-pointer">
           <AvatarImage src={recepientProfilePic!} className="" />
           <AvatarFallback>{`g${
-            recepientName ? recepientName[0] + recepientName[-1] : ""
+            groupName ? groupName[0] + groupName[-1] : ""
           } f`}</AvatarFallback>
         </Avatar>
 
     </PopoverTrigger>
-    <PopoverContent>
-      <GroupProfile groupId={""}/>
+    <PopoverContent className="w-fit h-fit">
+      <GroupProfile groupId={groupId}/>
     </PopoverContent>
   </Popover>
   );
 }
-
-

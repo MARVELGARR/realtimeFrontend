@@ -3,14 +3,6 @@ import { GroupConversationProp } from "@/actions/api-actions/messageActions/getC
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelection } from "@/store/useMessageSelection";
 import { DeleteMessagesDemo } from "../utilityComponent/deleteMessagesDialog";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import { ProfilePicDropdown } from "../chat/profilePicDropDown";
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
-=======
-import { ProfilePicDropdown } from "../chat/profilePicDropDown";
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
@@ -19,13 +11,7 @@ import Message from "../chat/message";
 import { GroupMessageForm } from "../chat/groupMessageForm";
 import GroupMessage from "../chat/groupMessage";
 import { useSession } from "@/providers/sessionProvider";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { GroupProfilePicDropdown } from "../chat/GroupProfilePicDropdown";
-=======
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
-=======
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
 
 type groupChatViewProp = {
     className?: string,
@@ -36,15 +22,7 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
     const {selections, setSelections, clearSelections } = useSelection()
     const groupName = groupConversation.group.name
     const groupImage = groupConversation.group.groupImage
-<<<<<<< HEAD
-<<<<<<< HEAD
     const groupId = groupConversation.groupId
-=======
-    const groupId = groupConversation.id
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
-=======
-    const groupId = groupConversation.id
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
     const conversationId = groupConversation.id
     
 
@@ -76,15 +54,7 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
             <p className=''> Selected: {selections.length}</p>
             </div></>):(<div className="p-4  border-gray-200 flex gap-[3rem] item-center">
   
-<<<<<<< HEAD
-<<<<<<< HEAD
               <GroupProfilePicDropdown groupId={groupId} className=" cursor-pointer" groupName={groupName!} recepientProfilePic={groupImage!}/>
-=======
-              <ProfilePicDropdown recepientId={groupId} className=" cursor-pointer" recepientName={groupName!} recepientProfilePic={groupImage!}/>
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
-=======
-              <ProfilePicDropdown recepientId={groupId} className=" cursor-pointer" recepientName={groupName!} recepientProfilePic={groupImage!}/>
->>>>>>> 02ffda6ca45a3476e79fc3afd9a5a61ce4aa0de1
   
             <h2 className="text-xl font-semibold">{groupName}</h2>
           </div>)}
