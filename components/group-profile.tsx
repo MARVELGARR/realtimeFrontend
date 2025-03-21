@@ -6,7 +6,12 @@ import { GroupOverviewTab } from "./group-overview-tab"
 import { GroupMembersTab } from "./group-members-tab"
 import { SidebarTabs } from "./sidebar-tabs"
 
-export default function GroupProfile() {
+type GroupProfile ={
+  className?: string;
+  groupId: string
+}
+
+export default function GroupProfile({groupId, className}:GroupProfile) {
   return (
     <div className="flex h-screen bg-background">
       {/* Left sidebar with tab triggers */}
