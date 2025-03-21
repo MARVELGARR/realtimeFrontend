@@ -28,7 +28,7 @@ type ProfileRecepient = {
 
 const getGroupProfile = async(groupId: string): Promise<getGroupProfileProps> => {
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/get-group-profile/${groupId}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/get-group-profile-by-id/${groupId}`,{
             method: "GET",
             headers: {
                 "Content-type": "application/json"
