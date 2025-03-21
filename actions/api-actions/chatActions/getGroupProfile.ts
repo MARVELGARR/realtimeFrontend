@@ -1,4 +1,4 @@
-type getRecepientProfileProps ={
+type getGroupProfileProps ={
     id: string,
     name: string,
     email: string,
@@ -26,9 +26,9 @@ type ProfileRecepient = {
     profilePicture: string,
 }
 
-const getRecepientProfile = async(recepientId: string): Promise<getRecepientProfileProps> => {
+const getGroupProfile = async(groupId: string): Promise<getGroupProfileProps> => {
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/get-recepient-profile/${recepientId}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/get-group-profile-by-id/${groupId}`,{
             method: "GET",
             headers: {
                 "Content-type": "application/json"
@@ -52,4 +52,4 @@ const getRecepientProfile = async(recepientId: string): Promise<getRecepientProf
     
 }
  
-export default getRecepientProfile;
+export default getGroupProfile;

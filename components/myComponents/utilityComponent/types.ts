@@ -19,6 +19,6 @@ export interface Views {
 export interface User {
   id: string
   name: string
-  selected: boolean
+  image: string
 }
 

@@ -1,11 +1,11 @@
 
 
 
-const starMessage = async (staringData: {messageId: string;
+const unStarGroupMessage = async (staringData: {messageId: string;
     currentProfileId: string;}) => {
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/star-group-message`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/unStar-group-message`,{
             method: "POST",
             headers:{
                 "Content-type": "application/json"
@@ -31,4 +31,4 @@ const starMessage = async (staringData: {messageId: string;
 
 }
  
-export default starMessage;
+export default unStarGroupMessage;

@@ -11,8 +11,7 @@ export interface User {
     updatedAt: string;
 }
 
-export interface StarredMessage {
-    
+export interface StarredMessage { 
     id: string,
     profileId: string,
     messageId: string,
@@ -28,7 +27,7 @@ export interface Message {
     userId: string;
     conversationId: string;
     user: User;
-    StarredMessage:StarredMessage
+    StarredMessage:StarredMessage[]
 
 }
 

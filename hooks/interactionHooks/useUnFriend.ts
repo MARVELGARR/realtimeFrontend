@@ -1,17 +1,18 @@
-import addFriend from "@/actions/api-actions/userAction/addFriend";
+
+import unFriend from "@/actions/api-actions/userAction/unFriend";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useAddFriend = (recepientId:string) => {
+const useUnFriend = (recepientId:string) => {
     const queryClient = useQueryClient();
 
-    const {mutateAsync: addingFriend, isPending: isAddingFriend} = useMutation({
-        mutationFn: (recepientId: string)=> addFriend(recepientId),
+    const {mutateAsync: removingFriend, isPending: isRemovingFriend} = useMutation({
+        mutationFn: (recepientId: string)=> unFriend(recepientId),
         onSettled: () =>{
             queryClient.invalidateQueries({ queryKey: ["recepient-profile", {recepientId}] });
             queryClient.invalidateQueries({ queryKey: ["conversation", {recepientId}] });
         }
     })
-    return {addingFriend, isAddingFriend}
+    return {removingFriend, isRemovingFriend}
 }
  
-export default useAddFriend;
+export default useUnFriend;

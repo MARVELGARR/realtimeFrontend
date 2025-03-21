@@ -1,16 +1,16 @@
 "use client"
 
-import unStarMessage from "@/actions/api-actions/messageActions/unStarMessage"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import useDeleteHook from "@/hooks/messageHooks/useDeleteHooks"
-import useStarHook from "@/hooks/messageHooks/useStarHook"
-import useUnStarMssage from "@/hooks/messageHooks/useUnStarHooks"
 import { toast } from "@/hooks/use-toast"
 import { useSelection } from "@/store/useMessageSelection"
 import { Check, Copy, Edit, Info, Star, Trash } from "lucide-react"
-import { PopoverDemo } from "../utilityComponent/messageInfo"
 import { Message } from "@/actions/api-actions/messageActions/getConversation"
+import { GroupMessageType } from "@/actions/api-actions/messageActions/getConversationWithConversationId"
+import { GroupPopoverDemo } from "../utilityComponent/groupMessageInfo"
+import useDeleteGroupMessage from "@/hooks/messageHooks/useDeleteGroupMessage"
+import useStarGroupMessageHook from "@/hooks/messageHooks/useStaringGroupMessageHook"
+import useUnStarGroupMssage from "@/hooks/messageHooks/unStaringGroupMessageHook"
 
 
 
@@ -20,11 +20,11 @@ export type MessageType = Message
 interface DropdownMenuMessageOptionsProps {
   onOpenChange?: (open: boolean) => void
   // messageId: string,
-  recepientId: string
+  conversationId: string
   isMyMessage: boolean
   // messageContent: string
   currentProfileId: string
-  messages: MessageType 
+  messages: GroupMessageType 
 }
 
 /**
@@ -43,11 +43,11 @@ interface DropdownMenuMessageOptionsProps {
 
 
 
-export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentProfileId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
+export function DropdownMenuGroupMessageOptions({ onOpenChange, messages,   currentProfileId, conversationId, isMyMessage }: DropdownMenuMessageOptionsProps) {
   
-  const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
-  const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
-  const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(recepientId as string)
+  const {DeleteGroupMessage, isDeletingGroupMessage} = useDeleteGroupMessage(conversationId as string)
+  const {isStaringGroupMessage, staringGroupMessage} = useStarGroupMessageHook(conversationId as string)
+  const { isUnStaringGroupMessage,unStaringGroupMessage} =useUnStarGroupMssage(conversationId as string)
   
     const messageContent = messages.content
     const messageId = messages.id
@@ -79,7 +79,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
     
     switch (action) {
       case "delete":
-        DeleteMessage(messageId).then((data)=>{
+        DeleteGroupMessage(messageId).then((data)=>{
           toast({
             title: "message deleted",
             variant: "success"
@@ -95,7 +95,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
         copyText()
         break
       case "star":
-        staringMessage(staringData).then((data)=>{
+        staringGroupMessage(staringData).then((data)=>{
           toast({
             title: "message liked",
             variant: "success"
@@ -108,7 +108,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
         })
         break
       case "un-Star":
-        unStaringMessage(staringData).then((data)=>{
+        unStaringGroupMessage(staringData).then((data)=>{
           toast({
             title: "message Unliked",
             variant: "success"
@@ -150,20 +150,20 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
           <p className="">Edit</p>
         </DropdownMenuItem>
       {isMessageLiked ? (
-        <DropdownMenuItem disabled={isUnStaringMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("un-Star")}>
+        <DropdownMenuItem disabled={isUnStaringGroupMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("un-Star")}>
           <Star fill="orange" className={`w-4 h-4 text-orange`} />
           <p className="">Unstar</p>
         </DropdownMenuItem>
       ) : (
-        <DropdownMenuItem disabled={isStaringMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("star")}>
+        <DropdownMenuItem disabled={isStaringGroupMessage} className="flex cursor-pointer items-center gap-4" onClick={() => handleItemClick("star")}>
           <Star fill="white" className={`w-4 h-4`} />
           <p className="">Star</p>
           {isMessageLiked}
         </DropdownMenuItem>
       )}
 
-        {isMyMessage && (<DropdownMenuItem disabled={isDeletingMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
-            <Trash  color="red" className={`w-4 h-4 ${isDeletingMessage ? " ": ""}`} />
+        {isMyMessage && (<DropdownMenuItem disabled={isDeletingGroupMessage} onClick={() => handleItemClick("delete")} className="flex items-center gap-4" >
+            <Trash  color="red" className={`w-4 h-4 ${isDeletingGroupMessage ? " ": ""}`} />
             <p className="">Delete</p>
         </DropdownMenuItem>)}
 
@@ -178,7 +178,7 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
         )}
         
         <DropdownMenuItem asChild className="flex items-center gap-4" >
-          <PopoverDemo messages={messages}  />
+          <GroupPopoverDemo messages={messages}  />
         </DropdownMenuItem>
        
       </DropdownMenuContent>

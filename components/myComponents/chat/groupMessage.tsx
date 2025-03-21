@@ -2,38 +2,39 @@
 
 import type React from "react";
 
-import type {
-  Message as ImportedMessageType,
-  User,
-} from "@/actions/api-actions/messageActions/getConversation";
+
 import { useMemo, useRef, useState } from "react";
 import { DropdownMenuMessageOptions } from "./messageOptions";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/store/useMessageSelection";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Star } from "lucide-react";
+import { GroupMessageType } from "@/actions/api-actions/messageActions/getConversationWithConversationId";
+import { DropdownMenuGroupMessageOptions } from "./groupMessageOptions.tsx";
+import { useSession } from "@/providers/sessionProvider";
 
-export type MessageType = ImportedMessageType;
+
 
 interface MessageProps {
-  currentUserId: string;
-  recepientId: string;
-  message: MessageType;
+  conversationId: string;
+  message: GroupMessageType;
   currentProfileId: string;
   className?: string;
 }
 
-const Message: React.FC<MessageProps> = ({
+const GroupMessage: React.FC<MessageProps> = ({
   message,
   currentProfileId,
   className,
-  currentUserId,
-  recepientId,
+  conversationId,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  
+  const currentUserId =useSession().currentUser?.id as string
 
   const { selections, removeSelections, setSelections } = useSelection();
 
@@ -109,18 +110,18 @@ const Message: React.FC<MessageProps> = ({
           message.userId === currentUserId ? "-left-11" : "-right-11"
         }`}
         >
-        <DropdownMenuMessageOptions
+        <DropdownMenuGroupMessageOptions
           messages={message}
           
           currentProfileId={currentProfileId}
           isMyMessage={isMyMessage}
-          recepientId={recepientId}
+          conversationId={conversationId}
           onOpenChange={handleDropdownOpenChange}
         />
         </div>
       )}
       <div
-        className={`inline-block relative relative px-4 p-2 rounded-lg ${
+        className={`inline-block relative px-4 p-2 rounded-lg ${
         message.userId === currentUserId
           ? "bg-blue-500 text-white mr-4"
           : "bg-gray-200 ml-4"
@@ -135,4 +136,4 @@ const Message: React.FC<MessageProps> = ({
   );
 };
 
-export default Message;
+export default GroupMessage;

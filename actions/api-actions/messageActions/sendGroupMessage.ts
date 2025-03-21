@@ -1,18 +1,19 @@
-import { MessageFormData } from "@/components/myComponents/chat/messageForm";
+import { MessageFormData } from "@/components/myComponents/chat/groupMessageForm";
 
 
 
-const addFriend = async( recepientId: string ) => {
+
+const sendGroupMessage = async( message: MessageFormData, conversationId?: string | undefined) => {
 
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/add-friend`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-group-message${conversationId ? conversationId : undefined}`, {
             
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({recepientId}),
+            body: JSON.stringify(message),
             credentials: "include",
         })
         if(res.ok){
@@ -32,4 +33,4 @@ const addFriend = async( recepientId: string ) => {
     }
 }
  
-export default addFriend;
+export default sendGroupMessage;

@@ -80,7 +80,7 @@ export function ChatList() {
                   </div>
                   <div>
                     {filterData.friendConvo.map((convo) => (
-                      <FriendListConvo className="" conversation={convo} />
+                      <FriendListConvo key={convo.id} className="" conversation={convo} />
                     ))}
                   </div>
                 </>
@@ -94,12 +94,14 @@ export function ChatList() {
                   </div>
                   <div>
                     {filterData.favouriteConvo.map((convo) => (
-                      <FavouriteListConvo className="" conversation={convo} />
+                      <FavouriteListConvo key={convo.id} className="" conversation={convo} />
                     ))}
                   </div>
                 </>
               ) : (
-                <></>
+                <div className="w-full flex justify-center items-center">
+                  <strong className="font-bold">No Favourites</strong>
+                </div>
               )}
             </>
           ) : filterState.id == "groups" ? (
@@ -120,7 +122,7 @@ export function ChatList() {
               </div>
               <div>
                 {filterData.friendConvo.map((convo) => (
-                  <FriendListConvo className="" conversation={convo} />
+                  <FriendListConvo key={convo.id} className="" conversation={convo} />
                 ))}
               </div>
             </>
@@ -131,7 +133,7 @@ export function ChatList() {
               </div>
               <div>
                 {filterData.favouriteConvo.map((convo) => (
-                  <FavouriteListConvo className="" conversation={convo} />
+                  <FavouriteListConvo key={convo.id} className="" conversation={convo} />
                 ))}
               </div>
             </>
