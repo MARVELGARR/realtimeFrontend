@@ -4,6 +4,7 @@ export type newGroupDetailsProp = {
     participant: string[],
     disappearingMessages: string,
     groupImage: string[] 
+    groupDescription: string
     
 }
 

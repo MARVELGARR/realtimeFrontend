@@ -14,9 +14,10 @@ import { Trash2Icon } from "lucide-react"
 type DeleteMessagesDemo = {
     className?: string
     handleDeleteSelectedMessages: ()=> void
+    isDeletingMessages: boolean
 }
   
-export function DeleteMessagesDemo({handleDeleteSelectedMessages, className}:DeleteMessagesDemo) {
+export function DeleteMessagesDemo({handleDeleteSelectedMessages, isDeletingMessages, className}:DeleteMessagesDemo) {
 
     return (
       <AlertDialog>
@@ -33,7 +34,7 @@ export function DeleteMessagesDemo({handleDeleteSelectedMessages, className}:Del
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="bg-red-600 text-white" >Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteSelectedMessages}>Continue</AlertDialogAction>
+            <AlertDialogAction disabled={isDeletingMessages} onClick={handleDeleteSelectedMessages}>Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

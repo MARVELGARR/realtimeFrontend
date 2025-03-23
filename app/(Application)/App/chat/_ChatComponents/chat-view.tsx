@@ -1,15 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect,} from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageForm } from "@/components/myComponents/chat/messageForm"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import getConversationsWithrecepientId from "@/actions/api-actions/messageActions/getConversation"
 import { useSearchParams } from "next/navigation"
 import { useSession } from "@/providers/sessionProvider"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Message from "@/components/myComponents/chat/message"
-import { Trash2Icon } from "lucide-react"
 import { useSelection } from "@/store/useMessageSelection"
 import useDeleteMessages from "@/hooks/messageHooks/useDeleteMessages"
 import { toast } from "@/hooks/use-toast"
@@ -99,7 +97,7 @@ export function ChatView() {
         <div className="flex items-center gap-3">
 
           {selections && selections?.length > 0 &&(
-            <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
+            <DeleteMessagesDemo isDeletingMessages={isDeletingMessages} handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
           )}
           {selections && selections?.length > 0 &&(
             <Button className=" h-8" onClick={clearSelections} variant={"outline"}>Cancel</Button>

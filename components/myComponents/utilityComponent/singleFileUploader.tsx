@@ -139,7 +139,7 @@ export function SingleFileUploader() {
                 <User className="w-4 h-4"/>
             </AvatarFallback>
          </Avatar>
-          </>) : (<Upload className="w-full  h-full" />)}
+          </>) : (<Upload className="w-5  h-5" />)}
             </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

@@ -27,6 +27,7 @@ export const GroupDetailsView = ({
 }) => {
   const [groupName, setGroupName] = useState("")
   const [disappearingMessages, setDisappearingMessages] = useState("")
+  const [groupDescription, setGroupDescription] = useState("")
 
   const {userSelections} = useUserSelection()
 
@@ -37,7 +38,7 @@ export const GroupDetailsView = ({
     name: groupName,
     participant: userSelections ? userSelections.map((users) => String(users.id)) : [],
     groupImage: urls ? urls.map((images) => images.url) : [],
-
+    groupDescription: groupDescription,
     disappearingMessages: disappearingMessages
   } 
 
@@ -87,6 +88,7 @@ export const GroupDetailsView = ({
         </Select>
         <label htmlFor="disappearing-messages">Enable disappearing messages</label>
       </div>
+      <Input type="text" placeholder="Group Description" value={groupDescription} onChange={(e)=>setGroupDescription(e.target.value)}/>
       <Button onClick={handleGroupCreation} className="w-full" disabled={isCreatingGroup}>
         {isCreatingGroup ? "Creating..." : "Create Group"}
       </Button>

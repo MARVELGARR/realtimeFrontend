@@ -22,6 +22,7 @@ export function ProfilePicDropdown({
   recepientId
 }: ProfilePicDropdownProps) {
   const handleClick = (action: string) => {
+
     switch (action) {
       case "view-pic":
         break;
@@ -53,18 +54,6 @@ export function ProfilePicDropdown({
           className="hover:bg-green-200"
         >
           <ProfileCardDialog recepientId={recepientId} recepientName={recepientName}/>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => handleClick("un-friend")}
-          className="hover:bg-green-200"
-        >
-          Unfriend
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => handleClick("block")}
-          className="hover:bg-green-200"
-        >
-          Block user
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

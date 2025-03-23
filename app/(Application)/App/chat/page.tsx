@@ -9,6 +9,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
 
@@ -24,7 +25,12 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={75}>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={
+            <div className="">
+
+              <Loader2 className=" animate-spin w-8 h-8"/>
+            </div>
+            }>
           
             <ChatView/>
           </Suspense>
