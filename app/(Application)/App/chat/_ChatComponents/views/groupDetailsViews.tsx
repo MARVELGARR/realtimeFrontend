@@ -29,15 +29,15 @@ export const GroupDetailsView = ({
   const [disappearingMessages, setDisappearingMessages] = useState("")
   const [groupDescription, setGroupDescription] = useState("")
 
-  const {userSelections} = useUserSelection()
+  const {userSelections, clearUserSelections: clearUserSelectio} = useUserSelection()
 
-  const {urls} = useStoreUploadedUrls()
+  const {url, clearUserSelections} = useStoreUploadedUrls()
   const DisappearingMessages =[ "OFF", "DAYS90", 'DAYS7', "H24"]
 
   const newGroupDetails = {
     name: groupName,
     participant: userSelections ? userSelections.map((users) => String(users.id)) : [],
-    groupImage: urls ? urls.map((images) => images.url) : [],
+    groupImage:  url,
     groupDescription: groupDescription,
     disappearingMessages: disappearingMessages
   } 
@@ -47,6 +47,8 @@ export const GroupDetailsView = ({
 
   const handleGroupCreation = async() =>{
     CreatGroup(newGroupDetails).then((data)=>{
+      clearUserSelections()
+      clearUserSelectio()
       toast({
         title: "Group created",
         variant: "success"
