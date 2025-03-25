@@ -1,7 +1,7 @@
-const editGroupDetails = async(data:FormData) => {
+const editGroupDetails = async(data:FormData, groupId: string) => {
     
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/edit-group-details`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/edit-group-details/${groupId}`,{
             method: "PATCH",
             body: JSON.stringify(data),
             credentials: "include"

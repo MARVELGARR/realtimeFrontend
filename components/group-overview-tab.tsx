@@ -19,23 +19,26 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import { SingleFileUploader } from "./myComponents/utilityComponent/singleFileUploader";
 import { DisappearingSelection } from "./myComponents/groupComponent/disapearingMessageSelection";
+import useEditGroup from "@/hooks/groupHook/editgroupHook";
+import { toast } from "@/hooks/use-toast";
+import { useStoreUploadedUrls } from "@/store/useStoreUploadedImage";
 type GroupOveGrouprviewTab = {
   data: GroupProfileProps;
   className?: string;
 };
 export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
-  const [isEditingGroupDescription, setIsEditingGrouDescription] =
-    useState(false);
+  const [isEditingGroupDescription, setIsEditingGrouDescription] = useState(false);
+
   const [isEditingGroupName, setIsEditingGroupName] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [newDisappearingMessages, setNewDisappearingMessages] = useState("");
-  const [newGroupImage, setNewGroupImage] = useState("");
   const [
     isEditingGroupDisappearingMessage,
     setIsEditingGrouDisappearingMessage,
   ] = useState(false);
   const { currentUser } = useSession();
+  const { editGroup, isEdittingGroup}= useEditGroup(data.id)
   const groupImage = data.groupImage;
   const groupName = data.name;
   const groupDescription = data.descriptions;
@@ -59,15 +62,27 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
     me?.groupRole!,
     "EDIT_GROUP"
   );
-  const isGroupDeleteable =
-    hasPermissionToDeleteGroup && data.participants.length < 2;
-
-  const handleEditGroup = () => {
+  const isGroupDeleteable =hasPermissionToDeleteGroup && data.participants.length < 2;
+  const {url, clearUserSelections} = useStoreUploadedUrls();
+ 
+  const handleEditGroup = async () => {
     const data = new FormData();
     data.append("name", newGroupName);
     data.append("description", newGroupDescription);
     data.append("disappearingMessages", disappearingMessages);
-    data.append("groupImage", groupImage);
+    data.append("groupImage", url);
+    editGroup(data).then(()=>{
+      clearUserSelections();
+      toast({
+        title: "Group updated",
+        variant: "success",
+      })
+    }).catch(()=>{
+      toast({
+        title: "Group update failed",
+        variant: "destructive",
+      })
+    })
   };
 
   return (

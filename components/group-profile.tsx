@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useGetGroupProfile from "@/hooks/chatJooks/useGetGroupProfileHook";
 import { GroupOverviewTab } from "./group-overview-tab";
+import useGetGroupProfile from "@/hooks/groupHook/useGetGroupProfileHook";
 
 type GroupProfile = {
   className?: string;

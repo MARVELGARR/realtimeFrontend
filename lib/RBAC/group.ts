@@ -1,10 +1,10 @@
 type Permission = "EDIT_GROUP" | "REMOVE_PARTICIPANT" | "VIEW_GROUP" | "ADD_PARTICIPANT" | "DELETE_GROUP";
 
-type Role = "admin" | "participant";
+type Role = "ADMIN" | "PARTICIPANT";
 
 const RolePermissions: Record<Role, Permission[]> = {
-  admin: ["EDIT_GROUP", "REMOVE_PARTICIPANT", "VIEW_GROUP"],
-  participant: ["VIEW_GROUP",  "ADD_PARTICIPANT"],
+  ADMIN: ["EDIT_GROUP", "REMOVE_PARTICIPANT", "VIEW_GROUP"],
+  PARTICIPANT: ["VIEW_GROUP",  "ADD_PARTICIPANT"],
 };
 
 
