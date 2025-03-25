@@ -168,22 +168,15 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
             {!isEditingGroupDescription ? (
               <p>{groupDescription?.toWellFormed()}</p>
             ) : (
-              <Input
-                value={newGroupDescription?.toWellFormed()}
-                onChange={(e) => setNewGroupDescription(e.target.value)}
-                type={"text"}
-              />
-            )}
-          </div>
-          {hasPermissionToEditGroup && (
-            <div className="">
-              {!isEditingGroupDescription ? (
-                <Edit
-                  onClick={() => setIsEditingGrouDescription((prev) => !prev)}
-                  className="h-4 w-4 cursor-pointer hover:bg-gray-200"
+              <div className="flex items-center gap-2">
+
+                <Input
+                  value={newGroupDescription?.toWellFormed()}
+                  onChange={(e) => setNewGroupDescription(e.target.value)}
+                  type={"text"}
                 />
-              ) : (
-                <div className="flex items-center gap-2">
+
+<div className="flex items-center gap-2">
                   <Button
                     variant="destructive"
                     size="icon"
@@ -201,8 +194,16 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
                     update
                   </Button>
                 </div>
-              )}
-            </div>
+
+              </div>
+            )}
+          </div>
+          {hasPermissionToEditGroup && (
+            
+ <Edit
+                  onClick={() => setIsEditingGrouDescription((prev) => !prev)}
+                  className="h-4 w-4 cursor-pointer hover:bg-gray-200"
+                />
           )}
         </div>
 
