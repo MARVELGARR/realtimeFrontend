@@ -13,8 +13,8 @@ import useGetRecepientProfile from "@/hooks/chatJooks/useGetRecepientProfile"
 import useAddFriend from "@/hooks/interactionHooks/useAddfriend"
 import { toast } from "@/hooks/use-toast"
 import useUnFriend from "@/hooks/interactionHooks/useUnFriend"
-import useGetGroupProfile from "@/hooks/chatJooks/useGetGroupProfileHook"
 import GroupProfile from "@/components/group-profile"
+import useGetGroupProfile from "@/hooks/groupHook/useGetGroupProfileHook"
 
 type ProfileRecepient = {
   bio: string
