@@ -5,12 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 /**
  * A hook that stores state in URL query parameters, mimicking the useState API
+ * With special handling for conversationId and recepientId to ensure they're mutually exclusive
  * @param key The query parameter key to use
  * @param initialValue The initial value to use if the query parameter is not present
  * @returns A tuple of [value, setValue] similar to useState
  */
-
-
 export function useUrlState<T>(key: string, initialValue?: T): [T, (value: T | ((prevValue: T) => T)) => void] {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -34,11 +33,24 @@ export function useUrlState<T>(key: string, initialValue?: T): [T, (value: T | (
   // Local state to handle the value before the URL is updated
   const [value, setValue] = useState<T>(getValueFromUrl)
 
-  // Update URL when value changes
+  // Update URL when value changes, with special handling for conversationId/recepientId
   const updateUrl = useCallback(
     (newValue: T) => {
       const newParams = new URLSearchParams(searchParams.toString())
 
+      // Special handling for mutually exclusive conversationId and recepientId
+      if ((key === "conversationId" || key === "recepientId") && newValue !== null && newValue !== undefined) {
+        // If setting conversationId, remove recepientId
+        if (key === "conversationId") {
+          newParams.delete("recepientId")
+        }
+        // If setting recepientId, remove conversationId
+        else if (key === "recepientId") {
+          newParams.delete("conversationId")
+        }
+      }
+
+      // Handle the current parameter
       if (newValue === undefined || newValue === null) {
         newParams.delete(key)
       } else {

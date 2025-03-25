@@ -8,9 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Users, UserPlus, Star, MessageCircle, UsersRound, Filter } from "lucide-react"
+import { Users, Star, MessageCircle, UsersRound, Filter } from "lucide-react"
 import ZustanFilterStore, { zustandFilterProps } from "@/store/useSearchFilter"
-import { useEffect } from "react"
 
 interface FilterOption {
   id: zustandFilterProps["id"]
@@ -21,7 +20,6 @@ interface FilterOption {
 const filterOptions: FilterOption[] = [
   { id: "all", label: "All", icon: <Users className="mr-2 h-4 w-4" /> },
   { id: "contact", label: "Contact", icon: <Users className="mr-2 h-4 w-4" /> },
-  { id: "contact", label: "Contact", icon: <UserPlus className="mr-2 h-4 w-4" /> },
   { id: "favourites", label: "Favourites", icon: <Star className="mr-2 h-4 w-4" /> },
   { id: "unreads", label: "Unreads", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
   { id: "groups", label: "Groups", icon: <UsersRound className="mr-2 h-4 w-4" /> },

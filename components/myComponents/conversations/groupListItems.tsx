@@ -26,6 +26,7 @@ const GroupListItem = ({conversation, className}:ConversatonListItemProps) => {
         const searchParams = useSearchParams()
     
         const initialRecepientId = searchParams.get("recepientId") ?? null
+        const initialConversationId = searchParams.get("conversationId") ?? null
     
         const currentUserId = currentUser?.id
         const groupData = conversation?.group
@@ -35,7 +36,7 @@ const GroupListItem = ({conversation, className}:ConversatonListItemProps) => {
 
 
     return (
-        <div className={cn(className, `cursor-pointer ${ConversationId === conversationId ? "border-2 border-black rounded" : ""}`)} onClick={()=>setConversationId(conversationId)}>
+        <div className={cn(className, `cursor-pointer p-2 ${initialConversationId && ConversationId === conversationId ? "bg-gray-400/15 rounded" : ""}`)} onClick={()=>setConversationId(conversationId)}>
             <div className="w-full flex place-items-start gap-3">
                 <Avatar className="w-[2.7rem] h-[2.7rem]">
                     <AvatarImage src={groupImage as string} alt={groupName || "profile picture"} />

@@ -33,7 +33,7 @@ const ConversatonListItem = ({conversation, className}:ConversatonListItemProps)
 
 
     return (
-        <div className={cn(`cursor-pointer ${recepientId === initialRecepientId ? "border-2 border-black rounded" : ""} `, className)} onClick={()=>setRecepientId(newRecepientId as string)}>
+        <div className={cn(`cursor-pointer p-2 ${initialRecepientId && recepientId === initialRecepientId ? " bg-slate-400/15 rounded" : ""} `, className)} onClick={()=>setRecepientId(newRecepientId as string)}>
             
             <div className="w-full flex place-items-start gap-3">
                 <Avatar className="w-[2.7rem] h-[2.7rem]">
