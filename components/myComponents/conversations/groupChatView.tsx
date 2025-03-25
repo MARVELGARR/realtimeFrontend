@@ -61,7 +61,7 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
           <div className="flex items-center gap-3">
   
             {selections && selections?.length > 0 &&(
-              <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages}/>
+              <DeleteMessagesDemo handleDeleteSelectedMessages={handleDeleteSelectedMessages} isDeletingMessages={isDeletingMessages}/>
             )}
             {selections && selections?.length > 0 &&(
               <Button className=" h-8" onClick={clearSelections} variant={"outline"}>Cancel</Button>
