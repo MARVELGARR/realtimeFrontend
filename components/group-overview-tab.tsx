@@ -125,6 +125,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
                     cancle
                   </Button>
                   <Button
+                  onClick={handleEditGroup}
                     variant="default"
                     size="icon"
                     className="h-7 w-fit p-2  hover:brightnes-50 bg-green-300"
@@ -192,6 +193,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
                     cancle
                   </Button>
                   <Button
+                  onClick={handleEditGroup}
                     variant="default"
                     size="icon"
                     className="h-7 w-fit p-2  hover:brightnes-50 bg-green-300"
@@ -230,6 +232,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
                     cancle
                   </Button>
                   <Button
+                    onClick={handleEditGroup}
                     variant="default"
                     size="icon"
                     className="h-7 w-fit p-2  hover:brightnes-50 bg-green-300"
