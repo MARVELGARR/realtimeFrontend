@@ -57,6 +57,12 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
   );
   const isGroupDeleteable =hasPermissionToDeleteGroup && data.participants.length < 2;
   const {url, clearUserSelections} = useStoreUploadedUrls();
+  const closeEdits = () => {
+    setIsEditingGrouDescription(false);
+    setIsEditingGroupName(false);
+    setIsEditingGrouDisappearingMessage(false)
+
+  }
  
   const handleEditGroup = async () => {
     const data = new FormData();
@@ -66,6 +72,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
     data.append("groupImage", url);
     editGroup(data).then(()=>{
       clearUserSelections();
+      closeEdits();
       toast({
         title: "Group updated",
         variant: "success",
