@@ -2,14 +2,6 @@ import { Edit, LogOut, Video, Phone, Trash, Pencil } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { GroupProfileProps } from "@/actions/api-actions/chatActions/getGroupProfile";
 import { LeaveGroupAlert } from "./AlertDialogs/leaveGroupAlert";
 import { DeleteGroupAlert } from "./AlertDialogs/deleteGroup";
@@ -30,9 +22,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
   const [isEditingGroupDescription, setIsEditingGrouDescription] = useState(false);
 
   const [isEditingGroupName, setIsEditingGroupName] = useState(false);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [newGroupDescription, setNewGroupDescription] = useState("");
-  const [newDisappearingMessages, setNewDisappearingMessages] = useState("");
+  
   const [
     isEditingGroupDisappearingMessage,
     setIsEditingGrouDisappearingMessage,
@@ -48,6 +38,9 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
     month: "long",
     day: "numeric",
   });
+  const [newGroupName, setNewGroupName] = useState(groupName);
+  const [newGroupDescription, setNewGroupDescription] = useState(groupDescription);
+  const [newDisappearingMessages, setNewDisappearingMessages] = useState("");
 
   const updatedAt = data.updatedAt;
   const me = data.participants.find(
@@ -68,7 +61,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
   const handleEditGroup = async () => {
     const data = new FormData();
     data.append("name", newGroupName);
-    data.append("description", newGroupDescription);
+    data.append("description", newGroupDescription!);
     data.append("disappearingMessages", disappearingMessages);
     data.append("groupImage", url);
     editGroup(data).then(()=>{
@@ -102,7 +95,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
             <p>{groupName?.toWellFormed()}</p>
           ) : (
             <Input
-              value={groupName?.toWellFormed()}
+              value={newGroupName?.toWellFormed()}
               onChange={(e) => setNewGroupName(e.target.value)}
               type={"text"}
             />
@@ -169,7 +162,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
               <p>{groupDescription?.toWellFormed()}</p>
             ) : (
               <Input
-                value={groupDescription?.toWellFormed()}
+                value={newGroupDescription?.toWellFormed()}
                 onChange={(e) => setNewGroupDescription(e.target.value)}
                 type={"text"}
               />
