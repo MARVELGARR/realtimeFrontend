@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Search, ExternalLink } from "lucide-react"
+import { useEffect, useRef, useState } from "react";
+import { Plus, Search, ExternalLink } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,35 +13,82 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { GroupProfileProps } from "@/actions/api-actions/chatActions/getGroupProfile";
+import useDebounce from "@/hooks/utilityHooks/useDebounce";
+import getGroupParticipant from "@/actions/api-actions/groupActions/getGroupParticipant";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { ScrollArea } from "./ui/scroll-area";
+import GroupParticipantItem from "@/app/(Application)/App/chat/_ChatComponents/groupParticipantItem'";
 
 // Define the member type for better type safety
-type Member = {
-  id: number
-  name: string
-  avatar: string
-  status: string
-}
+type Member = GroupProfileProps["participants"];
 
-export function GroupMembersTab() {
-  const [searchQuery, setSearchQuery] = useState("")
+type GroupMembersTabProps = {
+  Participants: GroupProfileProps["participants"];
+};
+export function GroupMembersTab({ Participants }: GroupMembersTabProps) {
+  const urlQuery = new URLSearchParams(window.location.search);
+  const conversationId = urlQuery.get("conversationId");
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedValue = useDebounce(searchQuery, 500);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const endRef = useRef<HTMLDivElement | null>(null);
 
-  const members: Member[] = [
-    { id: 1, name: "Alex Johnson", avatar: "/placeholder.svg?height=40&width=40", status: "Admin" },
-    { id: 2, name: "Jamie Smith", avatar: "/placeholder.svg?height=40&width=40", status: "Member" },
-    { id: 3, name: "Taylor Wilson", avatar: "/placeholder.svg?height=40&width=40", status: "Member" },
-    { id: 4, name: "Casey Brown", avatar: "/placeholder.svg?height=40&width=40", status: "Member" },
-    { id: 5, name: "Jordan Lee", avatar: "/placeholder.svg?height=40&width=40", status: "Member" },
-  ]
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const filteredMembers = members.filter((member) => member.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Fetch group participants with infinite scrolling
+  const {
+    data: groupParticipants,
+    isLoading: isGettingParticipant,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["group-participant", { searchQuery, page: 1, limit: 10 }],
+    queryFn: () => getGroupParticipant(debouncedValue,conversationId!, 1, 10),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasNextPage
+        ? lastPage.pagination.currentPage + 1
+        : undefined,
+  });
+
+  const observerOptions = {
+    root: containerRef.current,
+    threshold: 0.5,
+  };
+
+  const onEndOverlap = (entries: IntersectionObserverEntry[]) => {
+    if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  // Set up intersection observer
+  useEffect(() => {
+    if (!endRef.current) return;
+    observerRef.current = new IntersectionObserver(onEndOverlap, observerOptions);
+    observerRef.current.observe(endRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, observerOptions]);
+
+
+  const allParticipant = groupParticipants?.pages.flatMap((page) => page.participants) || [];
 
   return (
     <div className="flex flex-col h-full w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold">Members ({members.length})</h2>
+        {/* <h2 className="text-xl font-bold">Members ({members.length})</h2> */}
         <Dialog>
           <DialogTrigger asChild>
             <Button>
@@ -88,34 +135,23 @@ export function GroupMembersTab() {
       </div>
 
       <div className="space-y-4 flex-1 overflow-auto">
-        {filteredMembers.length > 0 ? (
-          filteredMembers.map((member) => (
-            <div key={member.id} className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-md">
-              <div className="flex items-center gap-3">
-                <Avatar>
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback>
-                    {member.name.charAt(0)}
-                    {member.name.split(" ")[1]?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium">{member.name}</p>
-                  <p className="text-sm text-muted-foreground">{member.status}</p>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
+        <ScrollArea ref={containerRef} className="max-h-[30rem]">
+          {allParticipant && allParticipant.length > 0 ? (
+            allParticipant.map((member) => (
+              <GroupParticipantItem key={member.id} member={member} />
+            ))
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">No members found</p>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-10">
-            <p className="text-muted-foreground">No members found</p>
-          </div>
-        )}
+          )} 
+
+          {/* /* Infinite Scroll Trigger */}
+          <div ref={endRef} className="h-10"></div>
+
+          {isFetchingNextPage && <p className="text-center py-4">Loading more...</p>}
+        </ScrollArea>
       </div>
     </div>
-  )
+  );
 }
-

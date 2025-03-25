@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 
-import { GroupOverviewTab } from "./group-overview-tab";
+
 import { GroupMembersTab } from "./group-members-tab";
 import {
   FileText,
@@ -16,6 +16,7 @@ import {
 
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetGroupProfile from "@/hooks/chatJooks/useGetGroupProfileHook";
+import { GroupOverviewTab } from "./group-overview-tab";
 
 type GroupProfile = {
   className?: string;
@@ -24,7 +25,10 @@ type GroupProfile = {
 
 export default function GroupProfile({ groupId, className }: GroupProfile) {
 
-  const {data} = useGetGroupProfile(groupId);
+  const {data, isGettinggroupProfile} = useGetGroupProfile(groupId);
+  const Participants = data?.participants
+  if(isGettinggroupProfile) return <div>Loading...</div>
+  if(!data) return <div>Group not found</div>
   return (
     <div className="flex h-[40rem] w-[56rem] p-0 bg-background">
       {/* Left sidebar with tab triggers */}
@@ -96,11 +100,11 @@ export default function GroupProfile({ groupId, className }: GroupProfile) {
         {/* Right content area with tab content */}
         <div className=" w-[50rem] p-6 overflow-auto">
           <TabsContent value="overview" className="mt-0 h-full w-full">
-            <GroupOverviewTab />
+            <GroupOverviewTab data={data!} />
           </TabsContent>
 
           <TabsContent value="members" className="mt-0 h-full w-full ">
-            <GroupMembersTab />
+            <GroupMembersTab Participants={Participants!} />
           </TabsContent>
         </div>
       </Tabs>

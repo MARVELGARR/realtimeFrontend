@@ -17,7 +17,7 @@ const NewChatSearch = ({onUserSelect }: NewChatSearchProps) => {
   const debouncedValue = useDebounce(searchQuery, 500)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const urlSearchParams = new URLSearchParams()
+  
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
     queryKey: ["users", debouncedValue],

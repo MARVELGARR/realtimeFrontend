@@ -8,35 +8,8 @@ export type newGroupDetailsProp = {
     
 }
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-  }
-  
-  interface Participant {
-    id: string;
-    createdAt: string;
-    // Add other fields if necessary
-  }
-  
-  interface Group {
-    id: string;
-    name: string;
-    admin: User;
-    adminId: string;
-    createdAt: string;
-    creator: User;
-    creatorId: string;
-    descriptions: string | null;
-    disappearingMessages: 'OFF' | 'DAYS90' | 'DAYS7' | 'H24';
-    groupImage: string;
-    participants: Participant[];
-    updatedAt: string;
-  }
-  
 
-const createGroup = async(newGroupDetails:newGroupDetailsProp): Promise<Group> => {
+const createGroup = async(newGroupDetails:newGroupDetailsProp) => {
 
     try{
         const res =  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/createGroup`,{

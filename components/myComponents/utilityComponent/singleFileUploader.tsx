@@ -16,7 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import useSingleFileUploadHook from "@/hooks/utilityHooks/fsingleFileUploadHook";
 import { cn } from "@/lib/utils";
 import { useStoreUploadedUrls } from "@/store/useStoreUploadedImage";
-import { Upload, FileIcon, X, Check, User } from "lucide-react";
+import { Upload, FileIcon, X, Check, User, Pencil } from "lucide-react";
 import { useState, type DragEvent, type ChangeEvent, useRef } from "react";
 
 type DragAction = "enter" | "leave" | "drop" | "exit" | "over" | "none";
@@ -26,8 +26,15 @@ type DragState = {
   action: DragAction;
   state: boolean;
 };
+type UsageProp = "profile" | "group" | "chat";
 
-export function SingleFileUploader() {
+
+
+type SingleFileUploaderProps = {
+  usage?: UsageProp;
+  initialPic?: string
+}
+export function SingleFileUploader({usage, initialPic}:SingleFileUploaderProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -130,7 +137,12 @@ export function SingleFileUploader() {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="w-20 cursor-pointer h-20 bg-gray-200 rounded-full flex items-center justify-center">
+          { usage==="group" ? (
+            <div className="">
+
+                <Pencil className=" h-6 w-6 bg-white text-green-400 rounded-full p-1 cursor-pointer" />
+            </div>
+          ):(<div className="w-20 cursor-pointer h-20 bg-gray-200 rounded-full flex items-center justify-center">
             {uploadedFileUrl ? (
               <>
                 <Avatar>
@@ -146,7 +158,7 @@ export function SingleFileUploader() {
             ) : (
               <Upload className="w-5  h-5" />
             )}
-          </div>
+          </div>)}
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <div className="sm:max-w-md">

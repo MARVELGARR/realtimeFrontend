@@ -1,32 +1,34 @@
-type getGroupProfileProps ={
-    id: string,
-    name: string,
-    email: string,
-    image: string
-    createdAt:string,
-    updatedAt: string
-    Friend: Friend[]
-    profile: ProfileRecepient
-}
-type Friend={
-    
-    friendId: string,
-    userId:string
-    
-}
+interface User {
+    id: string;
+    name: string;
+    email: string;
+  }
+  
+  interface Participant {
+    id: string;
+    createdAt: string;
+    userId: string,
+    groupRole: "PARTICIPANT" | "ADMIN";
+    // Add other fields if necessary
+  }
+  
+ export interface GroupProfileProps {
+    id: string;
+    name: string;
+    admin: User;
+    adminId: string;
+    createdAt: string;
+    creator: User;
+    creatorId: string;
+    descriptions: string | null;
+    disappearingMessages: string;
+    groupImage: string;
+    participants: Participant[];
+    updatedAt: string;
+  }
+  
 
-type ProfileRecepient = {
-    bio: string,
-    birthDay: Date,
-    firstName: string,
-    lastName: string,
-    gender: "MALE" | "FEMALE",
-    nickname: string,
-    phoneNumber: string,
-    profilePicture: string,
-}
-
-const getGroupProfile = async(groupId: string): Promise<getGroupProfileProps> => {
+const getGroupProfile = async(groupId: string): Promise<GroupProfileProps> => {
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/get-group-profile-by-id/${groupId}`,{
             method: "GET",
