@@ -24,6 +24,7 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
     const groupImage = groupConversation.group.groupImage
     const groupId = groupConversation.groupId
     const conversationId = groupConversation.id
+    const groupBio = groupConversation.group.descriptions
     
 
     const {DeleteMessages, isDeletingMessages} = useDeleteMessages(conversationId as string)
@@ -55,8 +56,11 @@ const GroupChatView = ({groupConversation, className}: groupChatViewProp) => {
             </div></>):(<div className="p-4  border-gray-200 flex gap-[3rem] item-center">
   
               <GroupProfilePicDropdown groupId={groupId} className=" cursor-pointer" groupName={groupName!} recepientProfilePic={groupImage!}/>
-  
-            <h2 className="text-xl font-semibold">{groupName}</h2>
+              <div className="flex flex-col items-start">
+
+              <h2 className="text-xl font-semibold">{groupName}</h2>
+              <p className="">{groupBio}</p>
+              </div>
           </div>)}
           <div className="flex items-center gap-3">
   

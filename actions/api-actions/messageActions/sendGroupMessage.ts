@@ -7,7 +7,7 @@ const sendGroupMessage = async( message: MessageFormData, conversationId?: strin
 
 
     try{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-group-message${conversationId ? conversationId : undefined}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-group-message/${conversationId ? conversationId : undefined}`, {
             
             method: "POST",
             headers: {

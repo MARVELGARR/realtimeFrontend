@@ -42,7 +42,7 @@ export function GroupMessageForm({
 
   const ConversationId = conversationId ? conversationId : ""
 
-  const {isSendingGroupMessage, sendingGroupMessage} = useGroupMessageHook(ConversationId!,);
+  const {isSendingGroupMessage, sendingGroupMessage} = useGroupMessageHook(ConversationId!);
 
   // 2. Define a submit handler.
   function onSubmit(values: MessageFormData) {
@@ -52,6 +52,7 @@ export function GroupMessageForm({
     };
 
     sendingGroupMessage(responseData).then((res) => {
+      form.setValue("message", "");
       toast({
         title: "message sent",
         description: `${res.message}`,

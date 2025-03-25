@@ -57,6 +57,7 @@ type Group = {
     disappearingMessages: string;
     groupImage?: string;
     name: string;
+    descriptions: string;
     createdAt: string;
     updatedAt: string;
     id: string;

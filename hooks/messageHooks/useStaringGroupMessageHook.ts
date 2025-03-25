@@ -7,8 +7,8 @@ const useStarGroupMessageHook = (conversationId: string) => {
 
     const {mutateAsync: staringGroupMessage, isPending: isStaringGroupMessage} = useMutation({
         mutationFn: (staringData: { messageId: string; currentProfileId: string; })=>starMessage(staringData),
-        onSettled: ()=>{
-            queryClient.invalidateQueries({queryKey:["conversation", {conversationId}]})
+        onSettled: () =>{
+            queryClient.invalidateQueries({ queryKey: ["group-conversation", { conversationId }] });
         }
     })
 

@@ -8,7 +8,7 @@ const useDeleteGroupMessage = (conversationId: string) => {
     const {mutateAsync: DeleteGroupMessage, isPending: isDeletingGroupMessage} = useMutation({
         mutationFn: (messageId: string)=> deleteGroupMessage(messageId),
         onSettled: () =>{
-            queryClient.invalidateQueries({ queryKey: ["conversation", { conversationId }] });
+            queryClient.invalidateQueries({ queryKey: ["group-conversation", { conversationId }] });
         }
     })
     return {DeleteGroupMessage, isDeletingGroupMessage};

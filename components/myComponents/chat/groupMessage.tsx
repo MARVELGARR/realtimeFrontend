@@ -8,10 +8,11 @@ import { DropdownMenuMessageOptions } from "./messageOptions";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/store/useMessageSelection";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star } from "lucide-react";
+import { Circle, Star } from "lucide-react";
 import { GroupMessageType } from "@/actions/api-actions/messageActions/getConversationWithConversationId";
 import { DropdownMenuGroupMessageOptions } from "./groupMessageOptions.tsx";
 import { useSession } from "@/providers/sessionProvider";
+import useStarGroupMessageHook from "@/hooks/messageHooks/useStaringGroupMessageHook";
 
 
 
@@ -72,6 +73,8 @@ const GroupMessage: React.FC<MessageProps> = ({
     }
   };
 
+  const {isStaringGroupMessage} = useStarGroupMessageHook(conversationId as string)
+
   const isMyMessage = message.userId === currentUserId;
 
   const isMessageLiked = message.StarredMessage.some((msg)=>msg.messageId === message.id)
@@ -130,6 +133,7 @@ const GroupMessage: React.FC<MessageProps> = ({
         <p>{message.content}</p>
 
         {isMessageLiked && (<Star fill="orange" className={`w-4 h-4 absolute ${isMyMessage ? " -right-2 -bottom-1" : " -left-2 -bottom-1"} text-orange`} />)}
+        {isStaringGroupMessage && (<Circle fill={"black"} className={`w-4 h-4 animate-spin absolute ${isMyMessage ? " -right-2 -bottom-1" : " -left-2 -bottom-1"} text-green-300`} />)}
       </div>
       </div>
     </div>

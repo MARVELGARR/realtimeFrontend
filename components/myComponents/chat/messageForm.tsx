@@ -18,7 +18,6 @@ import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   message: z.string(),
-  reciepientId: z.string().optional(),
 });
 
 
@@ -49,7 +48,6 @@ export function MessageForm({
   function onSubmit(values: MessageFormData) {
     const responseData = {
       ...values,
-      reciepientId: reciepientId,
     };
 
     sendingMessage(responseData).then((res) => {

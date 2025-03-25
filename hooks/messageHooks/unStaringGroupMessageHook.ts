@@ -9,7 +9,7 @@ const useUnStarGroupMssage = (conversationId: string) => {
     const {mutateAsync: unStaringGroupMessage, isPending: isUnStaringGroupMessage} = useMutation({
         mutationFn: (staringData: { messageId: string; currentProfileId: string; })=>unStarGroupMessage(staringData),
         onSettled: ()=>{
-            queryClient.invalidateQueries({queryKey:["conversation", {conversationId}]})
+            queryClient.invalidateQueries({ queryKey: ["group-conversation", { conversationId }] });
         }
     })
 
