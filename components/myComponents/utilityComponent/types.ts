@@ -21,4 +21,36 @@ export interface User {
   name: string
   image: string
 }
+interface PrivacySettings {
+  id: string;
+  profileId: string;
+  disappearingMessages: string;
+  lastSeen: string;
+  precense: string;
+  readReciept: boolean;
+}
 
+interface UserProfile {
+  id: string;
+  bio: string;
+  firstName: string;
+  lastName: string;
+  nickname: string;
+  phoneNumber: string | null;
+  gender: "MALE" | "FEMALE" | "OTHER";
+  birthDay: string | null;
+  createdAt: string;
+  updatedAt: string;
+  profilePicture: string;
+  userId: string;
+  privacy: PrivacySettings;
+}
+
+interface UserPropForCurrentUser {
+  id: string;
+  email: string;
+  name: string;
+  image: string;
+  profile: UserProfile;
+}
+export type CurrentUserType = UserPropForCurrentUser

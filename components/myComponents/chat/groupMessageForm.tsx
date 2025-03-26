@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import useGroupMessageHook from "@/hooks/messageHooks/useGroupMessageHook";
+import { socket } from "@/socket/socket";
 
 const formSchema = z.object({
   message: z.string(),
@@ -26,11 +27,13 @@ export type MessageFormData = z.infer<typeof formSchema>;
 interface MessageFormProps {
   reciepientId?: string;
   conversationId?: string;
+  groupId?: string;
 }
 
 export function GroupMessageForm({
   conversationId,
   reciepientId,
+  groupId
 }: MessageFormProps) {
   // 1. Define your form.
   const form = useForm<MessageFormData>({
@@ -41,6 +44,7 @@ export function GroupMessageForm({
   });
 
   const ConversationId = conversationId ? conversationId : ""
+  const getCurrentUser = JSON.parse(sessionStorage.getItem("currentUser")!);
 
   const {isSendingGroupMessage, sendingGroupMessage} = useGroupMessageHook(ConversationId!);
 
@@ -51,19 +55,19 @@ export function GroupMessageForm({
       reciepientId: reciepientId,
     };
 
+    const emitedData = {
+      ...values,
+      userId: getCurrentUser.id,
+      conversationId: conversationId,
+      groupId
+    }
+
+    socket.emit("send-group-message", emitedData);
     sendingGroupMessage(responseData).then((res) => {
       form.setValue("message", "");
-      toast({
-        title: "message sent",
-        description: `${res.message}`,
-        variant: "success"
-      })
+      
     }).catch((error)=>{
-      toast({
-        title: "message not sent",
-        description: `${error}`,
-        variant: `destructive`
-      })
+      
       
     })
 

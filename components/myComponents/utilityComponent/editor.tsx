@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useUpdateUser from "@/hooks/userHooks/useUpdatedUser";
 import { toast } from "@/hooks/use-toast";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import {  useQueryClient } from "@tanstack/react-query";
 
-export type editorUseType = "ProfilePic" | "Bio" | "Nickname" | " PhoneNumber"
+export type editorUseType = "ProfilePic" | "Bio" | "Nickname" | " PhoneNumber" | "Message"
 
 export type EditorType = {
   initialValue: string;

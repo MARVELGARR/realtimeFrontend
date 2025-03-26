@@ -22,6 +22,8 @@ import { DisappearingSelection } from "./myComponents/groupComponent/disapearing
 import useEditGroup from "@/hooks/groupHook/editgroupHook"
 import { toast } from "@/hooks/use-toast"
 import { useStoreUploadedUrls } from "@/store/useStoreUploadedImage"
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage"
+import { CurrentUserType } from "./myComponents/utilityComponent/types"
 type GroupOveGrouprviewTab = {
   data: GroupProfileProps
   className?: string
@@ -32,7 +34,7 @@ export function GroupOverviewTab({ data, className }: GroupOveGrouprviewTab) {
   const [isEditingGroupName, setIsEditingGroupName] = useState(false)
 
   const [isEditingGroupDisappearingMessage, setIsEditingGrouDisappearingMessage] = useState(false)
-  const { currentUser } = useSession()
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
   const { editGroup, isEdittingGroup } = useEditGroup(data.id)
   const groupImage = data.groupImage
   const groupName = data.name

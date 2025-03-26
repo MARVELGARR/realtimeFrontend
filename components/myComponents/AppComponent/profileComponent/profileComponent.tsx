@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import LogoutButton from "../../utilityComponent/logoutButton";
 import { useSession } from "@/providers/sessionProvider";
+import { CurrentUserType } from "../../utilityComponent/types";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 
 const ProfileBioComponent = () => {
 
@@ -15,7 +17,7 @@ const ProfileBioComponent = () => {
     };
 
 
-    const {currentUser} = useSession()
+    const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
 
     const currentUserBio = currentUser?.profile.bio
     const currentUserNickname = currentUser?.profile.nickname

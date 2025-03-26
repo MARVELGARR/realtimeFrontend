@@ -4,6 +4,8 @@ import { useUrlState } from "@/hooks/utilityHooks/use-url-state";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/providers/sessionProvider";
 import { useSearchParams } from "next/navigation";
+import { CurrentUserType } from "../utilityComponent/types";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 
 
 type Conversation = ConversationResponse["favouriteConvo"][0]
@@ -17,8 +19,8 @@ interface FavouriteListConvoItemProps{
 const FavouriteListConvo = ({conversation, className}:FavouriteListConvoItemProps) => {
 
     const queryParams = useSearchParams()
-const {currentUser, isGettingCurentUser} = useSession()
-const currentUserId = currentUser?.id
+    const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
+    const currentUserId = currentUser?.id
     const initialRecepientParams =queryParams.get("recepientId")
 
     const newRecepientData = conversation.participants.find((recepient)=>recepient.userId !== currentUserId)?.user

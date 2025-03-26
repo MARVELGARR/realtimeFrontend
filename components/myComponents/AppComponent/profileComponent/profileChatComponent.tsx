@@ -14,11 +14,13 @@ import {
 import clearAllChat from "@/actions/api-actions/userAction/clearAllChat";
 import { toast } from "@/hooks/use-toast";
 import { useSession } from "@/providers/sessionProvider";
+import { CurrentUserType } from "../../utilityComponent/types";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 
 const ProfileChatComponent = () => {
 
 
-    const {currentUser} = useSession()
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
     const currentUserId = currentUser?.id
 
     const handleClear = async () =>{

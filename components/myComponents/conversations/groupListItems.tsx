@@ -5,6 +5,8 @@ import { useSession } from "@/providers/sessionProvider";
 import { Conversation } from '../../../actions/api-actions/messageActions/getConversation';
 import { useUrlState } from "@/hooks/utilityHooks/use-url-state";
 import { useSearchParams } from "next/navigation";
+import { CurrentUserType } from "../utilityComponent/types";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 
 
 type groupConversation = ConversationResponse["groupConversations"][0]
@@ -21,7 +23,7 @@ const GroupListItem = ({conversation, className}:ConversatonListItemProps) => {
     const groupImage = conversation?.group.groupImage
 
 
-        const {currentUser, isGettingCurentUser} = useSession()
+       const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
         
         const searchParams = useSearchParams()
     

@@ -28,6 +28,8 @@ import useDebounce from "@/hooks/utilityHooks/useDebounce";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/providers/sessionProvider";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import { CurrentUserType } from "../../utilityComponent/types";
 
 const FormSchema = z.object({
   lastSeen: z.enum(["EVERYONE", "MYCONTACTS", "NOBODY"]).optional(),
@@ -47,7 +49,7 @@ export function AccountForm({
 }) {
 
 
-  const {currentUser} = useSession()
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
   
   const currentUserProfile =currentUser?.profile
   const currentProfilePrivacy = currentUser?.profile.privacy
@@ -55,9 +57,15 @@ export function AccountForm({
   const form = useForm<AccountFormType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      disappearing: currentProfilePrivacy?.disappearingMessages,
-      lastSeen: currentProfilePrivacy?.lastSeen,
-      online: currentProfilePrivacy?.precense,
+      disappearing: ["OFF", "DAYS90", "DAYS7", "H24"].includes(currentProfilePrivacy?.disappearingMessages ?? "")
+        ? (currentProfilePrivacy?.disappearingMessages as "OFF" | "DAYS90" | "DAYS7" | "H24")
+        : undefined,
+      lastSeen: ["EVERYONE", "MYCONTACTS", "NOBODY"].includes(currentProfilePrivacy?.lastSeen ?? "")
+        ? (currentProfilePrivacy?.lastSeen as "EVERYONE" | "MYCONTACTS" | "NOBODY")
+        : undefined,
+      online: ["EVERYONE", "NOBODY"].includes(currentProfilePrivacy?.precense ?? "")
+        ? (currentProfilePrivacy?.precense as "EVERYONE" | "NOBODY")
+        : undefined,
       readreceipt: currentProfilePrivacy?.readReciept
 
     },

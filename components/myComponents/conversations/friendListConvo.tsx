@@ -1,9 +1,11 @@
 import { ConversationResponse } from "@/actions/api-actions/userAction/getSearch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUrlState } from "@/hooks/utilityHooks/use-url-state";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/providers/sessionProvider";
 import { useSearchParams } from "next/navigation";
+import { CurrentUserType } from "../utilityComponent/types";
 
 
 type Conversation = ConversationResponse["friendConvo"][0]
@@ -15,7 +17,7 @@ interface FriendListConvoItemProps{
 
 const FriendListConvo = ({conversation, className}:FriendListConvoItemProps) => {
 
-    const {currentUser, isGettingCurentUser} = useSession()
+    const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
     
     const searchParams = useSearchParams()
 

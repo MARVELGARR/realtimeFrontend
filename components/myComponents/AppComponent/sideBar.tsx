@@ -70,7 +70,7 @@ const renderMenuItem = (item: any) => {
                       <DropdownMenuTrigger className="-ml-2">
                         <Avatar className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}>
                           <AvatarImage src={currentUserProfilePic!} alt="" />
-                          {isGettingCurentUser ? <Loader2 /> : <AvatarFallback>YOU</AvatarFallback>}
+                          {isGettingCurentUser ? <Loader2 className=" animate-spin" /> : <AvatarFallback>YOU</AvatarFallback>}
                         </Avatar>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>

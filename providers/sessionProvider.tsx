@@ -23,7 +23,6 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
     
   });
 
-
   const {setItem} = useSessionStorage("currentUser")
 
   if(isSuccess){

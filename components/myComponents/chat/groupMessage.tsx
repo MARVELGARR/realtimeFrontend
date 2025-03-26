@@ -13,6 +13,8 @@ import { GroupMessageType } from "@/actions/api-actions/messageActions/getConver
 import { DropdownMenuGroupMessageOptions } from "./groupMessageOptions.tsx";
 import { useSession } from "@/providers/sessionProvider";
 import useStarGroupMessageHook from "@/hooks/messageHooks/useStaringGroupMessageHook";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import { CurrentUserType } from "../utilityComponent/types";
 
 
 
@@ -34,8 +36,8 @@ const GroupMessage: React.FC<MessageProps> = ({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  
-  const currentUserId =useSession().currentUser?.id as string
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
+  const currentUserId =currentUser?.id as string
 
   const { selections, removeSelections, setSelections } = useSelection();
 
