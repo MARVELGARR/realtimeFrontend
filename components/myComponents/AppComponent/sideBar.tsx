@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Archive, MessageCircleMore, Phone, Settings, Star, Binoculars, User,  MenuIcon, Loader2 } from "lucide-react"
+import { Archive, MessageCircleMore, Phone, Settings, Star, Binoculars, User,  MenuIcon, Loader2, Dot } from "lucide-react"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { IconWithIndicator } from "./icons-with-indicators"
@@ -24,6 +24,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import ProfileComponent from "../profileComponent/profileComponent"
 import { cn } from "@/lib/utils"
 import { useSession } from "@/providers/sessionProvider"
+import { isOnline } from "@/hooks/utilityHooks/getUserStatus"
 
 const renderSidebarTrigger = () => {
   const {toggleSidebar} = useSidebar()
@@ -48,6 +49,8 @@ const renderMenuItem = (item: any) => {
   const { state } = useSidebar();
   const { currentUser, isGettingCurentUser } = useSession();
 
+  const isMeOnline = isOnline()
+
   const currentUserProfilePic = currentUser?.image;
   const currentProfileId = currentUser?.profile?.id;
 
@@ -67,11 +70,12 @@ const renderMenuItem = (item: any) => {
                   )}
                   {item.isAvatar ? (
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="-ml-2">
+                      <DropdownMenuTrigger className="-ml-2 relative">
                         <Avatar className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}>
                           <AvatarImage src={currentUserProfilePic!} alt="" />
                           {isGettingCurentUser ? <Loader2 className=" animate-spin" /> : <AvatarFallback>YOU</AvatarFallback>}
                         </Avatar>
+                        {isMeOnline && (<Dot className="absolute w-10 h-10 -bottom-4 -right-4 text-green-700 brightness-105"/>)}
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         {currentProfileId && <ProfileComponent currentProfileId={currentProfileId} />}

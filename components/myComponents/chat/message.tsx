@@ -120,7 +120,7 @@ const Message: React.FC<MessageProps> = ({
         </div>
       )}
       <div
-        className={`inline-block relative relative px-4 p-2 rounded-lg ${
+        className={`inline-block  relative px-4 p-2 rounded-lg ${
         message.userId === currentUserId
           ? "bg-blue-500 text-white mr-4"
           : "bg-gray-200 ml-4"

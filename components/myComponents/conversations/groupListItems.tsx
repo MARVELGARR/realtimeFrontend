@@ -27,11 +27,9 @@ const GroupListItem = ({conversation, className}:ConversatonListItemProps) => {
         
         const searchParams = useSearchParams()
     
-        const initialRecepientId = searchParams.get("recepientId") ?? null
         const initialConversationId = searchParams.get("conversationId") ?? null
     
-        const currentUserId = currentUser?.id
-        const groupData = conversation?.group
+
         const conversationId = conversation?.id 
     
         const [ConversationId, setConversationId] = useUrlState("conversationId")

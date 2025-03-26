@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dot } from "lucide-react";
 
 const renderBlockedUser = () => {
   const users = [
@@ -27,9 +28,10 @@ const renderBlockedUser = () => {
               key={index}
             >
               <div className="flex items-center space-1">
-                  <Avatar className="w-5 h-5">
+                  <Avatar className="w-5 h-5 relative">
                       <AvatarImage src="" alt={user.name} className="" />
                       <AvatarFallback>{user.name.slice(0,1)}</AvatarFallback>
+                      
                   </Avatar>
                   <span className="">{user.name}</span>
               </div>

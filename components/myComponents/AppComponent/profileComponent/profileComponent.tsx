@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Pen } from "lucide-react";
+import { Dot, Pen } from "lucide-react";
 import Editor from "../../utilityComponent/editor";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +7,7 @@ import LogoutButton from "../../utilityComponent/logoutButton";
 import { useSession } from "@/providers/sessionProvider";
 import { CurrentUserType } from "../../utilityComponent/types";
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import { isOnline } from "@/hooks/utilityHooks/getUserStatus";
 
 const ProfileBioComponent = () => {
 
@@ -25,19 +26,22 @@ const ProfileBioComponent = () => {
     const currentUserName = currentUser?.name
     const currentUserProfilePic = currentUser?.image
 
-
+    const isMeOnline = isOnline()
 
     return (
         <div className=" space-y-[2rem]">
             {/* avatar */}
-            <div className="w-full flex justify-start">
+            <div className="w-full flex justify-start relative">
 
                 <Avatar className="w-[7rem] h-[7rem]">
                     <AvatarImage src={currentUserProfilePic} alt="profilePic"/>
                     <AvatarFallback>YOU</AvatarFallback>
                 </Avatar>
+                {isMeOnline && (<Dot className=" w-[6rem] h-[6rem] text-green-400 brightness-75 absolute -bottom-7 left-[3rem]" />)}
             </div>
-
+            <i className="w-full">{isMeOnline &&(
+                <div className="">online</div>
+            )}</i>
 
             {/* bio */}
             <section className="w-full flex flex-col gap-[2rem]">

@@ -21,7 +21,7 @@ type groupChatViewProp = {
   className?: string;
   groupConversation: GroupConversationProp;
 };
-const GroupChatView = ({ groupConversation, className }: groupChatViewProp) => {
+export const GroupChatView = ({ groupConversation, className }: groupChatViewProp) => {
   const { selections, setSelections, clearSelections } = useSelection();
  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
   const groupName = groupConversation.group.name;
@@ -36,11 +36,30 @@ const GroupChatView = ({ groupConversation, className }: groupChatViewProp) => {
       socket.emit("join-conversation", { conversationId, groupId, userId });
       console.log("Join-conversation event emitted!");
     }
-
-    return () => {
-      socket.disconnect();
-    };
+  
+    
   }, [userId, groupId, conversationId]);
+
+    useEffect(() => {
+      // Listen for messages from backend
+      const handleMessage = ({
+        message,
+        userId,
+      }: {
+        message: string;
+        userId: string;
+      }) => {
+        // setIncomingMessageObject({ message, userId });
+        console.log("New message received:", { message, userId });
+      };
+  
+      socket.on("receive-group-message", handleMessage);
+  
+      // Cleanup function to remove listener when component unmounts
+      return () => {
+        socket.off("receive-group-message", handleMessage);
+      };
+    }, []);
 
   const { DeleteMessages, isDeletingMessages } = useDeleteMessages(
     conversationId as string
@@ -132,4 +151,5 @@ const GroupChatView = ({ groupConversation, className }: groupChatViewProp) => {
   );
 };
 
-export default GroupChatView;
+
+
