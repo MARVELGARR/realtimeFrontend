@@ -1,5 +1,5 @@
 "use client";
-import { GroupConversationProp } from "@/actions/api-actions/messageActions/getConversationWithConversationId";
+import { GroupConversationProp, GroupMessageType } from "@/actions/api-actions/messageActions/getConversationWithConversationId";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelection } from "@/store/useMessageSelection";
 import { DeleteMessagesDemo } from "../utilityComponent/deleteMessagesDialog";
@@ -13,53 +13,55 @@ import GroupMessage from "../chat/groupMessage";
 import { useSession } from "@/providers/sessionProvider";
 import { GroupProfilePicDropdown } from "../chat/GroupProfilePicDropdown";
 import { socket } from "@/socket/socket";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CurrentUserType } from "../utilityComponent/types";
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook";
+import { useSearchParams } from "next/navigation";
+import { groupMessageProp } from "@/actions/api-actions/messageActions/sendGroupMessage";
 
 type groupChatViewProp = {
   className?: string;
-  groupConversation: GroupConversationProp;
 };
-export const GroupChatView = ({ groupConversation, className }: groupChatViewProp) => {
+export const GroupChatView = ({  className }: groupChatViewProp) => {
+  const queryParams = useSearchParams()
   const { selections, setSelections, clearSelections } = useSelection();
+  const [incomingMessages, setIncomingMessages] = useState<groupMessageProp[]>([])
+ 
+  const conversationId = queryParams.get("conversationId")
  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem()
-  const groupName = groupConversation.group.name;
-  const groupImage = groupConversation.group.groupImage;
-  const groupId = groupConversation.groupId;
-  const conversationId = groupConversation.id;
-  const groupBio = groupConversation.group.descriptions;
+ 
+ const {groupConversation, isLoadingGroupConversation} =useGroupConversation(conversationId as string)
+
+  const groupName = groupConversation?.group.name;
+  const groupImage = groupConversation?.group.groupImage;
+  const groupId = groupConversation?.groupId;
+  const groupBio = groupConversation?.group.descriptions;
   const userId = currentUser?.id;
 
   useEffect(() => {
     if (groupId && conversationId && userId) {
-      socket.emit("join-conversation", { conversationId, groupId, userId });
-      console.log("Join-conversation event emitted!");
-    }
-  
-    
-  }, [userId, groupId, conversationId]);
+      socket.emit("join-conversation", { conversationId, groupId, userId })
+      console.log("Join-conversation event emitted!")
 
-    useEffect(() => {
-      // Listen for messages from backend
-      const handleMessage = ({
-        message,
-        userId,
-      }: {
-        message: string;
-        userId: string;
-      }) => {
-        // setIncomingMessageObject({ message, userId });
-        console.log("New message received:", { message, userId });
-      };
-  
-      socket.on("receive-group-message", handleMessage);
-  
-      // Cleanup function to remove listener when component unmounts
+      // Listen for new messages
+      const handleNewMessage = ({ ...prop}: groupMessageProp) => {
+        const newMessage: groupMessageProp = {
+          ...prop
+        }
+
+        setIncomingMessages((prev) => [...prev, newMessage])
+      }
+
+      socket.on("receive-group-message", handleNewMessage)
+
       return () => {
-        socket.off("receive-group-message", handleMessage);
-      };
-    }, []);
+        socket.off("receive-group-message", handleNewMessage)
+      }
+    }
+  }, [userId, groupId, conversationId])
+
+
 
   const { DeleteMessages, isDeletingMessages } = useDeleteMessages(
     conversationId as string
@@ -95,7 +97,7 @@ export const GroupChatView = ({ groupConversation, className }: groupChatViewPro
         ) : (
           <div className="p-4  border-gray-200 flex gap-[3rem] item-center">
             <GroupProfilePicDropdown
-              groupId={groupId}
+              groupId={groupId!}
               className=" cursor-pointer"
               groupName={groupName!}
               recepientProfilePic={groupImage!}
@@ -125,25 +127,23 @@ export const GroupChatView = ({ groupConversation, className }: groupChatViewPro
         </div>
       </div>
       <ScrollArea className="flex-1 py-4 w-full">
-        {groupConversation?.messages?.length ? (
-          groupConversation.messages.map((message) => (
-            <GroupMessage
-              className={
-                selections?.includes(message.id) ? " bg-green-200/[20%] " : ""
-              }
-              key={message.id}
-              message={message}
-              conversationId={conversationId as string}
-              currentProfileId={currentUserProfile as string}
-            />
-          ))
-        ) : (
-          <div className="w-full h-full">No messages yet start! new chat</div>
-        )}
-      </ScrollArea>
+      {groupConversation?.messages?.length || incomingMessages.length ? (
+        groupConversation?.messages.map((message) => (
+          <GroupMessage
+            className={selections?.includes(message.id) ? " bg-green-200/[20%] " : ""}
+            key={message.id}
+            message={message}
+            conversationId={conversationId as string}
+            currentProfileId={currentUserProfile as string}
+          />
+        ))
+      ) : (
+        <div className="w-full h-full">No messages yet start! new chat</div>
+      )}
+    </ScrollArea>
       <div className="p-4 border-t border-gray-200">
         <GroupMessageForm
-          groupId={groupConversation.groupId}
+          groupId={groupConversation?.groupId}
           conversationId={groupConversation?.id || ""}
         />
       </div>

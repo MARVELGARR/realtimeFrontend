@@ -1,9 +1,19 @@
 import { MessageFormData } from "@/components/myComponents/chat/groupMessageForm";
 
+export type groupMessageProp ={
+
+    conversationId: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    type: "DIRECT" | "GROUP";
+    content: string;
+    editableUntil: Date;
+}
 
 
-
-const sendGroupMessage = async( message: MessageFormData, conversationId?: string | undefined) => {
+const sendGroupMessage = async( message: MessageFormData, conversationId?: string | undefined): Promise<groupMessageProp> => {
 
 
     try{

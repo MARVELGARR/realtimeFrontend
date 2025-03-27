@@ -55,23 +55,17 @@ export function GroupMessageForm({
       reciepientId: reciepientId,
     };
 
-    const emitedData = {
-      ...values,
-      userId: getCurrentUser.id,
-      conversationId: conversationId,
-      groupId
-    }
 
-    socket.emit("send-group-message", emitedData);
+
     sendingGroupMessage(responseData).then((res) => {
       form.setValue("message", "");
+      socket.emit("send-group-message", res);
       
     }).catch((error)=>{
       
       
     })
 
-    console.log(responseData);
   }
 
   return (
