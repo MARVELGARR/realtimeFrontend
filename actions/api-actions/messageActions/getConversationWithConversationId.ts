@@ -68,7 +68,6 @@ export type GroupConversationProp = {
     createdAt: string;
     updatedAt: string;
     groupId: string;
-    messages: GroupMessageType[];
     participants: Participant[];
     group: Group;
 };

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import useMessageHook from "@/hooks/messageHooks/useMessageHook";
 import { toast } from "@/hooks/use-toast";
+import { socket } from "@/socket/socket";
 
 const formSchema = z.object({
   message: z.string(),
@@ -51,11 +52,8 @@ export function MessageForm({
     };
 
     sendingMessage(responseData).then((res) => {
-      toast({
-        title: "message sent",
-        description: `${res.message}`,
-        variant: "success"
-      })
+      form.setValue("message", "");
+      socket.emit("send-message", {reciepientId, res});
     }).catch((error)=>{
       toast({
         title: "message not sent",

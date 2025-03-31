@@ -2,19 +2,18 @@
 
 import type React from "react";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { DropdownMenuMessageOptions } from "./messageOptions";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useSelection } from "@/store/useMessageSelection";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Circle, Star } from "lucide-react";
-import { GroupMessageType } from "@/actions/api-actions/messageActions/getConversationWithConversationId";
 import { DropdownMenuGroupMessageOptions } from "./groupMessageOptions.tsx";
 import useStarGroupMessageHook from "@/hooks/messageHooks/useStaringGroupMessageHook";
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 import { CurrentUserType } from "../utilityComponent/types";
-import { socket } from "@/socket/socket";
 import useGroupMessageHook from "@/hooks/messageHooks/useGroupMessageHook";
+
+import { GroupMessageProp } from "@/actions/api-actions/groupActions/getGroupMessages";
 
 interface incomingMessageObjectProp {
   message: string;
@@ -23,9 +22,10 @@ interface incomingMessageObjectProp {
 
 interface MessageProps {
   conversationId: string;
-  message: GroupMessageType;
+  message: GroupMessageProp;
   currentProfileId: string;
   className?: string;
+  ref?: RefObject<HTMLDivElement>
 }
 
 const GroupMessage: React.FC<MessageProps> = ({
@@ -33,19 +33,19 @@ const GroupMessage: React.FC<MessageProps> = ({
   currentProfileId,
   className,
   conversationId,
+  ref
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { isSendingGroupMessage } = useGroupMessageHook(conversationId!);
 
   const currentUser =
     useSessionStorage<CurrentUserType>("currentUser").getItem();
   const currentUserId = currentUser?.id as string;
 
   const [incomingMessageObject, setIncomingMessageObject] =
-    useState<incomingMessageObjectProp | null>(null);
+    useState<GroupMessageProp | null>(null);
 
   const { selections, removeSelections, setSelections } = useSelection();
 
@@ -60,7 +60,7 @@ const GroupMessage: React.FC<MessageProps> = ({
     // Check if the mouse is moving to the dropdown
     if (
       containerRef.current &&
-      !containerRef.current.contains(e.relatedTarget as Node)
+      !containerRef.current?.contains(e.relatedTarget as Node)
     ) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -89,32 +89,11 @@ const GroupMessage: React.FC<MessageProps> = ({
 
   const isMyMessage = message.userId === currentUserId;
 
-  const isMessageLiked = message.StarredMessage.some(
+  const isMessageLiked = Array.isArray(message.StarredMessage) && message.StarredMessage.some(
     (msg) => msg.messageId === message.id
   );
 
-  useEffect(() => {
-    // Listen for messages from backend
-    const handleMessage = ({
-      message,
-      userId,
-    }: {
-      message: string;
-      userId: string;
-    }) => {
-      setIncomingMessageObject({ message, userId });
-      console.log("New message received:", { message, userId });
-    };
 
-    socket.on("receive-group-message", handleMessage);
-
-    // Cleanup function to remove listener when component unmounts
-    return () => {
-      socket.off("receive-group-message", handleMessage);
-    };
-  }, []);
-
-  const isMe = incomingMessageObject?.userId === currentUserId;
 
   return (
     <div
@@ -166,13 +145,8 @@ const GroupMessage: React.FC<MessageProps> = ({
     isMyMessage ? "bg-blue-500 text-white mr-4" : "bg-gray-200 ml-4"
   }`}
 >
-  {isSendingGroupMessage ? (
-    <p>Sending...</p>
-  ) : incomingMessageObject && isMe ? (
-    <p>{incomingMessageObject.message}</p>
-  ) : (
-    <p>{message.content}</p>
-  )}
+
+  <p className="text-base">{message.content}</p>
 
   {isMessageLiked && (
     <Star

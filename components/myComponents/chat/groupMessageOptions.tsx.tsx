@@ -56,7 +56,8 @@ export function DropdownMenuGroupMessageOptions({ onOpenChange, messages,   curr
 
   const {setSelections, selections, removeSelections} = useSelection()
 
-  const isMessageLiked = messages.StarredMessage.some((msg)=>msg.messageId === messageId)
+  const isMessageLiked = Array.isArray(messages.StarredMessage) &&
+  messages.StarredMessage.some((msg) => msg.messageId === messageId);
 
 
   const copyText = () =>{

@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 import useGroupMessageHook from "@/hooks/messageHooks/useGroupMessageHook";
 import { socket } from "@/socket/socket";
+import { RefObject } from "react";
 
 const formSchema = z.object({
   message: z.string(),
@@ -28,12 +28,14 @@ interface MessageFormProps {
   reciepientId?: string;
   conversationId?: string;
   groupId?: string;
+  
 }
 
 export function GroupMessageForm({
   conversationId,
   reciepientId,
-  groupId
+  groupId,
+  
 }: MessageFormProps) {
   // 1. Define your form.
   const form = useForm<MessageFormData>({
