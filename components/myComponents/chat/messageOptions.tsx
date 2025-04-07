@@ -73,8 +73,6 @@ export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentPr
     });
   }
   
-  console.log(isMessageLiked)
-  // Function to handle item clicks
   const handleItemClick = (action: string) => {
     
     switch (action) {

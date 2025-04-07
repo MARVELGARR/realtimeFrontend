@@ -44,6 +44,8 @@ const GroupMessageViewPort = ({ conversationId, className }: GroupMessageViewPor
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+
+
   // Preserve scroll position after fetching older messages
   useEffect(() => {
     if (!isFetching && scrollRef.current) {

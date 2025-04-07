@@ -56,12 +56,13 @@ export function ChatView() {
     recepientId as string
   );
 
-  useEffect(()=>{
-      if (recepientId  && currentUserId) {
-        socket.emit("join-conversation", { recepientId, userId: currentUserId })
-        console.log("join-conversation event emitted!")
-      }
-    },[])
+  useEffect(() => {
+    if (recepientId && currentUserId) {
+      socket.emit("join-conversation", { recepientId, userId: currentUserId });
+      socket.emit("message-read", {recepientId, userId: currentUserId});
+      console.log("join-conversation event emitted!");
+    }
+  }, []);
 
   if (isLoading || isGettingCurentUser) {
     return <div>Loading...</div>;
@@ -91,8 +92,6 @@ export function ChatView() {
         });
       });
   };
-
-
 
   if (recepientId) {
     return (
