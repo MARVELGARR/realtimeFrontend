@@ -19,7 +19,7 @@ interface FilterOption {
 
 const filterOptions: FilterOption[] = [
   { id: "all", label: "All", icon: <Users className="mr-2 h-4 w-4" /> },
-  { id: "contact", label: "Contact", icon: <Users className="mr-2 h-4 w-4" /> },
+  { id: "contact", label: "Following", icon: <Users className="mr-2 h-4 w-4" /> },
   { id: "favourites", label: "Favourites", icon: <Star className="mr-2 h-4 w-4" /> },
   { id: "unreads", label: "Unreads", icon: <MessageCircle className="mr-2 h-4 w-4" /> },
   { id: "groups", label: "Groups", icon: <UsersRound className="mr-2 h-4 w-4" /> },

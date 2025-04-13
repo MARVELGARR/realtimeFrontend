@@ -32,14 +32,31 @@ export interface GroupMessageProp {
   StarredMessage: StarredMessages[]; // Adjust if StarredMessage has a specific structure
   user: User;
 }
+export interface MessageProp {
+
+    id: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    type: "DIRECT"; // Adjust as needed
+    userId: string;
+    conversation: {
+        id: string
+    };
+    editableUntil: string;
+    StarredMessage: StarredMessages[]; // Adjust if StarredMessage has a specific structure
+    user: User;
+  }
+
+
 
 export type sendMessageProp = {
-    newMessage: GroupMessageProp,
+    newMessage: MessageProp,
 }
 
 
 
-const sendMessage = async( message: MessageFormData, recepientId: string, conversationId?: string | undefined): Promise<sendMessageProp> => {
+const sendMessage = async( message: MessageFormData, recepientId: string, ): Promise<sendMessageProp> => {
 
 
     try{

@@ -183,7 +183,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId }: Pro
                     disabled={isRemovingFriend}
                   >
                     <UserMinus className="h-4 w-4" />
-                    Unfriend
+                    unFollow
                   </Button>
                 ) : (
                   <Button
@@ -193,7 +193,7 @@ export function ProfileCardDialog({ className, recepientName, recepientId }: Pro
                     onClick={handleAddFriend}
                   >
                     <UserPlus className="h-4 w-4" />
-                    Add Friend
+                    Follow
                   </Button>
                 )}
                 <Button variant="destructive" className="flex-1 gap-2 cursor-pointer" onClick={handleBlockUser}>

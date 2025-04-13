@@ -18,6 +18,9 @@ import useGroupConversation from "@/hooks/messageHooks/useGroupConversationHook"
 import { GroupChatView } from "@/components/myComponents/conversations/groupChatView";
 import ChatViewPort from "./chatViewPort";
 import { socket } from "@/socket/socket";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import { CurrentUserType } from "@/components/myComponents/utilityComponent/types";
+import { getRoomId } from "@/lib/utils";
 
 export function ChatView() {
   const queryClient = useQueryClient();
@@ -41,7 +44,8 @@ export function ChatView() {
     });
   }, [recepientId]);
 
-  const { currentUser, isGettingCurentUser } = useSession();
+  const currentUser =
+    useSessionStorage<CurrentUserType>("currentUser").getItem();
   const recepientName = data?.participants.find(
     (user) => user.user.id !== currentUser?.id
   )?.user.name;
@@ -57,23 +61,47 @@ export function ChatView() {
   );
 
   useEffect(() => {
-    if (recepientId && currentUserId) {
-      socket.emit("join-conversation", { recepientId, userId: currentUserId });
-      socket.emit("message-read", {recepientId, userId: currentUserId});
-      console.log("join-conversation event emitted!");
-    }
-  }, []);
+    const joinRoom = () => {
+      if (!recepientId || !currentUserId) return;
+      console.log("🟢 Emitting join-conversation:", {
+        recepientId,
+        userId: currentUserId,
+      });
+      const roomId = getRoomId(currentUserId, recepientId);
+      socket.emit("join-conversation", { roomId });
+    };
 
-  if (isLoading || isGettingCurentUser) {
+    if (!socket.connected) {
+      socket.once("connect", () => {
+        console.log("✅ Socket connected. Now joining conversation.");
+        joinRoom();
+      });
+    } else {
+      joinRoom();
+    }
+
+    // Optional: rejoin on reconnect too
+    socket.on("connect", joinRoom);
+
+    return () => {
+      socket.off("connect", joinRoom);
+    };
+  }, [recepientId, currentUserId]);
+
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (!recepientId && !conversationId) {
     return (
-      <div className="w-full h-full flex justify-center items-center ">
+      <div className="w-full h-full flex  justify-center items-center ">
         No Chat history
       </div>
     );
+  }
+
+  if (conversationId !== null) {
+    <GroupChatView />;
   }
 
   const handleDeleteSelectedMessages = async () => {
@@ -138,6 +166,7 @@ export function ChatView() {
           profileId={profileId!}
           recepientId={recepientId}
           selections={selections!}
+          conversationId={data?.id!}
         />
         <div className="p-4 border-t border-gray-200">
           <MessageForm

@@ -5,3 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const getRoomId = (a: string, b: string) => {
+  return [a, b].sort().join(":");
+};

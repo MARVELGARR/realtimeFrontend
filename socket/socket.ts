@@ -6,6 +6,7 @@ import io from "socket.io-client";
 
 export const socket = io(`ws://${process.env.NEXT_PUBLIC_API_URL_WBESOCKET}`, {
     transports: ["websocket"],
+    autoConnect: true,
 });
 
 const messageCount = GetAndSetMessageRead("messageCount").getItem();
@@ -30,7 +31,7 @@ if (currentUser) {
   const stored = localStorage.getItem("unreadMessages");
   const unreadMessages = stored ? JSON.parse(stored) : {};
 
-  socket.emit("connect", {
+  socket.emit("connects", {
     userId: currentUser.id,
     messages: unreadMessages,
   });

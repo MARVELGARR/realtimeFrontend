@@ -4,14 +4,14 @@ import {  useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 
-const useMessageHook = (conversationId?: string, reciepientId?:string) => {
+const useMessageHook = (reciepientId?:string) => {
     const queryClient = useQueryClient();
 
     const {mutateAsync: sendingMessage, isPending: isSendingMessage} = useMutation({
         mutationKey: ['send-message', { reciepientId }],
-        mutationFn: (data: MessageFormData)=> sendMessage( data, conversationId as string ),
+        mutationFn: (data: MessageFormData)=> sendMessage( data, reciepientId as string),
         onSettled: () =>{
-            queryClient.invalidateQueries({ queryKey: ["conversation", { recepientId: reciepientId }] });
+            queryClient.invalidateQueries({ queryKey: ["get-messages", { reciepientId: reciepientId }] });
         }
     })
 

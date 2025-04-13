@@ -30,6 +30,11 @@ export interface MessageProp {
   user: User;
 }
 
+export interface SockedReceivedMessageProp {
+  reciepientId: string,
+  newMessage: MessageProp;
+}
+
 export interface GetMessagesProp {
   Messages: MessageProp;
   pagination: {

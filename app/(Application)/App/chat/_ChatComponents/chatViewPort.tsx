@@ -1,6 +1,4 @@
-import getMessages, { GetMessagesProp, MessageProp } from "@/actions/api-actions/chatActions/getMessages";
-import { GetGroupMessagesProp } from "@/actions/api-actions/groupActions/getGroupMessages";
-import { Conversation } from "@/actions/api-actions/messageActions/getConversation";
+import getMessages, { GetMessagesProp, MessageProp, SockedReceivedMessageProp } from "@/actions/api-actions/chatActions/getMessages";
 import Message from "@/components/myComponents/chat/message";
 import { CurrentUserType } from "@/components/myComponents/utilityComponent/types";
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
@@ -11,23 +9,26 @@ import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 type ChatViewPortProp = {
-    className?: string,
-    selections:string[],
-    recepientId: string,
-    profileId: string,
-    currentUserId: string
+  className?: string,
+  selections: string[],
+  recepientId: string, // This is actually used as the conversationId
+  profileId: string,
+  currentUserId: string
+  conversationId: string
 }
 
-const ChatViewPort = ({ selections, currentUserId, profileId, className, recepientId}:ChatViewPortProp) => {
+const ChatViewPort = ({ selections, currentUserId, conversationId, profileId, className, recepientId }: ChatViewPortProp) => {
+  // For clarity in the implementation
 
-    const [message, setMessages] = useState<GetMessagesProp["Messages"][] | null>(null);
-    const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem();
-    const userProfile = currentUser?.profile.id;
-
-    
+  
+  const [messages, setMessages] = useState<GetMessagesProp["Messages"][] | null>(null);
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem();
+  const userProfile = currentUser?.profile.id;
+  
   const { ref, inView } = useInView();
   const scrollRef = useRef<HTMLDivElement>(null);
   const previousHeightRef = useRef(0);
+  const isAtBottomRef = useRef(true);
 
   const {
     data,
@@ -42,49 +43,91 @@ const ChatViewPort = ({ selections, currentUserId, profileId, className, recepie
     getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
   });
 
-    // Store messages after query success
-    useEffect(() => {
-        if (isSuccess && data) {
-          setMessages(
-            data.pages
-              .flatMap((items) => items.Messages)
-              .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-          );
-        }
-      }, [isSuccess, data]);
+  // Join conversation when component mounts
 
-      useEffect(() => {
-        if (!isFetching && scrollRef.current) {
-          const newHeight = scrollRef.current.scrollHeight;
-          const heightDiff = newHeight - previousHeightRef.current;
-          scrollRef.current.scrollTop += heightDiff; // Maintain scroll position
-        }
-      }, [data]);
+  
 
-      // Listen for new messages from WebSocket
+  // Store messages after query success
   useEffect(() => {
-    const handleNewMessage = (newMessage: MessageProp) => {
-      setMessages((prevMessages) =>
-        prevMessages ? [...prevMessages, newMessage] : [newMessage]
+    if (isSuccess && data) {
+      setMessages(
+        data.pages
+          .flatMap((items) => items.Messages)
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
       );
+      
+      // After loading messages, scroll to bottom on initial load
+      setTimeout(() => {
+        if (scrollRef.current && isAtBottomRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+  }, [isSuccess, data]);
 
-      // Scroll to bottom if user is near the bottom
+  // Maintain scroll position when loading more messages
+  useEffect(() => {
+    if (!isFetching && scrollRef.current) {
+      const newHeight = scrollRef.current.scrollHeight;
+      const heightDiff = newHeight - previousHeightRef.current;
+      if (heightDiff > 0) {
+        scrollRef.current.scrollTop += heightDiff;
+      }
+    }
+  }, [isFetching]);
+
+  // Track if user is at bottom of scroll
+  useEffect(() => {
+    const checkIfAtBottom = () => {
       if (scrollRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-        const isNearBottom = scrollHeight - scrollTop <= clientHeight + 50; // 50px buffer
-        if (isNearBottom) {
-          scrollRef.current.scrollTop = scrollHeight;
-        }
+        isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 50;
       }
     };
 
-    socket.on("receive-message", handleNewMessage);
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', checkIfAtBottom);
+      return () => scrollElement.removeEventListener('scroll', checkIfAtBottom);
+    }
+  }, []);
 
+  // Listen for new messages from WebSocket
+  useEffect(() => {
+    const handleNewMessage = (newMessage: SockedReceivedMessageProp) => {
+
+
+      setMessages(prevMessages => {
+        if (prevMessages?.some(msg => msg.id === newMessage.newMessage.id)) return prevMessages;
+        return prevMessages ? [...prevMessages, newMessage.newMessage] : [newMessage.newMessage];
+      });
+
+      console.log("New message received:", newMessage);
+  
+      if (newMessage.newMessage.userId !== currentUserId) {
+        socket.emit("message-read", {
+          conversationId,
+          userId: currentUserId
+        });
+      }
+
+      
+  
+      if (scrollRef.current && isAtBottomRef.current) {
+        setTimeout(() => {
+          scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
+        }, 100);
+      }
+    };
+  
+    socket.on("receive-message", handleNewMessage);
     return () => {
       socket.off("receive-message", handleNewMessage);
     };
-  }, []);
+  }, [conversationId, currentUserId]);
+  
 
+  // Fetch more messages when scrolling to top
   useEffect(() => {
     if (inView && hasNextPage) {
       previousHeightRef.current = scrollRef.current?.scrollHeight || 0;
@@ -92,20 +135,30 @@ const ChatViewPort = ({ selections, currentUserId, profileId, className, recepie
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-    return (
-        <div ref={scrollRef} className={cn(className,"flex-1 py-4 w-full z-10 overflow-auto h-[200px]")}>
-        { message && message?.length > 0 ? (
-          message.map((message, index) => (
-            <div key={message.id} ref={ index === 0 ? ref : null } className="">
-
-                <Message className={selections?.includes(message.id) ? " bg-green-200/[20%] " : ""} message={message} recepientId={recepientId as string} currentProfileId={profileId as string} currentUserId={currentUserId as string}/>
-            </div>
-          ))
-        ) : (
-          <div className="w-full h-full">No messages yet start! new chat</div>
-        )}
-      </div>
-    );
-}
+  return (
+    <div 
+      ref={scrollRef} 
+      className={cn(className, "flex-1 py-4 w-full z-10 overflow-auto h-[200px]")}
+    >
+      {messages && messages.length > 0 ? (
+        messages.map((message, index) => (
+          <div key={message.id} ref={index === 0 ? ref : null}>
+            <Message 
+              className={selections?.includes(message.id) ? "bg-green-200/[20%]" : ""} 
+              message={message} 
+              recepientId={conversationId} 
+              currentProfileId={profileId} 
+              currentUserId={currentUserId}
+            />
+          </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center w-full h-full text-gray-500">
+          No messages yet. Start a new chat!
+        </div>
+      )}
+    </div>
+  );
+};
  
 export default ChatViewPort;

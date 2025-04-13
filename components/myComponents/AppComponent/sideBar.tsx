@@ -49,7 +49,7 @@ const renderMenuItem = (item: any) => {
   const { state } = useSidebar();
   const { currentUser, isGettingCurentUser } = useSession();
 
-  const isMeOnline = isOnline()
+  const isMeOnline = isOnline() ?? false;
 
   const currentUserProfilePic = currentUser?.image;
   const currentProfileId = currentUser?.profile?.id;

@@ -6,7 +6,7 @@ import {create} from 'zustand'
 
 const filterSchema =z.object({
     id: z.enum(["all", "contact",  'favourites', "groups", "unreads"]),
-    label: z.enum(["All", "Contact",  'Favourites', "Groups", "Unreads"]) 
+    label: z.enum(["All", "Following",  'Favourites', "Groups", "Unreads"]) 
 }) 
 
 

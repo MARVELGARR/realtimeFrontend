@@ -73,7 +73,7 @@ const Message: React.FC<MessageProps> = ({
 
   const isMyMessage = message.userId === currentUserId;
 
-  const isMessageLiked = message.StarredMessage.some((msg)=>msg.messageId === message.id)
+  const isMessageLiked = message.StarredMessage?.some((msg) => msg.messageId === message.id) ?? false;
 
   return (
     <div

@@ -9,13 +9,16 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import useMessageHook from "@/hooks/messageHooks/useMessageHook";
 import { toast } from "@/hooks/use-toast";
 import { socket } from "@/socket/socket";
+import { useSearchParams } from "next/navigation";
+import { getRoomId } from "@/lib/utils";
+import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
+import { CurrentUserType } from "../utilityComponent/types";
 
 const formSchema = z.object({
   message: z.string(),
@@ -41,31 +44,54 @@ export function MessageForm({
     },
   });
 
-  const answer = conversationId ? conversationId : ""
+  const urlSearchParams = useSearchParams()
+  const receiverId = urlSearchParams.get("reciepientId")
+  const ReciepientId = receiverId ? receiverId : reciepientId
 
-  const {sendingMessage} = useMessageHook(answer!, reciepientId!);
+  const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem();
+  const currentUserId = currentUser?.id;
+
+  const {sendingMessage} = useMessageHook( ReciepientId!);
 
   // 2. Define a submit handler.
-  function onSubmit(values: MessageFormData) {
+  function getRoomId(a: string, b: string) {
+    return [a, b].sort().join(":"); // Ensure consistent room naming
+  }
+  
+  async function onSubmit(values: MessageFormData) {
+    if (!currentUserId || !ReciepientId) {
+      console.warn("❌ Missing user or receiver ID");
+      return;
+    }
+  
     const responseData = {
       ...values,
     };
-
-    sendingMessage(responseData).then((res) => {
-      form.setValue("message", "");
-      socket.emit("send-message", {reciepientId, res});
-    }).catch((error)=>{
-      toast({
-        title: "message not sent",
-        description: `${error}`,
-        variant: `destructive`
+  
+  
+    sendingMessage(responseData)
+      .then((res) => {
+        const roomId = getRoomId(currentUserId, ReciepientId);
+        const newMessage = res;
+        console.log(res)
+        socket.emit("send-message", {
+          roomId,
+          newMessage,
+        });
+  
+        form.setValue("message", "");
       })
-      
-    })
-
-    console.log(responseData);
+      .catch((error) => {
+        toast({
+          title: "Message not sent",
+          description: `${error}`,
+          variant: "destructive",
+        });
+      });
+  
+    console.log("📝 Message payload:", responseData);
   }
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
