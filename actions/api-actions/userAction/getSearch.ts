@@ -1,7 +1,6 @@
-
 import { zustandFilterProps } from "@/store/useSearchFilter";
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 // Interface for a user
 // User Profile
@@ -36,11 +35,11 @@ interface Message {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  type: 'DIRECT' | 'GROUP';
+  type: "DIRECT" | "GROUP";
   userId: string;
   conversationId: string;
   editableUntil: Date;
-  user: Pick<User, 'id' | 'name'>; // Simplified user view
+  user: Pick<User, "id" | "name">; // Simplified user view
 }
 
 // Participant
@@ -59,7 +58,7 @@ interface Group {
   id: string;
   name: string;
   groupImage?: string;
-  disappearingMessages: 'OFF' | 'DAYS90' | 'DAYS7' | 'H24';
+  disappearingMessages: "OFF" | "DAYS90" | "DAYS7" | "H24";
   createdAt: Date;
   updatedAt: Date;
   creatorId: string;
@@ -85,6 +84,10 @@ interface Conversation {
   groupId?: string;
   group?: Group | null;
   StarConversation: StarConversation[];
+  unreadStates: {
+    unreadCount: number;
+    useerId: string
+  }[];
 }
 
 // Group Conversation
@@ -92,16 +95,16 @@ interface GroupConversationProp {
   id: string;
   name: string;
   groupImage?: string;
-  disappearingMessages: 'OFF' | 'DAYS90' | 'DAYS7' | 'H24';
+  disappearingMessages: "OFF" | "DAYS90" | "DAYS7" | "H24";
   createdAt: Date;
   updatedAt: Date;
   creatorId: string;
   adminId: string;
 }
 
-interface GroupConversation{
-  id: string,
-  group: GroupConversationProp
+interface GroupConversation {
+  id: string;
+  group: GroupConversationProp;
 }
 
 // Conversation Response
@@ -115,30 +118,38 @@ export interface ConversationResponse {
   totalPages: number;
 }
 
-
-const fetchSearchResults = async (searchTerm: string, page = 1, limit = 10): Promise<ConversationResponse> => {
-    try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/search`, {
-            params: { searchTerm, page, limit },
-            withCredentials: true
-        });
-        console.log('Search results:', response.data);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+const fetchSearchResults = async (
+  searchTerm: string,
+  page = 1,
+  limit = 10
+): Promise<ConversationResponse> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/search`,
+      {
+        params: { searchTerm, page, limit },
+        withCredentials: true,
+      }
+    );
+    console.log("Search results:", response.data);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
-export const useSearchQuery = (searchTerm: string, page:number, limit: number, filter: zustandFilterProps ) => {
+export const useSearchQuery = (
+  searchTerm: string,
+  page: number,
+  limit: number,
+) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["search", searchTerm, page, limit],
+    queryFn: () => fetchSearchResults(searchTerm, page, limit),
+    select: (data) => data,
+  });
 
-    const { data, isLoading, isError } = useQuery({
-      queryKey: ["search", searchTerm, page, limit],
-      queryFn: () => fetchSearchResults(searchTerm, page, limit),
-      select: (data) => data,
-    });    
-
-    return { data, isLoading, isError };
-
-  };
+  return { data, isLoading, isError };
+};

@@ -8,7 +8,7 @@ const useStarHook = (recepientId: string) => {
     const {mutateAsync: staringMessage, isPending: isStaringMessage} = useMutation({
         mutationFn: (staringData: { messageId: string; currentProfileId: string; })=>starMessage(staringData),
         onSettled: ()=>{
-            queryClient.invalidateQueries({queryKey:["conversation", {recepientId}]})
+            queryClient.invalidateQueries({queryKey:["get-messages", { recepientId }]})
         }
     })
 

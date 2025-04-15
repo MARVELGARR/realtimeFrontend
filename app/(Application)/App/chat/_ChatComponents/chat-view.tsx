@@ -21,6 +21,9 @@ import { socket } from "@/socket/socket";
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 import { CurrentUserType } from "@/components/myComponents/utilityComponent/types";
 import { getRoomId } from "@/lib/utils";
+import onReadMessage from "@/actions/api-actions/chatActions/onReadMessage";
+import createStoreSearchWord from "@/store/storeSearchValue";
+import useReadMessage from "@/hooks/chatJooks/useReadMessage";
 
 export function ChatView() {
   const queryClient = useQueryClient();
@@ -55,13 +58,26 @@ export function ChatView() {
   const currentUserId = currentUser?.id;
   const profileId = currentUser?.profile.id;
 
+  const singleConversationId = data?.id
+
   const { selections, setSelections, clearSelections } = useSelection();
   const { DeleteMessages, isDeletingMessages } = useDeleteMessages(
     recepientId as string
   );
 
+  const seachword = createStoreSearchWord().getState().searchWord;
+
+  const {isRead} = useReadMessage(singleConversationId as string);
+
+  useEffect(()=>{
+    queryClient.invalidateQueries({
+      queryKey: ["search", seachword, 1, 10]
+    })
+
+  },[isRead])
+
   useEffect(() => {
-    const joinRoom = () => {
+    const joinRoom = async() => {
       if (!recepientId || !currentUserId) return;
       console.log("🟢 Emitting join-conversation:", {
         recepientId,
@@ -69,6 +85,7 @@ export function ChatView() {
       });
       const roomId = getRoomId(currentUserId, recepientId);
       socket.emit("join-conversation", { roomId });
+      
     };
 
     if (!socket.connected) {

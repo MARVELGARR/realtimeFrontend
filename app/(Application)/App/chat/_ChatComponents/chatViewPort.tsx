@@ -4,7 +4,7 @@ import { CurrentUserType } from "@/components/myComponents/utilityComponent/type
 import useSessionStorage from "@/hooks/utilityHooks/useSessionStroage";
 import { cn } from "@/lib/utils";
 import { socket } from "@/socket/socket";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -20,7 +20,7 @@ type ChatViewPortProp = {
 const ChatViewPort = ({ selections, currentUserId, conversationId, profileId, className, recepientId }: ChatViewPortProp) => {
   // For clarity in the implementation
 
-  
+  const queryClient = useQueryClient()  
   const [messages, setMessages] = useState<GetMessagesProp["Messages"][] | null>(null);
   const currentUser = useSessionStorage<CurrentUserType>("currentUser").getItem();
   const userProfile = currentUser?.profile.id;
@@ -112,14 +112,15 @@ const ChatViewPort = ({ selections, currentUserId, conversationId, profileId, cl
       }
 
       
-  
+
       if (scrollRef.current && isAtBottomRef.current) {
         setTimeout(() => {
           scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
         }, 100);
       }
     };
-  
+
+      
     socket.on("receive-message", handleNewMessage);
     return () => {
       socket.off("receive-message", handleNewMessage);

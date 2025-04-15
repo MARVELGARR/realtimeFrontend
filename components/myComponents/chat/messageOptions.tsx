@@ -44,10 +44,11 @@ interface DropdownMenuMessageOptionsProps {
 
 
 export function DropdownMenuMessageOptions({ onOpenChange, messages,   currentProfileId, recepientId, isMyMessage }: DropdownMenuMessageOptionsProps) {
-  
-  const {DeleteMessage, isDeletingMessage} = useDeleteHook(recepientId as string)
-  const {isStaringMessage, staringMessage} = useStarHook(recepientId as string)
-  const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(recepientId as string)
+  const urlParams = new URLSearchParams(window.location.search)
+  const RecipientId = urlParams.get("recepientId")
+  const {DeleteMessage, isDeletingMessage} = useDeleteHook(RecipientId as string)
+  const {isStaringMessage, staringMessage} = useStarHook(RecipientId as string)
+  const {isUnStaringMessage, unStaringMessage} =useUnStarMssage(RecipientId as string)
   
     const messageContent = messages.content
     const messageId = messages.id

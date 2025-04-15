@@ -9,7 +9,7 @@ const useUnStarMssage = (recepientId: string) => {
     const {mutateAsync: unStaringMessage, isPending: isUnStaringMessage} = useMutation({
         mutationFn: (staringData: { messageId: string; currentProfileId: string; })=>unStarMessage(staringData),
         onSettled: ()=>{
-            queryClient.invalidateQueries({queryKey:["conversation", {recepientId}]})
+            queryClient.invalidateQueries({queryKey:["get-messages", { recepientId }]})
         }
     })
 

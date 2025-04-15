@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SearchBar } from "@/components/myComponents/utilityComponent/SearchBar";
 import {
@@ -15,17 +15,30 @@ import ZustanFilterStore from "@/store/useSearchFilter";
 import GroupListItem from "@/components/myComponents/conversations/groupListItems";
 import FriendListConvo from "@/components/myComponents/conversations/friendListConvo";
 import FavouriteListConvo from "@/components/myComponents/conversations/favouriteListConvo";
+import { socket } from "@/socket/socket";
+import { useQueryClient } from "@tanstack/react-query";
+import useStoreSearchWord from "@/store/storeSearchValue";
 
 export function ChatList() {
   const [searchWord, setSearchWord] = useState("");
   const filterState = ZustanFilterStore((state) => state.filters);
   const debouncedResult = useDebounce(searchWord, 500);
+
+  const {}= useStoreSearchWord(debouncedResult)
   const { data, isLoading, isError } = useSearchQuery(
     debouncedResult,
     1,
     10,
-    filterState
   );
+  const queryClient = useQueryClient()
+
+  useEffect(()=>{
+    socket.on("receive-message", ()=>{
+      queryClient.invalidateQueries({
+        queryKey: ["search", debouncedResult, 1, 10]
+      });
+    });
+  },[])
 
   const render = (filterData: ConversationResponse | undefined) => {
     if (isLoading) {

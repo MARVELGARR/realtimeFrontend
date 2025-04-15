@@ -8,7 +8,7 @@ const useDeleteHook = (reciepientId: string) => {
     const {mutateAsync: DeleteMessage, isPending: isDeletingMessage} = useMutation({
         mutationFn: (messageId: string)=> deleteMessage(messageId),
         onSettled: () =>{
-            queryClient.invalidateQueries({ queryKey: ["conversation", { recepientId: reciepientId }] });
+            queryClient.invalidateQueries({ queryKey: ["get-messages", { recepientId: reciepientId }] });
         }
     })
     return {DeleteMessage, isDeletingMessage};
