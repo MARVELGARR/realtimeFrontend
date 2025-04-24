@@ -12,7 +12,7 @@ type FavoriteItem = {
   lastSeen?: string
 }
 
-export default function FavoritesList() {
+export default function AppSidebar() {
   const [favorites, setFavorites] = useState<FavoriteItem[]>([])
   const [loading, setLoading] = useState(true)
 
