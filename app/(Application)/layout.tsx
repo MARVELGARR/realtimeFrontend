@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import type React from "react"; // Import React
-import { AppSidebar } from "@/components/myComponents/AppComponent/sideBar";
+
 import { Card } from "@/components/ui/card";
 import { MessageCircleCodeIcon } from "lucide-react";
+import AppSidebar from "@/components/myComponents/AppComponent/sideBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
