@@ -1,241 +1,74 @@
 "use client"
 
-import React, { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar"
-import { Archive, MessageCircleMore, Phone, Settings, Star, Binoculars, User,  MenuIcon, Loader2, Dot } from "lucide-react"
+import { Loader2 } from "lucide-react"
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { IconWithIndicator } from "./icons-with-indicators"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import ProfileComponent from "../profileComponent/profileComponent"
-import { cn } from "@/lib/utils"
-import { useSession } from "@/providers/sessionProvider"
-import { isOnline } from "@/hooks/utilityHooks/getUserStatus"
+type FavoriteItem = {
+  id: string
+  name: string
+  image?: string
+  lastSeen?: string
+}
 
-const renderSidebarTrigger = () => {
-  const {toggleSidebar} = useSidebar()
-  
-  const { state } = useSidebar()
-  
-  const isCollapsed = state === "collapsed"
-  return (
-    <Button 
-      onClick={
-        ()=>toggleSidebar()
+export default function FavoritesList() {
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const BaseUrl =
+    process.env.NODE_ENV === "development" ? "http://localhost:3001" : "https://realtime-frontend-olive.vercel.app"
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`${BaseUrl}/api/favorites`)
+        if (response.ok) {
+          const data = await response.json()
+          setFavorites(data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch favorites:", error)
+        // Fallback data in case the API fails
+        setFavorites([
+          { id: "1", name: "John Doe", image: "/placeholder.svg?height=40&width=40" },
+          { id: "2", name: "Jane Smith", image: "/placeholder.svg?height=40&width=40" },
+        ])
+      } finally {
+        setLoading(false)
       }
-      className=" w-fit cursor-pointer hover:bg-white bg-inherit"
-      
-    >
-      <MenuIcon color="black" className={`${isCollapsed ? " w-5 h-5" : "w-7 h-7 hover:bg-white" }`}/>
-    </Button>
-  )
-}
+    }
 
-const renderMenuItem = (item: any) => {
-  const { state } = useSidebar();
-  const { currentUser, isGettingCurentUser } = useSession();
+    fetchFavorites()
+  }, [BaseUrl])
 
-  const isMeOnline = isOnline() ?? false;
+  if (loading) {
+    return (
+      <DropdownMenuItem disabled className="flex justify-center">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span className="ml-2">Loading favorites...</span>
+      </DropdownMenuItem>
+    )
+  }
 
-  const currentUserProfilePic = currentUser?.image;
-  const currentProfileId = currentUser?.profile?.id;
-
-  const isCollapsed = React.useMemo(() => state === "collapsed", [state]);
-  const isAvatarOrSettings = React.useMemo(() => item.isAvatar || item.title === "Settings", [item]);
+  if (favorites.length === 0) {
+    return <DropdownMenuItem disabled>No favorites found</DropdownMenuItem>
+  }
 
   return (
-    <SidebarMenuItem className="w-full flex flex-col items-center" key={item.title}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <SidebarMenuButton asChild className="relative h-16">
-              {isAvatarOrSettings ? (
-                <div className="flex items-center w-full cursor-pointer h-full px-4">
-                  {item.isActive && (
-                    <div className="absolute left-0 h-full bottom-0 w-1 bg-green-500" />
-                  )}
-                  {item.isAvatar ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="-ml-2 relative">
-                        <Avatar className={`w-8 h-8 border-2 border-black transition-transform hover:scale-110`}>
-                          <AvatarImage src={currentUserProfilePic!} alt="" />
-                          {isGettingCurentUser ? <Loader2 className=" animate-spin" /> : <AvatarFallback>YOU</AvatarFallback>}
-                        </Avatar>
-                        {isMeOnline && (<Dot className="absolute w-10 h-10 -bottom-4 -right-4 text-green-700 brightness-105"/>)}
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {currentProfileId && <ProfileComponent currentProfileId={currentProfileId} />}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    <IconWithIndicator
-                      icon={item.icon}
-                      count={isCollapsed ? item.indicator : undefined}
-                      color={item.color}
-                      className="w-5 h-5"
-                    />
-                  )}
-                  {!isCollapsed && (
-                    <>
-                      <span className="ml-4 flex-grow">{item.title}</span>
-                      {item.indicator !== undefined && (
-                        <span className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}>
-                          {item.indicator}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </div>
-              ) : (
-                <a href={item.url} className="flex items-center w-full h-full px-4">
-                  {item.isActive && (
-                    <div className="absolute left-0 h-full bottom-0 w-1 bg-green-500" />
-                  )}
-                  <IconWithIndicator
-                    icon={item.icon}
-                    count={isCollapsed ? item.indicator : undefined}
-                    color={item.color}
-                    className="w-5 h-5"
-                  />
-                  {!isCollapsed && (
-                    <>
-                      <span className="ml-4 flex-grow">{item.title}</span>
-                      {item.indicator !== undefined && (
-                        <span className={`ml-2 px-2 py-1 rounded-full text-xs bg-${item.color}-500 text-white`}>
-                          {item.indicator}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </a>
-              )}
-            </SidebarMenuButton>
-          </TooltipTrigger>
-          <TooltipContent side="right" className="z-50">
-            <p>{item.title}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </SidebarMenuItem>
-  );
-};
-
-
-
-export function AppSidebar() {
-
-  // Mock state for unread counts (you would typically fetch this from an API)
-  const [unreadChats ] = React.useState(5)
-  const [missedCalls ] = React.useState(2)
-  const [hasUnviewedStatus] = React.useState(true)
-  
-  const pathname = usePathname()
-
-  const { isGettingCurentUser } = useSession();
-
-  const BaseUrl = process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:3001' 
-    : 'https://realtime-frontend-olive.vercel.app';
-
-
-  const itemsGroup1 = [
-    {
-      title: "Chat",
-      url: `${BaseUrl}/App/chat`,
-      icon: MessageCircleMore,
-      indicator: unreadChats,
-      color: "green" as const,
-      isActive: pathname === `/App/chat`,
-    },
-    {
-      title: "Phone",
-      url: `${BaseUrl}/App/phone`,
-      icon: Phone,
-      indicator: missedCalls,
-      color: "red" as const,
-      isActive: pathname === "/App/phone",
-    },
-    {
-      title: "Status",
-      url: `${BaseUrl}/App/status`,
-      icon: Binoculars,
-      indicator: hasUnviewedStatus ? 0 : undefined,
-      color: "green" as const,
-      isActive: pathname === "/App/status",
-    },
-  ]
-
-  const itemsGroup2 = [
-    {
-      title: "Favourite",
-      url: `${BaseUrl}/App/favourite`,
-      icon: Star,
-      isActive: pathname === "/App/favourite",
-    },
-    {
-      title: "Archive",
-      url: `${BaseUrl}/App/archive`,
-      icon: Archive,
-      isActive: pathname === "/App/archive",
-    },
-  ]
-
-  const itemsGroup3 = [
-    
-    {
-      title: "Profile",
-      url: "#",
-      icon: User,
-      isActive: pathname === "#",
-      isAvatar: true,
-    },
-  ]
-
-  const { state } = useSidebar()
-  const isCollapsed = state === "collapsed"
-
-
-
-
-  return (
-    <Sidebar collapsible="icon" className=" border-none bg-inherit">
-      <SidebarContent className={cn(isCollapsed ? " w-[4rem]" : "w-full" , "  text-primary  h-full flex items-center flex-col justify-between ")}>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {renderSidebarTrigger()}
-              {itemsGroup1.map(renderMenuItem)}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarFooter className="space-y-4 w-full">
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>{itemsGroup2.map(renderMenuItem)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu >{itemsGroup3.map(renderMenuItem)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarFooter>
-      </SidebarContent>
-    </Sidebar>
+    <>
+      {favorites.map((favorite) => (
+        <DropdownMenuItem key={favorite.id} className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={favorite.image || "/placeholder.svg"} alt={favorite.name} />
+              <AvatarFallback>{favorite.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <span>{favorite.name}</span>
+          </div>
+        </DropdownMenuItem>
+      ))}
+    </>
   )
 }
-
