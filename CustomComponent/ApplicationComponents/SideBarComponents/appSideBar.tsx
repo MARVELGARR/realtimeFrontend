@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import MyToolTips from "@/CustomComponent/utilityComponent/myToolTips";
 import Wrappers from "@/CustomComponent/utilityComponent/wrappers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 import Logo from "./logo";
 import { MessageCircle, PhoneCall, Settings } from "lucide-react";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
+import Link from "next/link";
 
 const AppSideBar = ({ className }: { className?: string }) => {
-
-  const {user} = useUserSession()
+  const { user } = useUserSession();
   return (
     <div
       className={cn(
@@ -21,20 +21,26 @@ const AppSideBar = ({ className }: { className?: string }) => {
       <Wrappers className="w-full h-full flex flex-col gap-3 items-center mt-3 justify-start ">
         <MyToolTips tips="Logo">
           <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
-            <Logo className="w-8 h-8    relative  cursor-pointer" />
+            <Link href="/Application">
+              <Logo className="w-8 h-8    relative  cursor-pointer" />
+            </Link>
           </div>
         </MyToolTips>
 
         <Wrappers className="  w-full h-full flex gap-3 flex-col items-center">
           <MyToolTips className="cursor-pointer" tips="Chat">
-            <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
-              <MessageCircle />
-            </div>
+            <Link href="/Application/chat">
+              <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
+                <MessageCircle />
+              </div>
+            </Link>
           </MyToolTips>
           <MyToolTips className="cursor-pointer" tips="Phone">
-            <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
-              <PhoneCall />
-            </div>
+            <Link href="/Application/phone">
+              <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
+                <PhoneCall />
+              </div>
+            </Link>
           </MyToolTips>
         </Wrappers>
 
@@ -42,7 +48,9 @@ const AppSideBar = ({ className }: { className?: string }) => {
           <MyToolTips className="cursor-pointer" tips="Profile">
             <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
               <Avatar>
-                <AvatarImage src={user?.user.image! || user?.profile?.profilePicture!} />
+                <AvatarImage
+                  src={user?.user.image! || user?.profile?.profilePicture!}
+                />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
