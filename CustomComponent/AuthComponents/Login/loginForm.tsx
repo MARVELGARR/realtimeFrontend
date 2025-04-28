@@ -15,6 +15,9 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useLogin from "@/hooks/AuthHooks/useLogin";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 const formSchema = z
   .object({
@@ -34,12 +37,12 @@ const formSchema = z
       .regex(/[^A-Za-z0-9]/, {
         message: "Password must include at least one special character.",
       }),
-    gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
     message: "Passwords must match.",
+
   });
 
 
@@ -50,6 +53,8 @@ const LoginForm = () => {
     password: false,
     confirmPassword: false,
   });
+
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,10 +69,21 @@ const LoginForm = () => {
   const toggleShow = (key: "password" | "confirmPassword") => {
     setShow((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+  
+  const handleToHome = () =>{
+    router.push("/")
+  }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    Login(values).then((data)=>{
-
+    Login(values).then(()=>{
+        toast("User has been logged in", {
+            dismissible: true,
+            description: `You are logged in`,
+            action: {
+                label: "Home",
+                onClick: ()=> handleToHome()
+            }
+        })
     }).catch((error)=>{
 
     })

@@ -24,6 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import usRegisterUser from "@/hooks/AuthHooks/useRegisterUser";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -65,13 +67,15 @@ const formSchema = z
     message: "Passwords must match.",
   });
 
-export type RegisterFormType = z.infer<typeof formSchema>
+export type RegisterFormType = z.infer<typeof formSchema>;
 
 export function RegisterForm() {
   const [show, setShow] = useState({
     password: false,
     confirmPassword: false,
   });
+
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -85,18 +89,34 @@ export function RegisterForm() {
     },
   });
 
+  const handleToLogin = () =>{
+    router.push('/login')
+  }
+
   const toggleShow = (key: "password" | "confirmPassword") => {
     setShow((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const {registerUser, isRegisteringUser} = usRegisterUser()
+  const { registerUser, isRegisteringUser } = usRegisterUser();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    registerUser(values).then((data)=>{
-
-    }).catch((error)=>{
-      
-    })
+    registerUser(values)
+      .then((data) => {
+        toast("User Account  has been Created", {
+          dismissible: true,
+          description: `${data.user.name} has been registered`,
+          action: {
+            label: "Login",
+            onClick: () => handleToLogin()
+          }
+        });
+      })
+      .catch(() => {
+        toast("User Account  has been Created", {
+          dismissible: true,
+          description: `Registration Failled`,
+        });
+      });
   }
 
   return (
@@ -239,7 +259,11 @@ export function RegisterForm() {
           )}
         />
         <div className="w-full h-fit flex flex-row justify-end">
-          <Button disabled={isRegisteringUser} className="cursor-pointer ml-auto" type="submit">
+          <Button
+            disabled={isRegisteringUser}
+            className="cursor-pointer ml-auto"
+            type="submit"
+          >
             {isRegisteringUser ? "Submitting" : " Submit"}
           </Button>
         </div>
