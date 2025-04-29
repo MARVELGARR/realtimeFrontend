@@ -9,7 +9,7 @@ import { MessageCircle, PhoneCall, Settings } from "lucide-react";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
 import Link from "next/link";
 import MyPopOvers from "@/CustomComponent/utilityComponent/myPopOvers";
-import Image from 'next/image'
+import Image from "next/image";
 import { AvatarPopOverContent } from "../PopOvers/avatarPopOverContent";
 const AppSideBar = ({ className }: { className?: string }) => {
   const { user } = useUserSession();
@@ -48,13 +48,22 @@ const AppSideBar = ({ className }: { className?: string }) => {
 
         <Wrappers className="w-full h-fit mb-4 mt-auto flex flex-col gap-3 items-center   ">
           <MyToolTips className="cursor-pointer" tips="Profile">
-            <MyPopOvers className=" p-0 bg- bg-cyan-900" content={<AvatarPopOverContent/>} position="center">
-
+            <MyPopOvers
+              className=" p-0 bg-cyan-900"
+              content={<AvatarPopOverContent />}
+              position="center"
+            >
               <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
                 <Avatar>
-                  {(user?.user?.image || user?.profile?.profilePicture) &&(<AvatarImage
-                    src={user?.user.image! || user?.profile?.profilePicture! || ""}
-                  />)}
+                  {(user?.user?.image || user?.profile?.profilePicture) && (
+                    <AvatarImage
+                      src={
+                        user?.user.image! ||
+                        user?.profile?.profilePicture! ||
+                        ""
+                      }
+                    />
+                  )}
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>

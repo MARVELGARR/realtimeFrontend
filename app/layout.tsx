@@ -32,6 +32,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <Toaster />
           {children}
+ 
         </ReactQueryProvider>
       </body>
     </html>

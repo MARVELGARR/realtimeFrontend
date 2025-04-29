@@ -5,13 +5,15 @@ import { cn } from "@/lib/utils";
 import { apiClient } from "@/utils/clientApi";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import MyProfileSheet from "../Sheets/myProfileSheet";
+import { useSheet } from "@/store/useSheetStore";
 
 
 export function AvatarPopOverContent(){
 
     const router = useRouter()
 
-
+    const {  onOpen} = useSheet()
 
     const handleLogout = async() =>{
         const data = await apiClient<{message: string}>("/v1/logout", {
@@ -25,13 +27,13 @@ export function AvatarPopOverContent(){
     }
     return (
         <div className="w-full p-1 flex flex-col ">
-            <AvatarPopOverContentItems className="hover:bg-cyan-500">Profile</AvatarPopOverContentItems>
+            <AvatarPopOverContentItems onClick={()=>onOpen("my-profile")} className="hover:bg-cyan-500">Profile</AvatarPopOverContentItems>
             <AvatarPopOverContentItems onClick={handleLogout} className="hover:bg-red-600">Logout</AvatarPopOverContentItems>
         </div>
     );
 } 
 
-const AvatarPopOverContentItems = ({className, onClick, children}:{
+export const AvatarPopOverContentItems = ({className, onClick, children}:{
     className?: string
     children: ReactNode
     onClick?: ()=>void

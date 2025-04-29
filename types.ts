@@ -48,6 +48,7 @@ export type profileType = {
   gender: Gender;
   birthDay: Date | null;
   profilePicture: string | null;
+  coverPicture: string | null;
 } | null;
 
 export type UserWithProfile = {
