@@ -26,14 +26,9 @@ const MyProfileSheet = () => {
       <SheetTrigger>
       
       </SheetTrigger>
-      <SheetContent className={"bg-cyan-800"}>
-        <SheetHeader>
-          <SheetTitle className="text-white">Edit Profile</SheetTitle>
-          <SheetDescription className="text-white">
-          Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="w-full">
+      <SheetContent className={"bg-cyan-800 "}>
+
+        <div className="w-full ">
           <UserProfileContent />
         </div>
       </SheetContent>

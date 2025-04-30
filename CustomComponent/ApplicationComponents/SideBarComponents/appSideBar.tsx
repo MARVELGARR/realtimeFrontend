@@ -55,10 +55,10 @@ const AppSideBar = ({ className }: { className?: string }) => {
             >
               <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
                 <Avatar>
-                  {(user?.user?.image || user?.profile?.profilePicture) && (
+                  {(user?.image || user?.profile?.profilePicture) && (
                     <AvatarImage
                       src={
-                        user?.user.image! ||
+                        user.image! ||
                         user?.profile?.profilePicture! ||
                         ""
                       }

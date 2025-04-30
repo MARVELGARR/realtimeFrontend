@@ -25,16 +25,7 @@ export enum GroupRole {
   ADMIN,
 }
 
-export type userType = {
-    name: string | null;
-    id: string;
-    email: string | null;
-    emailVerified: boolean | null;
-    image: string | null;
-    password: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-}
+
 export type profileType = {
   id: string;
   createdAt: Date;
@@ -52,6 +43,13 @@ export type profileType = {
 } | null;
 
 export type UserWithProfile = {
-    user: userType;
+  name: string | null;
+  id: string;
+  email: string | null;
+  emailVerified: boolean | null;
+  image: string | null;
+  password: string | null;
+  createdAt: Date;
+  updatedAt: Date;
   profile: profileType
 };

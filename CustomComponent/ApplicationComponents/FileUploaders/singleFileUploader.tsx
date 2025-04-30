@@ -30,7 +30,6 @@ type DragState = {
 
 export function SingleFileUploader() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
 
   const { isOpen, onClose, type } = useModal();
 
@@ -102,11 +101,10 @@ export function SingleFileUploader() {
     upload(formData)
       .then((data) => {
         setUrl(data.url);
-        
-        setUploadedFileUrl(data.url);
         toast("File uploaded", {
           description: `${data.url}`,
         });
+        onClose();
       })
       .catch((error) => {
         toast("File upload failed", {
@@ -134,23 +132,7 @@ export function SingleFileUploader() {
     <div>
       <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
         <DialogTrigger asChild>
-          <div className="w-20 cursor-pointer h-20 bg-gray-200 rounded-full flex items-center justify-center">
-            {uploadedFileUrl ? (
-              <>
-                <Avatar>
-                  <AvatarImage
-                    src={uploadedFileUrl}
-                    className="w-full h-full rounded-full"
-                  />
-                  <AvatarFallback>
-                    <User className="w-4 h-4" />
-                  </AvatarFallback>
-                </Avatar>
-              </>
-            ) : (
-              <Upload className="w-full  h-full" />
-            )}
-          </div>
+
         </DialogTrigger>
         <DialogContent className="sm:max-w-md bg-cyan-800 text-white">
           <div className="sm:max-w-md">
