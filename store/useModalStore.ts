@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 
-export type ModalType = "createSever";
+export type ModalType = "singleFileUploader";
 
 
 interface ModalStore {

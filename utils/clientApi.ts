@@ -1,10 +1,11 @@
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
+type headers = "Application/Json" | "Application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain" | "text/html" | "text/css" | "text/javascript" | "image/png" | "image/jpeg" | "image/gif" | "image/svg+xml" | "application/xml" | "application/pdf" | "application/zip" | "application/octet-stream";
 interface ApiClientOptions {
   method?: HttpMethod;
   token?: string;
   queryParams?: Record<string, string | number | boolean | undefined>;
   body?: any;
+  headers?:headers
 }
 
 export const apiClient = async <T>(
@@ -26,15 +27,28 @@ export const apiClient = async <T>(
     : '';
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}${queryString}`, {
+    let fetchOptions: RequestInit = {
       method,
       headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
+      ...(token && { Authorization: `Bearer ${token}` }),
       },
-      ...(body && { body: JSON.stringify(body) }),
       credentials: "include",
-    });
+    };
+
+    if (options.headers === 'multipart/form-data' && body instanceof FormData) {
+      fetchOptions.body = body;
+      // Do not set 'Content-Type' header; fetch will automatically set it for FormData
+    } else {
+      fetchOptions.headers = {
+      ...fetchOptions.headers,
+      ...(options.headers !== 'multipart/form-data' && { 'Content-Type': options.headers || 'application/json' }),
+      };
+      if (body) {
+      fetchOptions.body = JSON.stringify(body);
+      }
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}${queryString}`, fetchOptions);
 
     if (!res.ok) {
       const errorDetails = await res.json();
