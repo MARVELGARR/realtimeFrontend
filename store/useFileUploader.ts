@@ -1,8 +1,11 @@
 import {create} from 'zustand';
+import { singleFileUploaderFor } from './useModalStore';
+
 
 type useFileUploaderProp ={
     url: string | null;
-    setUrl: (url: string | null) => void;
+    fileFor: singleFileUploaderFor | null;
+    setUrl: (url: string | null, fileFor: singleFileUploaderFor | null) => void;
     image: string | null;
     setImage: (image: string | null) => void;
 }
@@ -10,7 +13,8 @@ type useFileUploaderProp ={
 
 export const useFileUploader = create<useFileUploaderProp>((set)=>({
  url: null,
- setUrl: (url: string | null) => set({url}),
+ fileFor: null,
+ setUrl: (url: string | null, fileFor: singleFileUploaderFor | null) => set({url, fileFor}),
     image: null,
     setImage: (image: string | null) => set({image})
 }))

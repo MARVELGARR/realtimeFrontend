@@ -39,7 +39,7 @@ export function SingleFileUploader() {
     onClose();
   };
 
-  const { setUrl } = useFileUploader();
+  const { setUrl, fileFor } = useFileUploader();
 
   const [dragState, setDragState] = useState<DragState>({
     name: "drag-box",
@@ -100,7 +100,7 @@ export function SingleFileUploader() {
    console.log(formData.get("singleFile")) 
     upload(formData)
       .then((data) => {
-        setUrl(data.url);
+        setUrl(data.url, fileFor);
         toast("File uploaded", {
           description: `${data.url}`,
         });

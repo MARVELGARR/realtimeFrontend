@@ -1,6 +1,8 @@
 "use client"
 
 import { SingleFileUploader } from "@/CustomComponent/ApplicationComponents/FileUploaders/singleFileUploader";
+import ProfileCoverPicModal from "@/CustomComponent/ApplicationComponents/Modals/coverPicModal";
+import ProfilePicModal from "@/CustomComponent/ApplicationComponents/Modals/profilePicModals";
 import MyProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/myProfileSheet";
 import { useEffect, useState } from "react";
 
@@ -18,6 +20,8 @@ const MyModalProviders = () => {
     return (
         <>
             <SingleFileUploader/>
+            <ProfilePicModal/>
+            <ProfileCoverPicModal/>
         </>
     );
 }

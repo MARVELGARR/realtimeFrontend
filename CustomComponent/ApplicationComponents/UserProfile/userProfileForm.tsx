@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "sonner"
 import { format } from "date-fns"
+import useUpdateProfile from "@/hooks/UserHooks/updateProfile"
 
 // Define Gender enum to match the schema
 
@@ -31,11 +32,14 @@ const formSchema = z.object({
   birthDay: z.date().optional().nullable(),
 })
 
-type ProfileFormValues = z.infer<typeof formSchema>
+export type ProfileFormValues = z.infer<typeof formSchema>
 
 const UserProfileContent = ({ className }: { className?: string }) => {
   const [storedValue] = useLocalStorage<UserWithProfile | null>("user-session", null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+
+
+
+  const {updateProfile, isUpdatingProfile} = useUpdateProfile()
 
   // Initialize form with default values from user data
   const form = useForm<ProfileFormValues>({
@@ -54,25 +58,15 @@ const UserProfileContent = ({ className }: { className?: string }) => {
 
   // Handle form submission
   const onSubmit = async (values: ProfileFormValues) => {
-    setIsSubmitting(true)
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Here you would normally update the user profile with an API call
-      console.log("Form values submitted:", values)
-
-      toast.success("Profile updated", {
-        description: "Your profile has been successfully updated.",
+    updateProfile(values).then(()=>{
+      toast("Profile Updataed",{
+        description:"Your Profile has been updated"
       })
-    } catch (error) {
-      toast.error("Error", {
-        description: "There was an error updating your profile.",
+    }).catch((error)=>{
+      toast("Profile not updated", {
+        description: " Profile failled to update"
       })
-    } finally {
-      setIsSubmitting(false)
-    }
+    })
   }
 
   return (
@@ -276,12 +270,14 @@ const UserProfileContent = ({ className }: { className?: string }) => {
                   </FormItem>
                 )}
               />
+
+              
             </div>
 
             {/* Submit button - sticky at bottom */}
             <div className="sticky top-[50%]  right-2 bg-inherit z-40 w-full  bottom-0 pt-2 pb-1  mt-6">
-              <Button asChild type="submit" disabled={isSubmitting} className="w-fit bg-cyan-600 hover:bg-cyan-500 text-white">
-                <Save className="w-4 h-4"/>
+              <Button asChild type="submit" disabled={isUpdatingProfile} className="w-fit bg-cyan-600 hover:bg-cyan-500 text-white">
+                <Save className="w-4 cursor-pointer h-4"/>
               </Button>
             </div>
           </form>
@@ -291,4 +287,4 @@ const UserProfileContent = ({ className }: { className?: string }) => {
   )
 }
 
-export default UserProfileContent
+export default UserProfileContent 

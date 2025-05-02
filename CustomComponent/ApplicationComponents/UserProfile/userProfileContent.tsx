@@ -10,6 +10,8 @@ import { UserWithProfile } from "@/types";
 import { Edit2Icon, UploadCloud } from "lucide-react";
 import Image from "next/image";
 import ProfileForm from "./userProfileForm";
+import useUpdateProfilePicture from "@/hooks/UserHooks/updateProfilePic";
+import { toast } from "sonner";
 
 const UserProfileContent = ({ className }: { className?: string }) => {
   const [storedValue] = useLocalStorage<UserWithProfile | null>(
@@ -17,8 +19,22 @@ const UserProfileContent = ({ className }: { className?: string }) => {
     null
   );
 
-  const { onOpen } = useModal();
-  const { url } = useFileUploader();
+  const { onOpen, type, fileFor } = useModal();
+  const { url, setUrl } = useFileUploader();
+  const {isUpdatingProfile, updateProfilePic} = useUpdateProfilePicture()
+
+  const handleUpdateProfilePic = async () =>{
+    updateProfilePic(url as string).then(()=>{
+        setUrl(null, null)
+        toast("Profile Pic Updated", {
+            description: "Your Profile Pic Has been updated"
+        })
+    }).catch((error)=>{
+        toast("Failed To Update Pic", {
+            description: "Your Profile Picture Update Failled"
+        })
+    })
+  }
 
   return (
 
@@ -32,20 +48,20 @@ const UserProfileContent = ({ className }: { className?: string }) => {
                 fill
                 alt="cover paper"
             />
-            {!url ? (
+            {url && fileFor ==="profile-cover-picture" ? (
                 <div
-                onClick={() => onOpen("singleFileUploader")}
+                className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
+                >
+                <UploadCloud className="w-4 h-4 text-green-900" />
+                </div>
+            ) : (
+                <div
+                onClick={() => onOpen("singleFileUploader", null, "profile-cover-picture")}
                 className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
                 >
                 <Edit2Icon className="w-4 h-4 text-cyan-900" />
                 </div>
-            ) : (
-                <div
-                onClick={() => onOpen("singleFileUploader")}
-                className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
-                >
-                <UploadCloud className="w-4 h-4 text-cyan-900" />
-                </div>
+                
             )}
             </div>
             <div className="absolute  left-[0.4rem] -bottom-[3rem]">
@@ -59,29 +75,31 @@ const UserProfileContent = ({ className }: { className?: string }) => {
                 <AvatarFallback>YOU</AvatarFallback>
                 )}
             </Avatar>
-            {!url ? (
+            {url && fileFor =="profile-pic" ? (
+                 <div
+              
+                 className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
+                 >
+                     <UploadCloud onClick={handleUpdateProfilePic} className={` ${ isUpdatingProfile ? " animate animate-bounce" : ""} w-4 h-4 rounded-full text-green-900`} />
+                    
+                 </div>
+            ) : (
+               
                 <div
-                onClick={() => onOpen("singleFileUploader")}
+                onClick={() => onOpen("singleFileUploader", null, "profile-pic")}
                 className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
                 >
                 <Edit2Icon className="w-4 h-4 rounded-full text-cyan-900" />
-                </div>
-            ) : (
-                <div
-                onClick={() => onOpen("singleFileUploader")}
-                className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
-                >
-                <UploadCloud className="w-4 h-4 rounded-full text-cyan-900" />
                 </div>
             )}
             </div>
         </Wrappers>
 
         <Wrappers className="flex items-center gap-3 mt-4 w-full justify-end pr-3">
-            <Button className=" cursor-pointer text-cyan-900" variant={"outline"}>
+            <Button  onClick={()=> onOpen("profile-pic", storedValue?.profile?.profilePicture, "profile-pic")} className=" cursor-pointer text-cyan-900" variant={"outline"}>
             View Pic
             </Button>
-            <Button className="cursor-pointer text-cyan-900" variant={"outline"}>
+            <Button onClick={()=>onOpen("profile-cover-picture", "/images/wallpaper.webp", "profile-cover-picture")} className="cursor-pointer text-cyan-900" variant={"outline"}>
             View Cover
             </Button>
         </Wrappers>
