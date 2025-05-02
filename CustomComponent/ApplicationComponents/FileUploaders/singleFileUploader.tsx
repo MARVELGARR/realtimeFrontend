@@ -207,7 +207,7 @@ export function SingleFileUploader() {
                   </>
                 ) : (
                   <div
-                    className="flex items-center text-white gap-2"
+                    className="flex items-center cursor-pointer text-white gap-2"
                     
                   >
                     <Upload className="w-4 h-4" />

@@ -1,14 +1,19 @@
 import { ProfileFormValues } from "@/CustomComponent/ApplicationComponents/UserProfile/userProfileForm";
 import { apiClient } from "@/utils/clientApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useUpdateProfile = () => {
+
+    const queryClient =  useQueryClient()
     
     const {mutateAsync: updateProfile, isPending: isUpdatingProfile} = useMutation({
         mutationFn: (data: ProfileFormValues)=>apiClient("/v1/update-profile",{
-            method: "POST",
-            body: data
-        })
+            method: "PATCH",
+            body: {...data}
+        }),
+        onSettled: ()=>{
+            queryClient.invalidateQueries({queryKey:["user"]})
+        }
     })
     return {isUpdatingProfile, updateProfile}
 

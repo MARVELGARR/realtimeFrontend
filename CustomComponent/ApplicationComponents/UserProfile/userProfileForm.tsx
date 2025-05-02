@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLocalStorage } from "@/hooks/LocalHooks/useLocalStorage"
 import { cn } from "@/lib/utils"
-import { Gender, type UserWithProfile } from "@/types"
+import {  Gender, type UserWithProfile } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -17,6 +17,7 @@ import * as z from "zod"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import useUpdateProfile from "@/hooks/UserHooks/updateProfile"
+import { useUserSession } from "@/providers/UserProvider/userSessionProvider"
 
 // Define Gender enum to match the schema
 
@@ -28,14 +29,21 @@ const formSchema = z.object({
   bio: z.string().optional(),
   nickname: z.string().optional(),
   phoneNumber: z.string().optional(),
-  gender: z.nativeEnum(Gender).optional(),
+  gender: z.enum(["MALE", "FEMALE", "OTHERS"]).optional(),
   birthDay: z.date().optional().nullable(),
 })
+
+const genderEnumToString = (value: number | undefined): keyof typeof Gender => {
+  return Gender[value as unknown as keyof typeof Gender] as unknown as keyof typeof Gender;
+};
+
+
+
 
 export type ProfileFormValues = z.infer<typeof formSchema>
 
 const UserProfileContent = ({ className }: { className?: string }) => {
-  const [storedValue] = useLocalStorage<UserWithProfile | null>("user-session", null)
+  const {user: storedValue} = useUserSession()
 
 
 
@@ -51,13 +59,14 @@ const UserProfileContent = ({ className }: { className?: string }) => {
       bio: storedValue?.profile?.bio || "",
       nickname: storedValue?.profile?.nickname || "",
       phoneNumber: storedValue?.profile?.phoneNumber || "",
-      gender: storedValue?.profile?.gender || Gender.MALE,
+      gender: genderEnumToString(storedValue?.profile?.gender) ?? "OTHERS",
       birthDay: storedValue?.profile?.birthDay || null,
     },
   })
 
   // Handle form submission
   const onSubmit = async (values: ProfileFormValues) => {
+    console.log(values)
     updateProfile(values).then(()=>{
       toast("Profile Updataed",{
         description:"Your Profile has been updated"
@@ -195,8 +204,8 @@ const UserProfileContent = ({ className }: { className?: string }) => {
                   <FormItem>
                     <FormLabel className="text-white text-xs">Gender</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(value as unknown as Gender)}
-                      defaultValue={field.value as string | undefined}
+                     onValueChange={(value) => field.onChange(value)}
+                      defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="bg-cyan-800 border-cyan-700 text-white">
@@ -204,9 +213,9 @@ const UserProfileContent = ({ className }: { className?: string }) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-cyan-800 border-cyan-700 text-white">
-                        <SelectItem value="MALE">Male</SelectItem>
-                        <SelectItem value="FEMALE">Female</SelectItem>
-                        <SelectItem value="OTHER">Other</SelectItem>
+                        <SelectItem value={"MALE"}>Male</SelectItem>
+                        <SelectItem value={"FEMALE"}>Female</SelectItem>
+                        <SelectItem value={"OTHERS"}>OTHERS</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-red-300 text-xs" />
@@ -276,7 +285,7 @@ const UserProfileContent = ({ className }: { className?: string }) => {
 
             {/* Submit button - sticky at bottom */}
             <div className="sticky top-[50%]  right-2 bg-inherit z-40 w-full  bottom-0 pt-2 pb-1  mt-6">
-              <Button asChild type="submit" disabled={isUpdatingProfile} className="w-fit bg-cyan-600 hover:bg-cyan-500 text-white">
+              <Button  type="submit" disabled={isUpdatingProfile} className="w-fit bg-cyan-600 hover:bg-cyan-500 text-white">
                 <Save className="w-4 cursor-pointer h-4"/>
               </Button>
             </div>
