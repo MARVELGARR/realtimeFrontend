@@ -11,8 +11,10 @@ import Link from "next/link";
 import MyPopOvers from "@/CustomComponent/utilityComponent/myPopOvers";
 import Image from "next/image";
 import { AvatarPopOverContent } from "../PopOvers/avatarPopOverContent";
+import { useDrawer } from "@/store/useDrawer";
 const AppSideBar = ({ className }: { className?: string }) => {
   const { user } = useUserSession();
+  const { openDrawer} = useDrawer()
   return (
     <div
       className={cn(
@@ -70,7 +72,7 @@ const AppSideBar = ({ className }: { className?: string }) => {
             </MyPopOvers>
           </MyToolTips>
           <MyToolTips className="cursor-pointer" tips="Settings">
-            <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
+            <div onClick={()=>openDrawer("settings")} className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
               <Settings />
             </div>
           </MyToolTips>

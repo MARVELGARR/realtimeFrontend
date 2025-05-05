@@ -1,3 +1,4 @@
+import MyDrawerProvider from "@/providers/AppProviders/drawerProvider";
 import MyModalProviders from "@/providers/AppProviders/modalProvider";
 import MySheetsProviders from "@/providers/AppProviders/sheetProviders";
 import { UserSessionProvider } from "@/providers/UserProvider/userSessionProvider";
@@ -9,6 +10,7 @@ const NavigationRoute = ({ children }: { children: ReactNode }) => {
       <UserSessionProvider>
         <MySheetsProviders />
         <MyModalProviders />
+        <MyDrawerProvider/>
         {children}
       </UserSessionProvider>
     </div>

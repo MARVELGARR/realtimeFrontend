@@ -1,29 +1,24 @@
-export enum LastSeen {
-  EVERYONE,
-  MYCONTACTS,
-  NOBODY,
-}
+export type LastSeen = "EVERYONE"|"MYCONTACTS"|"NOBODY"
 
-export enum Precense {
-  EVERYONE,
-  NOBODY,
-}
 
-export enum Gender {
-  MALE,
-  FEMALE,
-  OTHERS,
-}
+export type Precense =
+  "EVERYONE"|
+  "NOBODY"
 
-export enum ChatType {
-  DIRECT,
-  GROUP,
-}
+export type DisappearingMessages = 
+  "OFF"|
+  "DAYS90"|
+  "DAYS7"|
+  "H24"
 
-export enum GroupRole {
-  PARTICIPANT,
-  ADMIN,
-}
+export type Gender = "MALE"| "FEMALE"| "OTHERS"
+
+
+export type ChatType = "DIRECT"|"GROUP"
+
+
+export type GroupRole = "PARTICIPANT" |  "ADMIN"
+
 
 
 export type profileType = {
@@ -42,6 +37,13 @@ export type profileType = {
   coverPicture: string | null;
 } | null;
 
+export type Privacy={
+  readReciept: boolean | null;
+  lastSeen: LastSeen | null;
+  precense: Precense | null;
+  disappearingMessages: DisappearingMessages | null;
+}
+
 export type UserWithProfile = {
   name: string | null;
   id: string;
@@ -51,5 +53,21 @@ export type UserWithProfile = {
   password: string | null;
   createdAt: Date;
   updatedAt: Date;
-  profile: profileType
+  profile: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    bio: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    nickname: string | null;
+    phoneNumber: string | null;
+    gender: Gender;
+    birthDay: Date | null;
+    profilePicture: string | null;
+    coverPicture: string | null;
+    privacy: Privacy | null;
+  }
+
 };

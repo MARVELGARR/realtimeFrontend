@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLocalStorage } from "@/hooks/LocalHooks/useLocalStorage"
 import { cn } from "@/lib/utils"
-import {  Gender, type UserWithProfile } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -33,9 +32,7 @@ const formSchema = z.object({
   birthDay: z.date().optional().nullable(),
 })
 
-const genderEnumToString = (value: number | undefined): keyof typeof Gender => {
-  return Gender[value as unknown as keyof typeof Gender] as unknown as keyof typeof Gender;
-};
+
 
 
 
@@ -59,7 +56,7 @@ const UserProfileContent = ({ className }: { className?: string }) => {
       bio: storedValue?.profile?.bio || "",
       nickname: storedValue?.profile?.nickname || "",
       phoneNumber: storedValue?.profile?.phoneNumber || "",
-      gender: genderEnumToString(storedValue?.profile?.gender) ?? "OTHERS",
+      gender: storedValue?.profile?.gender ?? "OTHERS",
       birthDay: storedValue?.profile?.birthDay || null,
     },
   })

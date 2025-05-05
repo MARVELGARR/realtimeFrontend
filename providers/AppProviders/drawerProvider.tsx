@@ -1,6 +1,7 @@
 "use client"
 
 
+import SettingsDrawer from "@/CustomComponent/ApplicationComponents/Drawers/seetingDrawer";
 import { useEffect, useState } from "react";
 
 
@@ -16,6 +17,7 @@ const MyDrawerProvider = () => {
     }
     return (
         <>
+        <SettingsDrawer/>
         </>
     );
 }
