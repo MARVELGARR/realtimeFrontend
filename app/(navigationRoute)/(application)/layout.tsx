@@ -3,10 +3,13 @@ import { ReactNode } from "react";
 
 const NavigationRoute = ({ children }: { children: ReactNode }) => {
   return (
-    <div className=" bg-cyan-900 h-screen w-screen">
+    <div className=" bg-cyan-900 flex h-screen w-screen">
       <AppSideBar className="" />
-      {children}
-    </div>
+      <div className="ml-[5.9rem] w-full">
+
+        {children}
+      </div>
+    </div> 
   );
 };
 

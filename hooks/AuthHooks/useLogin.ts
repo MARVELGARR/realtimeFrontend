@@ -33,7 +33,7 @@ const useLogin = () => {
     const router = useRouter()
 
     const {mutateAsync: Login, isPending: isLoggingIn} = useMutation({
-        mutationFn: (body: LoginFormType)=> apiClient<LoginUserResponse>(`/v1/login`, {
+        mutationFn: (body: LoginFormType)=> apiClient<LoginUserResponse>(`/login`, {
             method: "POST",
             body
         }),

@@ -12,6 +12,8 @@ import MyPopOvers from "@/CustomComponent/utilityComponent/myPopOvers";
 import Image from "next/image";
 import { AvatarPopOverContent } from "../PopOvers/avatarPopOverContent";
 import { useDrawer } from "@/store/useDrawer";
+import CreateButton from "./createButton";
+import CreatePopOverContent from "../PopOvers/createPopOverContent";
 const AppSideBar = ({ className }: { className?: string }) => {
   const { user } = useUserSession();
   const { openDrawer} = useDrawer()
@@ -49,6 +51,11 @@ const AppSideBar = ({ className }: { className?: string }) => {
         </Wrappers>
 
         <Wrappers className="w-full h-fit mb-4 mt-auto flex flex-col gap-3 items-center   ">
+          <MyToolTips tips="create">
+            <MyPopOvers className="p-2" content={<CreatePopOverContent/>} position={"center"}>
+              <CreateButton/>
+            </MyPopOvers>
+          </MyToolTips>
           <MyToolTips className="cursor-pointer" tips="Profile">
             <MyPopOvers
               className=" p-0 bg-cyan-900"

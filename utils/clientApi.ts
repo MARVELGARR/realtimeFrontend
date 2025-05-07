@@ -48,7 +48,7 @@ export const apiClient = async <T>(
       }
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}${queryString}`, fetchOptions);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1${endpoint}${queryString}`, fetchOptions);
 
     if (!res.ok) {
       const errorDetails = await res.json();

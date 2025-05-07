@@ -2,7 +2,9 @@
 
 import { SingleFileUploader } from "@/CustomComponent/ApplicationComponents/FileUploaders/singleFileUploader";
 import ProfileCoverPicModal from "@/CustomComponent/ApplicationComponents/Modals/coverPicModal";
+import FindNewFriendModalCommand from "@/CustomComponent/ApplicationComponents/Modals/findNewFriendModal";
 import ProfilePicModal from "@/CustomComponent/ApplicationComponents/Modals/profilePicModals";
+import StartNewChatModal from "@/CustomComponent/ApplicationComponents/Modals/startNewChatModal";
 import MyProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/myProfileSheet";
 import { useEffect, useState } from "react";
 
@@ -22,6 +24,8 @@ const MyModalProviders = () => {
             <SingleFileUploader/>
             <ProfilePicModal/>
             <ProfileCoverPicModal/>
+            <StartNewChatModal/>
+            <FindNewFriendModalCommand/>
         </>
     );
 }

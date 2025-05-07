@@ -35,7 +35,7 @@ import { useQuery } from "@tanstack/react-query";
 const useUser = () => {
   const {data: user, isLoading: isGettingUser} = useQuery({
     queryKey: ["user"],
-    queryFn: () => apiClient<UserWithProfile>("/v1/user")
+    queryFn: () => apiClient<UserWithProfile>("/user")
   });
   return {user, isGettingUser};
 };
