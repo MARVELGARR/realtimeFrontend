@@ -1,6 +1,7 @@
 "use client"
 
 import MyProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/myProfileSheet";
+import UsersProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/usersProfileSheet";
 import { useEffect, useState } from "react";
 
 
@@ -17,6 +18,7 @@ const MySheetsProviders = () => {
     return (
         <>
         <MyProfileSheet/>
+        <UsersProfileSheet/>
         </>
     );
 }

@@ -1,17 +1,20 @@
+import { UsersResponse } from '@/CustomComponent/ApplicationComponents/Modals/findNewFriendModal';
 import {create} from 'zustand';
 
-export type SheetType = "my-profile";
+export type SheetType = "my-profile" | "users-profile";
 
 
 interface SheetStore {
     type: SheetType | null;
     isOpen: boolean;
-    onOpen: (type: SheetType) => void;
+    data?: UsersResponse["users"][0] | null;
+    onOpen: (type: SheetType, data?: UsersResponse["users"][0]) => void;
     onClose: () => void;
 }
 export const useSheet  = create<SheetStore>((set)=>({
     type: null,
     isOpen: false,
-    onOpen: (type: SheetType) => set({isOpen: true, type}),
+    data: null,
+    onOpen: (type: SheetType, data?:  UsersResponse["users"][0]) => set({isOpen: true, type, data }),
     onClose: () => set({isOpen: false, type: null})
 }))

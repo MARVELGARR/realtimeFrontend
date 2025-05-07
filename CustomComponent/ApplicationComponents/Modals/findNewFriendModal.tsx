@@ -17,28 +17,44 @@ import { CiMenuKebab } from "react-icons/ci";
 import { useInView } from "react-intersection-observer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PersonStanding } from "lucide-react";
+import MyPopOvers from "@/CustomComponent/utilityComponent/myPopOvers";
+
+import { IoIosPersonAdd } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
+import { useSheet } from "@/store/useSheetStore";
+import MyToolTips from "@/CustomComponent/utilityComponent/myToolTips";
+import { Gender } from '../../../types';
 export interface UsersResponse {
-    users: User[];
-    totalCount: number;
-  }
-  
-  export interface User {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: string | null;
-    image: string;
-    password: string;
-    createdAt: string;
-    updatedAt: string;
-    profile: UserProfile;
-  }
-  
-  export interface UserProfile {
-    profilePicture: string;
-    blockedBy: string[]; // assuming these are user IDs
-  }
-  
+  users: User[];
+  totalCount: number;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: string | null;
+  image: string;
+  password: string;
+  createdAt: string;
+  updatedAt: string;
+  profile: UserProfile;
+}
+
+
+
+export interface UserProfile {
+  profilePicture: string;
+  coverPicture: string
+  nickname: string,
+  phoneNumber: string
+  bio: string,
+  createdAt: Date,
+
+  gender: Gender
+  blockedBy: string[]; // assuming these are user IDs
+}
+
 const FindNewFriendModalCommand = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const me = "someValue";
@@ -90,6 +106,8 @@ const FindNewFriendModalCommand = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const { onOpen } = useSheet();
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className=" w-[25rem] h-[25rem] p-0 rounded">
@@ -103,15 +121,40 @@ const FindNewFriendModalCommand = () => {
             <CommandGroup heading="Users">
               {data?.pages?.map((page) =>
                 page.users.map((user) => (
-                  <CommandItem key={user.id} className="cursor-pointer hover:bg-cyan-500/70">
+                  <CommandItem
+                    key={user.id}
+                    className="cursor-pointer hover:bg-cyan-500/70"
+                  >
                     <Avatar>
-                        <AvatarImage src={user.image || user.profile.profilePicture}/>
-                        <AvatarFallback>
-                            <PersonStanding/>
-                        </AvatarFallback>
+                      <AvatarImage
+                        src={user.image || user.profile.profilePicture}
+                      />
+                      <AvatarFallback>
+                        <PersonStanding />
+                      </AvatarFallback>
                     </Avatar>
+
                     <span className="">{user.name}</span>
-                    <CiMenuKebab className="ml-auto"/>
+
+                    <div className="ml-auto flex items-center gap-3">
+
+                      <div  className="cursor-pointer">
+
+                        <MyToolTips className="cursor-pointer" tips="add friend">
+                          <IoIosPersonAdd  className="cursor-pointer text-2xl text-cyan-900" />
+                        </MyToolTips>
+                      </div>
+                      <div onClick={()=>onOpen("users-profile", user! )} className=" cursor-pointer ">
+
+                        <MyToolTips className="cursor-pointer" tips={"view profile"}>
+
+                            <CgProfile
+                              className=" text-[55rem] cursor-pointer text-cyan-900 "
+                            />
+                        </MyToolTips>
+                      </div>
+                    </div>
+
                   </CommandItem>
                 ))
               )}
