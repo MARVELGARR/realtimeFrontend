@@ -1,38 +1,52 @@
+'use client'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { createContext, ReactNode, useContext } from "react";
 
+type Participant = {
+  id: string;
+  name: string;
+  avatar: string;
+};
 
-type  ChatViewProp ={
-    conversationType: "DIRECT"| "GROUP",
-    children: ReactNode
-}
-const chatViewContext = createContext<ChatViewProp | null>(null)
+type ChatViewProp = {
+  conversationType: string;
+  participants: Participant[];
+};
+
+const ChatViewContext = createContext<ChatViewProp | null>(null);
 
 export function useChatView() {
-    const context = useContext(chatViewContext);
-    if (!context) {
-      throw new Error("useUserSession must be used within a UserSessionProvider");
-    }
-    return context;
+  const context = useContext(ChatViewContext);
+  if (!context) {
+    throw new Error("useChatView must be used within a ChatView provider");
   }
-
-const ChatView = ({conversationType, children}:ChatViewProp) => {
-    
-    
-    return (
-        <chatViewContext.Provider value={{conversationType}}>
-            {children}
-        </chatViewContext.Provider>
-    );
+  return context;
 }
 
+export function ChatView({
+  children,
+  conversationType,
+  participants,
+}: {
+  children: ReactNode;
+  conversationType: string;
+  participants: Participant[];
+}) {
+  return (
+    <ChatViewContext.Provider value={{ conversationType, participants }}>
+      {children}
+    </ChatViewContext.Provider>
+  );
+}
 
-ChatView.Header = function ChatHeader() {
-    const {conversationType} = useChatView()
-  
-    return (
-      <div className="chat-header">
-        {conversationType === 'GROUP' ? (
-          <div className="relative h-12 w-12">
+export function ChatHeader() {
+  const { conversationType, participants } = useChatView();
+
+  return (
+    <div className="chat-header">
+      {conversationType === "GROUP" && participants.length > 1 ? (
+        <div className="relative h-12 w-12">
           {participants.slice(0, 3).map((p, i) => (
             <Avatar
               key={p.id}
@@ -48,15 +62,16 @@ ChatView.Header = function ChatHeader() {
             </Avatar>
           ))}
         </div>
-        ) : (
-          <div className="individual-header">
-            <img src={participants[0].avatar} alt={participants[0].name} className="avatar" />
-            <span>{participants[0].name}</span>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-
-    
+      ) : (
+        <div className="individual-header flex items-center gap-2">
+          <img
+            src={participants[0]?.avatar || "/placeholder.svg"}
+            alt={participants[0]?.name}
+            className="h-10 w-10 rounded-full"
+          />
+          <span>{participants[0]?.name}</span>
+        </div>
+      )}
+    </div>
+  );
+}

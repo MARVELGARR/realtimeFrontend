@@ -70,7 +70,7 @@ export default function UserProfile({
   const { onOpen } = useModal();
 
   return (
-    <Card className="w-full max-w-3xl bg-cyan-900 mx-auto overflow-hidden border-0 shadow-lg">
+    <Card className="w-full max-w-3xl bg-cyan-900 p-0 mx-auto overflow-hidden border-0 shadow-lg">
       {/* Cover Photo */}
       <div
         className="h-48 w-full bg-cyan-800 relative"

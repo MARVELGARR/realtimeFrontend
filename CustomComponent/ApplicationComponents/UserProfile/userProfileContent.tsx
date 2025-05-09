@@ -14,6 +14,7 @@ import useUpdateProfilePicture from "@/hooks/UserHooks/updateProfilePic";
 import { toast } from "sonner";
 import useUpdateCoverPicture from "@/hooks/UserHooks/updateCoverPicture";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
+import { useSocket } from "@/providers/AppProviders/socketProvider";
 
 const UserProfileContent = ({ className }: { className?: string }) => {
 const { user: storedValue } = useUserSession();
@@ -51,6 +52,8 @@ const { user: storedValue } = useUserSession();
         });
       });
   };
+
+  const {isOnline} = useSocket()
 
   return (
     <div className={cn(className, "")}>
@@ -115,7 +118,9 @@ const { user: storedValue } = useUserSession();
         </div>
       </Wrappers>
 
+          
       <Wrappers className="flex items-center gap-3 mt-4 w-full justify-end pr-3">
+ 
         <Button
           onClick={() =>
             onOpen(
@@ -142,6 +147,7 @@ const { user: storedValue } = useUserSession();
         >
           View Cover
         </Button>
+        {isOnline &&(<div className="text-green-300  text-md">Online</div>)}
       </Wrappers>
 
       <section>

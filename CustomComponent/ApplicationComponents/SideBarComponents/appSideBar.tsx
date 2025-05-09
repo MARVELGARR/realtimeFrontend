@@ -14,9 +14,12 @@ import { AvatarPopOverContent } from "../PopOvers/avatarPopOverContent";
 import { useDrawer } from "@/store/useDrawer";
 import CreateButton from "./createButton";
 import CreatePopOverContent from "../PopOvers/createPopOverContent";
+import { useSocket } from "@/providers/AppProviders/socketProvider";
 const AppSideBar = ({ className }: { className?: string }) => {
   const { user } = useUserSession();
   const { openDrawer} = useDrawer()
+
+  const {isOnline} = useSocket()
   return (
     <div
       className={cn(
@@ -62,7 +65,7 @@ const AppSideBar = ({ className }: { className?: string }) => {
               content={<AvatarPopOverContent />}
               position="center"
             >
-              <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
+              <div className="shadow-blue-500 relative p-2 bg-cyan-600  rounded-full shadow-2xl">
                 <Avatar>
                   {(user?.image || user?.profile?.profilePicture) && (
                     <AvatarImage
@@ -75,6 +78,7 @@ const AppSideBar = ({ className }: { className?: string }) => {
                   )}
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
+                {isOnline && (<div className="absolute w-3 h-3 bg-green-500 rounded-full bottom-0 right-0"></div>)}
               </div>
             </MyPopOvers>
           </MyToolTips>

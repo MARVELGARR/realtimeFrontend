@@ -24,6 +24,8 @@ import { CgProfile } from "react-icons/cg";
 import { useSheet } from "@/store/useSheetStore";
 import MyToolTips from "@/CustomComponent/utilityComponent/myToolTips";
 import { Gender } from '../../../types';
+import useDebounce from "@/hooks/UtilityHooks/useDebounce";
+import Link from "next/link";
 export interface UsersResponse {
   users: User[];
   totalCount: number;
@@ -57,7 +59,7 @@ export interface UserProfile {
 
 const FindNewFriendModalCommand = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const me = "someValue";
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   const { isOpen, type, onClose } = useModal();
   const isModalOpen = isOpen && type === "find-new-friend";
@@ -82,7 +84,7 @@ const FindNewFriendModalCommand = () => {
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["conversations", limit],
+    queryKey: ["users", limit, searchTerm],
     queryFn: ({ pageParam = 0 }) =>
       apiClient<UsersResponse>("/users", {
         method: "GET",
@@ -111,19 +113,22 @@ const FindNewFriendModalCommand = () => {
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className=" w-[25rem] h-[25rem] p-0 rounded">
-        <Command>
+        <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search for a user"
             onValueChange={(value) => setSearchTerm(value)}
+            value={searchTerm}
           />
           <CommandList>
-            <CommandEmpty>No result found.</CommandEmpty>
+            {/* <CommandEmpty>No result found.</CommandEmpty> */}
             <CommandGroup heading="Users">
               {data?.pages?.map((page) =>
                 page.users.map((user) => (
+                  <Link href={`/Application/chat/${user.id}`}>
                   <CommandItem
                     key={user.id}
                     className="cursor-pointer hover:bg-cyan-500/70"
+                    
                   >
                     <Avatar>
                       <AvatarImage
@@ -156,6 +161,7 @@ const FindNewFriendModalCommand = () => {
                     </div>
 
                   </CommandItem>
+                  </Link>
                 ))
               )}
               {hasNextPage && (

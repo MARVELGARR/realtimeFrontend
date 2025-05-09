@@ -16,7 +16,7 @@ export function AvatarPopOverContent(){
     const {  onOpen} = useSheet()
 
     const handleLogout = async() =>{
-        const data = await apiClient<{message: string}>("/v1/logout", {
+        const data = await apiClient<{message: string}>("/logout", {
             method: "GET"
         })
         if(data){
