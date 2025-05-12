@@ -123,7 +123,7 @@ const FindNewFriendModalCommand = () => {
             {/* <CommandEmpty>No result found.</CommandEmpty> */}
             <CommandGroup heading="Users">
               {data?.pages?.map((page) =>
-                page.users.map((user) => (
+                page.users?.map((user) => (
                   <Link href={`/Application/chat/${user.id}`}>
                   <CommandItem
                     key={user.id}
