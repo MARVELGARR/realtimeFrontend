@@ -20,7 +20,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
   
 
   return (
-    <div className="flex items-center p-4 hover:bg-cyan-500/70 cursor-pointer transition-colors">
+    <div className="flex border-cyan-400/30 shadow-md border rounded items-center p-4 hover:bg-cyan-500/70 cursor-pointer transition-colors">
       <div className="flex-shrink-0 mr-3">
         {isGroup ? (
           <GroupAvatars participants={participants} />

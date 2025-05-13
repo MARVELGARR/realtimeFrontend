@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 const ChatPageLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className=" h-full flex  w-full">
-      <Wrappers className="space-y-4 w-[15rem] border-white rounded border-2 h-full">
+      <Wrappers className="space-y-4 w-[17rem]  h-full">
         <h1 className="font-bold text-lg">Messages</h1>
         <ChatSideBar />
       </Wrappers>

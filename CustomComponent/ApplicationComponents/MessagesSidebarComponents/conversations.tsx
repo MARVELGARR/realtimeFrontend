@@ -114,7 +114,7 @@ const currentUserId = user?.id as string
         onChange={setSearchTerm}
       />
 
-      <div className="">
+      <div className=" mt-4">
         {conversations && (<ConversationList currentUserId={currentUserId!} conversations={conversations!}/>)}
       </div>
     </div>

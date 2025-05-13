@@ -12,7 +12,7 @@ const FriendList = () => {
     
     return (
         <div className="">
-            <h1 className=" text-3xl font-bold">My FriendList</h1>
+            <h1 className=" text-3xl text-white font-bold">My FriendList</h1>
             <div className="mt-[2rem]">
 
                 {myFriendList?.map((user)=>{
