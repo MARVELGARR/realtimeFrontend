@@ -15,11 +15,16 @@ import { useDrawer } from "@/store/useDrawer";
 import CreateButton from "./createButton";
 import CreatePopOverContent from "../PopOvers/createPopOverContent";
 import { useSocket } from "@/providers/AppProviders/socketProvider";
+import { usePathname } from "next/navigation";
 const AppSideBar = ({ className }: { className?: string }) => {
   const { user } = useUserSession();
   const { openDrawer} = useDrawer()
 
   const {isOnline} = useSocket()
+
+  const pathName = usePathname()
+
+  
   return (
     <div
       className={cn(
@@ -39,15 +44,15 @@ const AppSideBar = ({ className }: { className?: string }) => {
         <Wrappers className="  w-full h-full flex gap-3 flex-col items-center">
           <MyToolTips className="cursor-pointer" tips="Chat">
             <Link href="/Application/chat">
-              <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
-                <MessageCircle />
+              <div className={`${pathName.includes("chat") ? " bg-green-200 shadow-green-300 shadow-xl" : ""} shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl`}>
+                <MessageCircle className={`${pathName.includes("chat") ? "text-green-500" : ""}`} />
               </div>
             </Link>
           </MyToolTips>
           <MyToolTips className="cursor-pointer" tips="Phone">
             <Link href="/Application/phone">
-              <div className="shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl">
-                <PhoneCall />
+              <div className={`${pathName.includes("phone") ? " bg-green-200 shadow-green-300 shadow-xl" : ""} shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl`}>
+                <PhoneCall className={`${pathName.includes("phone") ? "text-green-500" : ""}`} />
               </div>
             </Link>
           </MyToolTips>
