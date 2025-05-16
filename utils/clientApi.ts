@@ -1,18 +1,20 @@
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 type headers = "Application/Json" | "Application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain" | "text/html" | "text/css" | "text/javascript" | "image/png" | "image/jpeg" | "image/gif" | "image/svg+xml" | "application/xml" | "application/pdf" | "application/zip" | "application/octet-stream";
+
 interface ApiClientOptions {
   method?: HttpMethod;
   token?: string;
   queryParams?: Record<string, string | number | boolean | undefined>;
   body?: any;
-  headers?:headers
+  headers?: headers;
+  param?: string; // Added param option
 }
 
 export const apiClient = async <T>(
   endpoint: string,
   options: ApiClientOptions = {}
 ): Promise<T> => {
-  const { method = 'GET', token, queryParams, body } = options;
+  const { method = 'GET', token, queryParams, body, param } = options;
 
   // Build query string if needed
   const queryString = queryParams
@@ -26,11 +28,14 @@ export const apiClient = async <T>(
         .join('&')
     : '';
 
+  // Append param to the endpoint if provided
+  const finalEndpoint = param ? `${endpoint}/${param}` : endpoint;
+
   try {
     let fetchOptions: RequestInit = {
       method,
       headers: {
-      ...(token && { Authorization: `Bearer ${token}` }),
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
       credentials: "include",
     };
@@ -40,15 +45,15 @@ export const apiClient = async <T>(
       // Do not set 'Content-Type' header; fetch will automatically set it for FormData
     } else {
       fetchOptions.headers = {
-      ...fetchOptions.headers,
-      ...(options.headers !== 'multipart/form-data' && { 'Content-Type': options.headers || 'application/json' }),
+        ...fetchOptions.headers,
+        ...(options.headers !== 'multipart/form-data' && { 'Content-Type': options.headers || 'application/json' }),
       };
       if (body) {
-      fetchOptions.body = JSON.stringify(body);
+        fetchOptions.body = JSON.stringify(body);
       }
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1${endpoint}${queryString}`, fetchOptions);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1${finalEndpoint}${queryString}`, fetchOptions);
 
     if (!res.ok) {
       const errorDetails = await res.json();

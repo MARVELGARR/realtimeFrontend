@@ -3,8 +3,8 @@
 const Page =  () => {
 
     return (
-        <div className="text-red-800 w-full">
-        
+        <div className=" flex justify-center item-center text-white mt-[3rem] w-full">
+            No conversation selected yet
         </div>
     );
 }
