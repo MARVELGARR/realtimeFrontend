@@ -10,7 +10,7 @@ import useGetConvoDetails from "@/hooks/ChatHooks/useGetConvoDetails";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
 import { UserWithProfile } from "@/types";
 import { apiClient } from "@/utils/clientApi";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -53,10 +53,10 @@ const ChatViewPage = () => {
   const participants = convoDetails?.participants;
   const conversationId = convoDetails?.id
 
-
+  const queryClient = useQueryClient()
   
 
-  const limit = 6;
+  const limit = 9;
   const { data: GottenMessages ,
     fetchNextPage,
     hasNextPage,
@@ -64,7 +64,8 @@ const ChatViewPage = () => {
     isLoading,
     isError,
     error,
-    isFetched
+    isFetched, 
+    
 
   } = useInfiniteQuery({
     queryKey: ["messages", id],
@@ -83,19 +84,23 @@ const ChatViewPage = () => {
       return nextOffset < totalItems ? nextOffset : undefined;
     },
     initialPageParam: 0,
+
+    
   });
   useEffect(() => {
-      const gottenMessages = GottenMessages?.pages.flatMap((item)=>item.messages)
+
+      const gottenMessages = GottenMessages?.pages.flatMap((item)=>item.messages).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
   if (gottenMessages && !isLoading) {
     setMessages(gottenMessages); 
   }
-}, [isFetched]);
+}, [isFetched, GottenMessages]);
 
 //   const {sendMessage, isSendingMessage} = useSendMessage()
   const {sendMessage} = useChatSocket({ conversationId: id as string, setMessages,  });
 
+
   return (
-    <>
+    <div className='h-screen'>
     <ChatView
       conversationType={chatType!}
       participants={participants!} 
@@ -117,7 +122,7 @@ const ChatViewPage = () => {
       <TextView  />
       <ChatInput />
     </ChatView>
-    </>
+    </div>
   );
 };
 
