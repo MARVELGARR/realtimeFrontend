@@ -1,9 +1,23 @@
 import MyPopOvers from "../utilityComponent/myPopOvers";
 import MessagePopOverContent from "../ApplicationComponents/PopOvers/messagePopOverContent";
-const MessageOptions = () => {
+
+type media ={
+    picture: string,
+    video: string
+}
+export type MessageOptions = {
+    className?: string,
+    content?: string,
+    media?: media
+    id: string
+}
+
+const MessageOptions = ({
+className, id, content
+}: MessageOptions) => {
     return (
-        <MyPopOvers position="start" content={<MessagePopOverContent/>}>
-            <div className="">
+        <MyPopOvers className={"bg-cyan-900 p-0"} position="end" content={<MessagePopOverContent content={content} id={id} />}>
+            <div className={className}>
                 ...
             </div>
         </MyPopOvers>

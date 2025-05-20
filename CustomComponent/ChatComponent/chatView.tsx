@@ -5,7 +5,7 @@ import type React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Send } from "lucide-react";
+import { Copy, Send, Trash2Icon } from "lucide-react";
 import {
   createContext,
   type ReactNode,
@@ -24,6 +24,7 @@ import { socket } from "@/configs/socket";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useInView } from "react-intersection-observer";
 import MessageCard from "../MessageComponents/messageCard";
+import { useSelection } from "@/store/useMessageSelector";
 
 type ChatViewProp = {
   conversationType: "DIRECT" | "GROUP";
@@ -119,7 +120,7 @@ export function ChatHeader() {
     useChatView();
 
   const reciever = participants?.find((who) => who.userId !== currentUserId);
-
+  const { selections, clearSelections } = useSelection();
   return (
     <div className="chat-header h-[4rem] p-3 border-b flex items-center gap-3">
       {conversationType === "GROUP" && participants.length > 1 ? (
@@ -149,24 +150,38 @@ export function ChatHeader() {
           ))}
         </div>
       ) : (
-        <div className="individual-header flex items-center gap-2">
+        <div className="individual-header w-full flex items-center gap-2">
           {participants && (
-            <>
-              <Avatar className="h-10 w-10">
-                <AvatarImage
-                  src={
-                    reciever?.user.image ||
-                    reciever?.user.profile.profilePicture ||
-                    "/placeholder.svg"
-                  }
-                  alt={reciever?.user.name}
-                />
-                <AvatarFallback>
-                  {reciever?.user.name?.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <span className="font-medium">{reciever?.user.name}</span>
-            </>
+            <div className="w-full flex items-center ">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={
+                      reciever?.user.image ||
+                      reciever?.user.profile.profilePicture ||
+                      "/placeholder.svg"
+                    }
+                    alt={reciever?.user.name}
+                  />
+                  <AvatarFallback>
+                    {reciever?.user.name?.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="font-medium">{reciever?.user.name}</span>
+              </div>
+              {selections && selections?.length && (
+                <div className="flex ml-auto items-center gap-4">
+                  <Trash2Icon className=" text-red-700 hover:text-red-500 cursor-pointer" />
+                  <Copy className="cursor-pointer text-gray-400 hover:text-white" />
+                  <Button
+                    className="cursor-pointer bg-cyan-500 hover:bg-red-500 p-2"
+                    onClick={clearSelections}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -183,7 +198,7 @@ export function TextView() {
     participants,
     currentUserId,
   } = useChatView();
-  
+
   // Using react-intersection-observer for infinite scroll
   const { ref, inView } = useInView({
     threshold: 0,
@@ -191,7 +206,7 @@ export function TextView() {
   });
 
   // useEffect(() => {
-    
+
   //   scrollToBottom();
   // }, []);
 
