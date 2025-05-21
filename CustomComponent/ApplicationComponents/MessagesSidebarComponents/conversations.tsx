@@ -75,7 +75,7 @@ const Conversations = () => {
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["users", limit, debouncedSearchTerm],
+    queryKey: ["convrsations", limit, debouncedSearchTerm],
     queryFn: ({ pageParam = 0 }) =>
       apiClient<ConversationResponse>("/conversations", {
         method: "GET",

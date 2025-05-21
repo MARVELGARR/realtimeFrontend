@@ -25,6 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useInView } from "react-intersection-observer";
 import MessageCard from "../MessageComponents/messageCard";
 import { useSelection } from "@/store/useMessageSelector";
+import { useAlertModal } from "@/store/useAlertModalStore";
 
 type ChatViewProp = {
   conversationType: "DIRECT" | "GROUP";
@@ -119,6 +120,8 @@ export function ChatHeader() {
   const { conversationType, groupName, participants, currentUserId } =
     useChatView();
 
+    const {onOpen} = useAlertModal()
+
   const reciever = participants?.find((who) => who.userId !== currentUserId);
   const { selections, clearSelections } = useSelection();
   return (
@@ -171,7 +174,7 @@ export function ChatHeader() {
               </div>
               {selections && selections?.length && (
                 <div className="flex ml-auto items-center gap-4">
-                  <Trash2Icon className=" text-red-700 hover:text-red-500 cursor-pointer" />
+                  <Trash2Icon onClick={()=>onOpen("delete-multiple-message")} className=" text-red-700 hover:text-red-500 cursor-pointer" />
                   <Copy className="cursor-pointer text-gray-400 hover:text-white" />
                   <Button
                     className="cursor-pointer bg-cyan-500 hover:bg-red-500 p-2"
@@ -265,6 +268,7 @@ export function TextView() {
             key={message.id}
             ref={isFirstMessage ? ref : isSecondMessage ? messagesEndRef : null} // Pass ref only to first message for infinite scroll
             message={message}
+            conversationId={message.conversationId}
             isCurrentUser={isCurrentUser}
             sender={
               sender

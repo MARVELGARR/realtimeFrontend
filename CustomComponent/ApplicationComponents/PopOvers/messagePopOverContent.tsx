@@ -1,13 +1,17 @@
 import { MessageOptions } from "@/CustomComponent/MessageComponents/messageOption";
+import useChatSocket from "@/hooks/ChatHooks/useChatSocket";
 import { useSelection } from "@/store/useMessageSelector";
 import { Check, Copy, Trash } from "lucide-react";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 
 
 
 
 const MessagePopOverContent = ({id, content}: MessageOptions) => {
+const { id: conversationId } = useParams();
 
+const {deleteMessage} = useChatSocket({ conversationId: conversationId as string });
 
     async function copyTextToClipboard(text: string) {
   try {
@@ -18,10 +22,10 @@ const MessagePopOverContent = ({id, content}: MessageOptions) => {
   }
 }
 
-    const {setSelections} = useSelection()
+    const {setSelections, selections } = useSelection()
     return (
         <div className="bg-cyan-900 p-1 flex flex-col justify-start ">
-            <div className="flex items-center cursor-pointer p-2 rounded hover:bg-cyan-500 gap-3 w-full">
+            <div onClick={()=>deleteMessage(id, conversationId as string)} className="flex items-center cursor-pointer p-2 rounded hover:bg-cyan-500 gap-3 w-full">
                 <Trash className="text-red-400"/>
                 <span className="">Delete</span>        
             </div>
@@ -30,7 +34,7 @@ const MessagePopOverContent = ({id, content}: MessageOptions) => {
                 <span className="">Copy</span>        
             </div>
             <div onClick={()=>setSelections(id)} className="flex items-center cursor-pointer p-2 rounded hover:bg-cyan-500yuy gap-3 w-full">
-                <Check className="text-white"/>
+                <Check className={`${selections?.includes(id) ? "text-blue-600" : "text-white"} `}/>
                 <span className="">Select</span>        
             </div>
         </div>

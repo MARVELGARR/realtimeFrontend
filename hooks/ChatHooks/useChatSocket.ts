@@ -2,28 +2,51 @@
 import { socket } from "@/configs/socket";
 import { useEffect, useState } from "react";
 import { messageProp, MessagesProp } from "@/app/(navigationRoute)/(application)/Application/chat/[id]/page";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
 
 type useChatSocketProp = {
   conversationId: string;
-  setMessages: React.Dispatch<React.SetStateAction<MessagesProp["messages"]>>
+  setMessages?: React.Dispatch<React.SetStateAction<MessagesProp["messages"]>>
 };
 
 const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   if (conversationId) {
-  //     socket.emit("join-conversation", conversationId);
-  //   }
-  // }, [conversationId]);
+
+  const queryClient =  useQueryClient()
+
+  useEffect(() => {
+    if (conversationId) {
+      socket.emit("join-conversation", conversationId);
+    }
+  }, [conversationId]);
 
   //Handle Incoming Messages
   useEffect(() => {
     function handleReceiveMessage(message: messageProp){
-      console.log("recieved message from socket", message)
-      setMessages((prev: any[]) => [...prev, message]);
+      if (setMessages) {
+        
+        setMessages((prev: any[]) => [...prev, message]);
+      }
+      queryClient.invalidateQueries({queryKey: ["convrsations"]})
+     
     };
+
+
+    const handleInvalidateConvo = ({messageId, userId}:{messageId: string, userId: string}) =>{
+      
+      queryClient.invalidateQueries({queryKey: ["messages"]})
+      queryClient.invalidateQueries({queryKey: ["convrsations"]})
+      toast("messages was deleted ")
+    }
+
+
+
+
+    
 
     function handleTyping(userId: string) {
       setTypingUser(userId);
@@ -35,11 +58,18 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
     socket.on("receive-message", handleReceiveMessage);
     socket.on("user-typing", handleTyping);
     socket.on("online-users", handleOnlineUsers);
-
+    socket.on("message-deleted", handleInvalidateConvo)
+    socket.on("multiple-messages-deleted", handleInvalidateConvo)
+  
+    
     return () => {
+      
       socket.off("receive-message", handleReceiveMessage);
       socket.off("user-typing", handleTyping);
       socket.off("online-users", handleOnlineUsers);
+      socket.off("online-users", handleOnlineUsers);
+      socket.off("message-deleted", handleInvalidateConvo)
+      socket.off("multiple-messages-deleted", handleInvalidateConvo)
     };
   },[]);
 
@@ -48,6 +78,12 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
     
   };
 
+  const deleteMessage = (messageId?: string, conversationId?: string) => {
+    socket.emit("delete-single-message", { messageId, conversationId });
+  }
+  const deleteMultipleMessage = (messageIds?: string[], conversationId?: string) => {
+    socket.emit("delete-multiple-messages", { messageIds , conversationId });
+  }
   // Emit typing event
   const emitTyping = () => {
     if (conversationId) {
@@ -60,6 +96,8 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
     emitTyping,
     onlineUsers,
     typingUser,
+    deleteMessage,
+    deleteMultipleMessage
   };
 };
 

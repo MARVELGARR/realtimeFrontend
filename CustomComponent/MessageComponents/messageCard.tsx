@@ -15,6 +15,7 @@ export type MessageCardProps = {
     createdAt: string | Date;
     userId: string;
   };
+  conversationId?: string
   isCurrentUser: boolean;
   sender?: {
     name: string;
@@ -25,7 +26,7 @@ export type MessageCardProps = {
 
 // Use forwardRef to create a component that can accept a ref from its parent
 const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
-  ({ message, isCurrentUser, sender }, ref) => {
+  ({ message, isCurrentUser, conversationId, sender }, ref) => {
     const { selections, removeSelections, setSelections } = useSelection();
     return (
       <div
@@ -74,6 +75,7 @@ const MessageCard = forwardRef<HTMLDivElement, MessageCardProps>(
       <MessageOptions
         id={message.id}
         content={message.content}
+        conversationId={conversationId}
         className={`${
           isCurrentUser ? "left-3" : " right-3 "
         } cursor-pointer z-[9999] absolute`}

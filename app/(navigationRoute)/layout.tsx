@@ -1,3 +1,4 @@
+import MyAlertModalProviders from "@/providers/AppProviders/alertModalProviders";
 import MyDrawerProvider from "@/providers/AppProviders/drawerProvider";
 import MyModalProviders from "@/providers/AppProviders/modalProvider";
 import MySheetsProviders from "@/providers/AppProviders/sheetProviders";
@@ -11,6 +12,7 @@ const NavigationRoute = ({ children }: { children: ReactNode }) => {
         <MySheetsProviders />
         <MyModalProviders />
         <MyDrawerProvider/>
+        <MyAlertModalProviders/>
         {children}
       </UserSessionProvider>
     </div>

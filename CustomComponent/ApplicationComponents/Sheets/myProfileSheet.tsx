@@ -26,7 +26,7 @@ const MyProfileSheet = () => {
       <SheetTrigger>
       
       </SheetTrigger>
-      <SheetContent className={"bg-cyan-800 w-[10rem]"}>
+      <SheetContent className={"bg-cyan-800 "}>
 
         <div className="w-full ">
           <UserProfileContent />

@@ -1,5 +1,6 @@
 import MyPopOvers from "../utilityComponent/myPopOvers";
 import MessagePopOverContent from "../ApplicationComponents/PopOvers/messagePopOverContent";
+import { Conversation } from '../ApplicationComponents/MessagesSidebarComponents/conversations';
 
 type media ={
     picture: string,
@@ -10,13 +11,14 @@ export type MessageOptions = {
     content?: string,
     media?: media
     id: string
+    conversationId?: string
 }
 
 const MessageOptions = ({
-className, id, content
+className, conversationId, id, content
 }: MessageOptions) => {
     return (
-        <MyPopOvers className={"bg-cyan-900 p-0"} position="end" content={<MessagePopOverContent content={content} id={id} />}>
+        <MyPopOvers className={"bg-cyan-900 p-0"} position="end" content={<MessagePopOverContent conversationId={conversationId} content={content} id={id} />}>
             <div className={className}>
                 ...
             </div>
