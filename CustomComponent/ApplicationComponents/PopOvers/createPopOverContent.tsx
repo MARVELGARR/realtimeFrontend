@@ -26,7 +26,7 @@ const CreatePopOverContent = ({className}:{className?: string}) => {
                 <FaPeopleArrows className=" text-2xl fill-cyan-900 w-8 h-8" />
                 <span className="">Friend List</span>
             </div>
-            <div className="flex bg-white text-cyan-900 w-full justify-start items-center cursor-pointer rounded p-2 gap-2 hover:bg-cyan-600/70">
+            <div onClick={()=>onOpen("create-new-group", null, null)} className="flex bg-white text-cyan-900 w-full justify-start items-center cursor-pointer rounded p-2 gap-2 hover:bg-cyan-600/70">
                 <FaPeopleGroup className=" text-2xl fill-cyan-900 w-8 h-8" />
                 <span className="">Create new group</span>
             </div>

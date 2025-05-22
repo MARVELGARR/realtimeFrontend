@@ -5,6 +5,7 @@ import { messageProp, MessagesProp } from "@/app/(navigationRoute)/(application)
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
+import { useSelection } from "@/store/useMessageSelector";
 
 type useChatSocketProp = {
   conversationId: string;
@@ -17,6 +18,7 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
 
 
   const queryClient =  useQueryClient()
+  const {clearSelections} = useSelection()
 
   useEffect(() => {
     if (conversationId) {
@@ -40,6 +42,7 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
       
       queryClient.invalidateQueries({queryKey: ["messages"]})
       queryClient.invalidateQueries({queryKey: ["convrsations"]})
+      clearSelections()
       toast("messages was deleted ")
     }
 
