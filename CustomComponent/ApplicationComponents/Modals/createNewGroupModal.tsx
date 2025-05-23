@@ -5,19 +5,19 @@ import { Button } from "@/components/ui/button";
 import { useAddGroupMembersSelection } from "@/store/addGroupMembersSelection";
 import useUrlState from "@/hooks/UtilityHooks/useUrlState";
 import { useEffect, useState } from "react";
+import AddGroupDetails from "../createNewGroupComponent/groupDetails";
 
 const CreateNewGroupModal = () => {
 
 
-    const {isOpen, onClose, type} = useModal()
+    const {isOpen, onClose, fileFor, type} = useModal()
     const [urlState, setUrlState] = useUrlState()
 
     const handleClose = () =>{
-      onClose()
+      onClose(null)
     }
 
-    const isModalOpen = isOpen && type === "create-new-group"
-
+    const isModalOpen = isOpen && (type === "create-new-group"  ) || fileFor === "group-profile-pic"
 
     const {selections} = useAddGroupMembersSelection()
     const conditions = !selections || selections.length === 0;
@@ -34,11 +34,19 @@ const CreateNewGroupModal = () => {
 
       }
     },[isModalOpen,newGroupstage])
-    // useEffect(()=>{
-    //   if(!isModalOpen){
-    //     setUrlState({createGroup: undefined})
-    //   }
-    // },[])
+
+    const render = (state?: number) =>{
+      switch (state) {
+        case 1:
+          return <AddFriendToGroup/>
+        case 2:
+          return <AddGroupDetails/>
+      
+        default:
+          break;
+      }
+    }
+
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -46,11 +54,12 @@ const CreateNewGroupModal = () => {
        
        <div className="mt-[2.5rem] px-2">
 
-        <AddFriendToGroup/>
+        {render(newGroupstage)}
+        
        </div>
        <div className=" px-2 flex items-center w-full justify-between">
           <Button disabled={newGroupstage < 2} onClick={() => setNewGroupstage(prev => prev - 1)} className=" rounded bg-cyan-900 hover:bg-cyan-500 cursor-pointer">Previous</Button>
-          <Button onClick={() => setNewGroupstage(prev => prev + 1)} className="rounded bg-cyan-900 hover:bg-cyan-500 cursor-pointer" disabled={conditions}>Next</Button>
+          {newGroupstage < 2 && (<Button onClick={() => setNewGroupstage(prev => prev + 1)} className="rounded bg-cyan-900 hover:bg-cyan-500 cursor-pointer" disabled={conditions}>Next</Button>)}
        </div>
       </DialogContent>
     </Dialog>
