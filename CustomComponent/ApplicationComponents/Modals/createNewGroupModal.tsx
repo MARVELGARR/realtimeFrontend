@@ -13,13 +13,11 @@ const CreateNewGroupModal = () => {
     const {isOpen, onClose, fileFor, type} = useModal()
     const [urlState, setUrlState] = useUrlState()
 
-    const handleClose = () =>{
-      onClose(null)
-    }
+
 
     const isModalOpen = isOpen && (type === "create-new-group"  ) || fileFor === "group-profile-pic"
 
-    const {selections} = useAddGroupMembersSelection()
+    const {selections, clearSelections} = useAddGroupMembersSelection()
     const conditions = !selections || selections.length === 0;
     const [newGroupstage, setNewGroupstage] = useState(1)
 
@@ -34,6 +32,12 @@ const CreateNewGroupModal = () => {
 
       }
     },[isModalOpen,newGroupstage])
+    
+    const handleClose = () =>{
+       setUrlState({ createGroup: undefined })
+       clearSelections()
+      onClose(null)
+    }
 
     const render = (state?: number) =>{
       switch (state) {
@@ -50,7 +54,7 @@ const CreateNewGroupModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className=" w-[25rem] h-[25rem] p-0 rounded ">
+      <DialogContent className=" w-[25rem] h-[30rem] p-0 rounded ">
        
        <div className="mt-[2.5rem] px-2">
 

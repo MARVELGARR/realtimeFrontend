@@ -2,6 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useCreateNewGroup from "@/hooks/GroupHooks/useCreateNewGroup";
 import { useAddGroupMembersSelection } from "@/store/addGroupMembersSelection";
 import { useFileUploader } from "@/store/useFileUploader";
@@ -9,9 +16,11 @@ import { useModal } from "@/store/useModalStore";
 import { Edit2Icon, Pencil, PencilIcon, UploadCloud, User } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DisappearingMessages } from '../../../types';
 
 const AddGroupDetails = () => {
   const [groupName, setGroupName] = useState("");
+  const [DisappearingMessages, setDisappearingMessages] = useState("")
   const { onOpen, type, fileFor } = useModal();
   const { selections, clearSelections } = useAddGroupMembersSelection();
   const { url, setUrl } = useFileUploader();
@@ -49,14 +58,16 @@ const AddGroupDetails = () => {
           </div>
         ) : (
           <div
-            onClick={() => onOpen("singleFileUploader", null, "group-profile-pic")}
+            onClick={() =>
+              onOpen("singleFileUploader", null, "group-profile-pic")
+            }
             className="absolute cursor-pointer z-30 right-0 bottom-2  bg-white p-1 rounded-full shadow-md"
           >
             <Edit2Icon className="w-4 h-4 rounded-full text-cyan-900" />
           </div>
         )}
       </div>
-      <div className="">
+      <div className="space-y-4">
         <fieldset>
           <Label htmlFor="groupName">Group Name</Label>
 
@@ -68,8 +79,27 @@ const AddGroupDetails = () => {
             onChange={(e) => setGroupName(e.target.value)}
           />
         </fieldset>
+        <fieldset>
+          <Label htmlFor="disapearingMessage">Dissapearing Message</Label>
+          <Select onValueChange={(value)=>setDisappearingMessages(value)} defaultValue="OFF">
+            <SelectTrigger>
+              <SelectValue  placeholder="Select a verified time" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={"OFF"}>{"OFF"}</SelectItem>
+              <SelectItem value={"H24"}>{"H24"}</SelectItem>
+              <SelectItem value={"DAYS7"}>{"DAYS7"}</SelectItem>
+              <SelectItem value={"DAYS90"}>{"DAYS90"}</SelectItem>
+            </SelectContent>
+          </Select>
+        </fieldset>
       </div>
-        <Button onClick={handleCreateGroup} className="absolute -bottom-[6rem] right-0 bg-cyan-900 cursor-pointer text-white">Create</Button>
+      <Button
+        onClick={handleCreateGroup}
+        className="absolute -bottom-[6rem] right-0 bg-cyan-900 cursor-pointer text-white"
+      >
+        Create
+      </Button>
     </div>
   );
 };

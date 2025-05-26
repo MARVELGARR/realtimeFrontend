@@ -15,7 +15,7 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
       return " djdsdjk"
     }
   return (
-    <div className="divide-y">
+    <div className="divide-y flex flex-col gap-3 h-full">
       {conversations
   .filter((conversation): conversation is Conversation => conversation !== undefined)
   .map((conversation) => (

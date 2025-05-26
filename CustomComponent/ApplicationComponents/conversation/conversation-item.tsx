@@ -16,6 +16,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
   }
   const { messages, participants, unreadStates, groupId } = conversation
   const isGroup = groupId !== null
+  const GroupName = conversation.group?.name
   const unreadCount = unreadStates[0]?.unreadCount
   const lastMessage = messages[0]?.content
   const timestamp = messages[0]?.createdAt
@@ -39,8 +40,8 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
 
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-baseline">
-            {<h3 className="text-sm font-medium text-gray-900 truncate">{singleParticipant?.user.name}</h3>}
-            <span className="text-xs text-gray-500">{formatDistanceToNow(new Date(timestamp) , { addSuffix: true })}</span>
+            {<h3 className="text-sm font-medium text-gray-900 truncate">{!isGroup ? singleParticipant?.user.name : GroupName}</h3>}
+           {timestamp ? formatDistanceToNow(new Date(timestamp), { addSuffix: true }) : ""}
           </div>
           <p className="text-sm  truncate text-white">{lastMessage}</p>
         </div>

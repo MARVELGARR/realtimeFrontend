@@ -283,7 +283,7 @@ export function TextView() {
         );
       })}
 
-      {/* <div ref={buttomRef} className=""></div> */}
+      <div ref={buttomRef} className="text-white w-full h-full items-center justify-center">No Chat Yet</div>
     </ScrollArea>
   );
 }
