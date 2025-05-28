@@ -7,7 +7,7 @@ const useUpdateProfile = () => {
     const queryClient =  useQueryClient()
     
     const {mutateAsync: updateProfile, isPending: isUpdatingProfile} = useMutation({
-        mutationFn: (data: ProfileFormValues)=>apiClient("/v1/update-profile",{
+        mutationFn: (data: ProfileFormValues)=>apiClient("/update-profile",{
             method: "PATCH",
             body: {...data}
         }),

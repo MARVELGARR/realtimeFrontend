@@ -2,7 +2,7 @@
 import { socket } from "@/configs/socket";
 import { useEffect, useState } from "react";
 import { messageProp, MessagesProp } from "@/app/(navigationRoute)/(application)/Application/chat/[id]/page";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
 import { useSelection } from "@/store/useMessageSelector";
@@ -23,7 +23,27 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
   useEffect(() => {
     if (conversationId) {
       socket.emit("join-conversation", conversationId);
+      async function fetchMessages(){
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/read-message/${conversationId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch messages");
+          }
+          const data = await response.json();
+         
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      }
+      fetchMessages()
     }
+    queryClient.invalidateQueries({queryKey: ["convrsations"]})
   }, [conversationId]);
 
   //Handle Incoming Messages

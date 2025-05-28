@@ -38,6 +38,7 @@ export interface Group {
 
 export interface UnreadState {
   unreadCount: number;
+  userId: string
   lastReadAt: string;
 }
 

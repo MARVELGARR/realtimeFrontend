@@ -17,7 +17,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
   const { messages, participants, unreadStates, groupId } = conversation
   const isGroup = groupId !== null
   const GroupName = conversation.group?.name
-  const unreadCount = unreadStates[0]?.unreadCount
+  const unreadCount = unreadStates.find((count)=>count.userId == currentUserId)?.unreadCount || 0
   const lastMessage = messages[0]?.content
   const timestamp = messages[0]?.createdAt
 
@@ -46,7 +46,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
           <p className="text-sm  truncate text-white">{lastMessage}</p>
         </div>
 
-        {unreadStates && unreadStates.length > 0 && (
+        {unreadCount > 0 && (
           <div className="ml-3 flex-shrink-0">
             <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-500 text-xs font-medium text-white">
               {unreadCount}

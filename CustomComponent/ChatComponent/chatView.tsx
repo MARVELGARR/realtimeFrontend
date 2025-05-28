@@ -255,6 +255,9 @@ export function TextView() {
           </div>
         )}
       </div>
+      {messages.length < 1 && (
+        <div className="w-full h-full flex items-center justify-center text-white">No Chat Yet!!    Start a new chat</div>
+      )}
 
       {/* Messages */}
       {messages?.map((message, index) => {
@@ -283,7 +286,7 @@ export function TextView() {
         );
       })}
 
-      <div ref={buttomRef} className="text-white w-full h-full items-center justify-center">No Chat Yet</div>
+      <div ref={buttomRef} className="text-white w-full h-full items-center justify-center"></div>
     </ScrollArea>
   );
 }
