@@ -1,7 +1,6 @@
 import { apiClient } from "@/utils/clientApi";
 import { useQuery } from "@tanstack/react-query";
 
-
 export interface Profile {
   profilePicture: string;
 }
@@ -31,6 +30,10 @@ export interface Group {
   groupImage: string | null;
   descriptions: string | null;
   adminId: string;
+
+  disappearingMessages: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface convoDetails {
@@ -43,25 +46,19 @@ export interface convoDetails {
   group: Group;
 }
 
-
 const useGetConvoDetails = (conversationId: string) => {
+  const { data: convoDetails, isLoading: isGettingConvoDetails } = useQuery({
+    queryKey: ["convo-details", conversationId],
+    queryFn: () =>
+      apiClient<convoDetails>("/convo-details", {
+        method: "GET",
+        param: conversationId,
+      }),
+  });
+  return {
+    convoDetails,
+    isGettingConvoDetails,
+  };
+};
 
-
-    const {
-        data: convoDetails,
-        isLoading: isGettingConvoDetails
-    } = useQuery({
-        queryKey: ["convo-details", conversationId],
-        queryFn: ()=>apiClient<convoDetails>("/convo-details", {
-            method: "GET",
-            param: conversationId
-            
-        })
-    })
-    return {
-        convoDetails,
-        isGettingConvoDetails
-    };
-}
- 
 export default useGetConvoDetails;

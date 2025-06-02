@@ -5,7 +5,7 @@ import type React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Copy, Send, Trash2Icon } from "lucide-react";
+import { Copy, Send, Settings, Trash2Icon } from "lucide-react";
 import {
   createContext,
   type ReactNode,
@@ -26,6 +26,8 @@ import { useInView } from "react-intersection-observer";
 import MessageCard from "../MessageComponents/messageCard";
 import { useSelection } from "@/store/useMessageSelector";
 import { useAlertModal } from "@/store/useAlertModalStore";
+import { useDrawer } from "@/store/useDrawer";
+import { useSheet } from "@/store/useSheetStore";
 
 type ChatViewProp = {
   conversationType: "DIRECT" | "GROUP";
@@ -44,7 +46,13 @@ type ChatViewProp = {
   currentUserId: string;
   groupName?: string;
   groupId?: string;
+  groudAdminId: string
   conversationId: string;
+      groupImage: string
+      groupDescriptions:string
+      groupDisappearingMessages: string
+      groupCreatedAt: string
+      groupUpdatedAt: string
 };
 
 const ChatViewContext = createContext<ChatViewProp | null>(null);
@@ -68,7 +76,13 @@ export function ChatView({
   sendMessage,
   currentUserId,
   groupName,
+  groudAdminId,
   groupId,
+      groupImage,
+      groupDescriptions,
+      groupDisappearingMessages,
+      groupCreatedAt,
+      groupUpdatedAt,
   conversationId,
 }: {
   children: ReactNode;
@@ -89,6 +103,12 @@ export function ChatView({
   groupName?: string;
   groupId?: string;
   conversationId: string;
+  groudAdminId: string
+   groupImage: string,
+      groupDescriptions: string,
+      groupDisappearingMessages: string,
+      groupCreatedAt: string,
+      groupUpdatedAt: string,
 }) {
   useEffect(() => {
     if (conversationId) {
@@ -106,9 +126,15 @@ export function ChatView({
         isLoadingMessages,
         sendMessage,
         conversationId,
+        groudAdminId,
         currentUserId,
         groupId,
         groupName,
+        groupImage,
+      groupDescriptions,
+      groupDisappearingMessages,
+      groupCreatedAt,
+      groupUpdatedAt
       }}
     >
       <div className="flex flex-col h-full">{children}</div>
@@ -117,19 +143,27 @@ export function ChatView({
 }
 
 export function ChatHeader() {
-  const { conversationType, groupName, participants, currentUserId } =
+  const { conversationType, groudAdminId, groupId, groupImage, groupDescriptions, groupDisappearingMessages, groupCreatedAt, groupUpdatedAt,  groupName,  participants, currentUserId } =
     useChatView();
 
     const {onOpen} = useAlertModal()
+    const {openDrawer} = useDrawer()
+    const {onOpen: onOpenSheet} = useSheet()
+
+
+    const data = {groupId,  groupName, participants, groupImage, groupDescriptions, groupDisappearingMessages, groupCreatedAt, groupUpdatedAt} as const
 
   const reciever = participants?.find((who) => who.userId !== currentUserId);
   const { selections, clearSelections } = useSelection();
   return (
     <div className="chat-header h-[4rem] p-3 border-b flex items-center gap-3">
       {conversationType === "GROUP" && participants.length > 1 ? (
+        <div className="w-full flex items-center justify-between">
+
         <div className="relative h-12 w-12">
           {participants.slice(0, 3).map((p, i) => (
             <Avatar
+            onClick={()=>onOpenSheet("group-profile-sheet")}
               key={p.id}
               className={cn(
                 "h-8 w-8 border-2 border-white dark:border-gray-900 absolute",
@@ -152,12 +186,14 @@ export function ChatHeader() {
             </Avatar>
           ))}
         </div>
+                {groudAdminId !== currentUserId &&(<Settings onClick={()=>openDrawer("groupSettings", data)} className="text-cyan-400  cursor-pointer hover:animate-spin"/>)}
+        </div>
       ) : (
         <div className="individual-header w-full flex items-center gap-2">
           {participants && (
             <div className="w-full flex items-center ">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
+              <div onClick={()=>onOpenSheet("users-profile")} className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 cursor-pointer">
                   <AvatarImage
                     src={
                       reciever?.user.image ||
@@ -188,6 +224,7 @@ export function ChatHeader() {
           )}
         </div>
       )}
+
     </div>
   );
 }

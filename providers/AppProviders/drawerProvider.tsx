@@ -1,6 +1,7 @@
 "use client"
 
 
+import GroupSettingDrawer from "@/CustomComponent/ApplicationComponents/Drawers/groupSettingDrawer";
 import SettingsDrawer from "@/CustomComponent/ApplicationComponents/Drawers/seetingDrawer";
 import { useEffect, useState } from "react";
 
@@ -18,6 +19,7 @@ const MyDrawerProvider = () => {
     return (
         <>
         <SettingsDrawer/>
+        <GroupSettingDrawer/>
         </>
     );
 }

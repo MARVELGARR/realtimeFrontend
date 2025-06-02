@@ -1,17 +1,20 @@
 import { create } from "zustand";
 
-type DrawerType = "settings" | null;
+type DrawerType = "settings" | "groupSettings" | null;
+type data = {}
 
 export interface DrawerState {
   isOpen: boolean;
   type: DrawerType | null;
-  openDrawer: (type: DrawerType) => void;
+  data?:data | null;
+  openDrawer: (type: DrawerType, data?: data) => void;
   closeDrawer: () => void;
 }
 
 export const useDrawer = create<DrawerState>((set) => ({
   isOpen: false,
   type: null,
-  openDrawer: (type: DrawerType) => set({ isOpen: true, type }),
+  data: null,
+  openDrawer: (type: DrawerType, data?: data) => set({ isOpen: true, type, data }),
   closeDrawer: () => set({ isOpen: false, type: null }),
 }));

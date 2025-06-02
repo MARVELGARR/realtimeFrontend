@@ -1,4 +1,5 @@
 "use client";
+import { socket } from "@/configs/socket";
 import {
   ChatHeader,
   TextView,
@@ -52,9 +53,18 @@ const ChatViewPage = () => {
   const chatType = convoDetails?.conversationType;
   const participants = convoDetails?.participants;
   const conversationId = convoDetails?.id
+  const groupName = convoDetails?.group?.name
+  const groupImage = convoDetails?.group?.groupImage
+  const groupDescriptions = convoDetails?.group?.descriptions
+  const groupDisappearingMessages = convoDetails?.group?.disappearingMessages
+  const groupCreatedAt = convoDetails?.group?.createdAt
+  const groupUpdatedAt = convoDetails?.group?.updatedAt
+  const groupId = convoDetails?.groupId
+  const groudAdminId = convoDetails?.group?.adminId
 
+  console.log(convoDetails)
   const queryClient = useQueryClient()
-  
+
 
   const limit = 9;
   const { data: GottenMessages ,
@@ -87,6 +97,8 @@ const ChatViewPage = () => {
 
     
   });
+
+
   useEffect(() => {
 
       const gottenMessages = GottenMessages?.pages.flatMap((item)=>item.messages).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
@@ -116,6 +128,15 @@ const ChatViewPage = () => {
       })}
       currentUserId={user?.id!}
       conversationId={conversationId!}
+      groupId={groupId}
+      groupName={groupName}
+      groupImage={groupImage!}
+      groupDescriptions={groupDescriptions!}
+      groupDisappearingMessages={groupDisappearingMessages!}
+      groupCreatedAt={groupCreatedAt!}
+      groupUpdatedAt={groupUpdatedAt!}
+      groudAdminId={groudAdminId!}
+
     >
       
       <ChatHeader />

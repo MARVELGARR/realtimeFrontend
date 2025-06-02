@@ -44,6 +44,8 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
       fetchMessages()
     }
     queryClient.invalidateQueries({queryKey: ["convrsations"]})
+
+
   }, [conversationId]);
 
   //Handle Incoming Messages
