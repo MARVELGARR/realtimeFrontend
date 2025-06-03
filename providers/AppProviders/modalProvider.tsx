@@ -4,6 +4,7 @@ import { SingleFileUploader } from "@/CustomComponent/ApplicationComponents/File
 import ProfileCoverPicModal from "@/CustomComponent/ApplicationComponents/Modals/coverPicModal";
 import CreateNewGroupModal from "@/CustomComponent/ApplicationComponents/Modals/createNewGroupModal";
 import FindNewFriendModalCommand from "@/CustomComponent/ApplicationComponents/Modals/findNewFriendModal";
+import ParticipanProfileModel from "@/CustomComponent/ApplicationComponents/Modals/participanProfileModal";
 import ProfilePicModal from "@/CustomComponent/ApplicationComponents/Modals/profilePicModals";
 import StartNewChatModal from "@/CustomComponent/ApplicationComponents/Modals/startNewChatModal";
 import MyProfileSheet from "@/CustomComponent/ApplicationComponents/Sheets/myProfileSheet";
@@ -28,6 +29,7 @@ const MyModalProviders = () => {
             <StartNewChatModal/>
             <FindNewFriendModalCommand/>
             <CreateNewGroupModal/>
+            <ParticipanProfileModel/>
         </>
     );
 }

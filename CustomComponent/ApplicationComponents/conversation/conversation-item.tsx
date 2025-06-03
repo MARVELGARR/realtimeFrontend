@@ -17,6 +17,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
   const { messages, participants, unreadStates, groupId } = conversation
   const isGroup = groupId !== null
   const GroupName = conversation.group?.name
+  const GroupId = conversation.groupId
   const unreadCount = unreadStates.find((count)=>count.userId == currentUserId)?.unreadCount || 0
   const lastMessage = messages[0]?.content
   const timestamp = messages[0]?.createdAt
@@ -25,7 +26,7 @@ export function ConversationItem({ conversation, currentUserId }: ConversationIt
   const recieverId = singleParticipant?.userId
 
   return (
-    <Link  href={`/Application/chat/${conversation.id}/?recieverId=${ recieverId as string}`}>
+    <Link  href={`/Application/chat/${conversation.id}/?recieverId=${isGroup ? GroupId : recieverId }`}>
       <div className="flex border-cyan-400/30 shadow-md border rounded items-center p-4 hover:bg-cyan-500/70 cursor-pointer transition-colors">
         <div className="flex-shrink-0 mr-3">
           {isGroup ? (

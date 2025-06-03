@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 
-export type ModalType = "singleFileUploader" | "profile-pic" | "profile-cover-picture" | "start-new-chat" | "find-new-friend" | "create-new-group";
+export type ModalType = "singleFileUploader" | "profile-pic" | "profile-cover-picture" | "start-new-chat" | "find-new-friend" | "create-new-group" | "participan-profile-modal";
 export type singleFileUploaderFor = "profile-pic" | "profile-cover-picture" | "group-profile-pic" | null;
 
 interface ModalStore {

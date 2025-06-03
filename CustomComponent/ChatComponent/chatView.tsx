@@ -28,6 +28,7 @@ import { useSelection } from "@/store/useMessageSelector";
 import { useAlertModal } from "@/store/useAlertModalStore";
 import { useDrawer } from "@/store/useDrawer";
 import { useSheet } from "@/store/useSheetStore";
+import { useModal } from "@/store/useModalStore";
 
 type ChatViewProp = {
   conversationType: "DIRECT" | "GROUP";
@@ -149,6 +150,7 @@ export function ChatHeader() {
     const {onOpen} = useAlertModal()
     const {openDrawer} = useDrawer()
     const {onOpen: onOpenSheet} = useSheet()
+    const {onOpen: openModal} = useModal()
 
 
     const data = {groupId,  groupName, participants, groupImage, groupDescriptions, groupDisappearingMessages, groupCreatedAt, groupUpdatedAt} as const
@@ -186,13 +188,15 @@ export function ChatHeader() {
             </Avatar>
           ))}
         </div>
-                {groudAdminId !== currentUserId &&(<Settings onClick={()=>openDrawer("groupSettings", data)} className="text-cyan-400  cursor-pointer hover:animate-spin"/>)}
+                {groudAdminId == currentUserId ?(<Settings onClick={()=>openDrawer("groupSettings", data)} className="text-cyan-400  cursor-pointer hover:animate-spin"/>): (
+                  <Button onClick={()=>onOpenSheet('group-profile-sheet')} className="cursor-pointer">I</Button>
+                )}
         </div>
       ) : (
         <div className="individual-header w-full flex items-center gap-2">
           {participants && (
             <div className="w-full flex items-center ">
-              <div onClick={()=>onOpenSheet("users-profile")} className="flex items-center gap-3">
+              <div onClick={()=>openModal("participan-profile-modal", null,null)} className="flex items-center gap-3">
                 <Avatar className="h-10 w-10 cursor-pointer">
                   <AvatarImage
                     src={

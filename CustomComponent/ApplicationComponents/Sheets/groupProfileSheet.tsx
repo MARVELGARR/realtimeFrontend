@@ -11,6 +11,7 @@ import {
 import UserProfileContent from "../UserProfile/userProfileContent";
 import { AvatarPopOverContentItems } from "../PopOvers/avatarPopOverContent";
 import { useSheet } from "@/store/useSheetStore";
+import GroupProfileContent from "@/CustomComponent/GroupComponents/groupProfile";
 
 const GroupProfile = () => {
     const { isOpen, onClose, onOpen, type} = useSheet()
@@ -29,7 +30,7 @@ const GroupProfile = () => {
       <SheetContent className={"bg-cyan-800 "}>
 
         <div className="w-full ">
-          
+            <GroupProfileContent/>
         </div>
       </SheetContent>
     </Sheet>
