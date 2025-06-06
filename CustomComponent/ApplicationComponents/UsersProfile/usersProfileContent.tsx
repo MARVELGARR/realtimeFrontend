@@ -7,6 +7,8 @@ import { CalendarDays, Mail, Phone, UserPlus, UserX } from "lucide-react";
 import { UsersResponse } from "../Modals/findNewFriendModal";
 import { useModal } from "@/store/useModalStore";
 import Wrappers from "@/CustomComponent/utilityComponent/wrappers";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/utils/clientApi";
 
 interface UserProfile {
   profilePicture: string;
@@ -31,32 +33,32 @@ interface User {
   profile: UserProfile;
 }
 
-// Sample data for demonstration
-const data: User = {
-  id: "1",
-  name: "Jane Doe",
-  email: "jane.doe@example.com",
-  emailVerified: null,
-  image: "",
-  password: "",
-  createdAt: "2023-01-01",
-  updatedAt: "2023-01-01",
-  profile: {
-    profilePicture: "/placeholder.svg?height=128&width=128",
-    coverPicture: "/placeholder.svg?height=300&width=800",
-    nickname: "janedoe",
-    phoneNumber: "+1 (555) 123-4567",
-    bio: "Digital creator and tech enthusiast. Love exploring new technologies and sharing knowledge.",
-    createdAt: new Date("2023-01-01"),
-    gender: "Female",
-    blockedBy: [],
-  },
-};
+
+type usersProfileProp = {
+    id: string,
+    name: string,
+    email: string,
+    emailVerified: any,
+    image: string,
+    password: string,
+    createdAt: string,
+    updatedAt: string,
+    profile: {
+        profilePicture: string,
+        nickname:string,
+        bio: string,
+        gender: string,
+        phoneNumber: string,
+        createdAt: string,
+        birthDay: string,
+        coverPicture: string
+    }
+}
 
 export default function UserProfile({
   data,
 }: {
-  data?: UsersResponse["users"][0];
+  data?: string | User | null | undefined | UsersResponse["users"][0];
 }) {
   // Format date to be more readable
   const formatDate = (date: string | Date) => {
@@ -69,13 +71,24 @@ export default function UserProfile({
 
   const { onOpen } = useModal();
 
+  const {
+    data: usersProfile ,
+    isLoading: isGettingUsersProfile
+  } = useQuery({
+    queryKey: ['users-profile'],
+    queryFn: ()=>apiClient<usersProfileProp>(`/users-profile/${data}`, {
+      method: "GET"
+    })
+  })
+  
+
   return (
     <Card className="w-full max-w-3xl bg-cyan-900 p-0 mx-auto overflow-hidden border-0 shadow-lg">
       {/* Cover Photo */}
       <div
         className="h-48 w-full bg-cyan-800 relative"
         style={{
-          backgroundImage: `url(${data?.profile.coverPicture})`,
+          backgroundImage: `url(${usersProfile?.profile.coverPicture})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -90,13 +103,13 @@ export default function UserProfile({
               <div className="flex justify-center -mt-16 md:-mt-20">
                 <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-cyan-900 bg-cyan-800">
                   <AvatarImage
-                    src={data?.profile.profilePicture || "/placeholder.svg"}
-                    alt={data?.name}
+                    src={usersProfile?.profile.profilePicture || "/placeholder.svg"}
+                    alt={usersProfile?.name}
                   />
                   <AvatarFallback className="text-2xl bg-cyan-800">
-                    {data?.name
+                    {usersProfile?.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: any) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
@@ -104,27 +117,27 @@ export default function UserProfile({
             </div>
             {/* User Details */}
             <div className=" mt-[2rem] text-center md:text-left">
-              <h1 className="text-2xl font-bold">{data?.name}</h1>
+              <h1 className="text-2xl font-bold">{usersProfile?.name}</h1>
               <h4 className="font-light text-cyan-100">
-                @{data?.profile.nickname}
+                @{usersProfile?.profile.nickname}
               </h4>
 
               <div className="mt-3 space-y-1 text-sm">
                 <div className="flex items-center justify-center md:justify-start gap-2">
                   <Mail className="h-4 w-4 text-cyan-300" />
-                  <span>{data?.email}</span>
+                  <span>{usersProfile?.email}</span>
                 </div>
 
-                {data?.profile.phoneNumber && (
+                {usersProfile?.profile.phoneNumber && (
                   <div className="flex items-center justify-center md:justify-start gap-2">
                     <Phone className="h-4 w-4 text-cyan-300" />
-                    <span>{data.profile.phoneNumber}</span>
+                    <span>{usersProfile.profile.phoneNumber}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-center md:justify-start gap-2">
                   <CalendarDays className="h-4 w-4 text-cyan-300" />
-                  <span>Joined {formatDate(data!.createdAt!)}</span>
+                  <span>Joined {formatDate(usersProfile!?.createdAt!)}</span>
                 </div>
               </div>
             </div>
@@ -134,7 +147,7 @@ export default function UserProfile({
                 onClick={() =>
                   onOpen(
                     "profile-pic",
-                    data?.profile?.profilePicture,
+                    usersProfile?.profile?.profilePicture,
                     "profile-pic"
                   )
                 }
@@ -147,7 +160,7 @@ export default function UserProfile({
                 onClick={() =>
                   onOpen(
                     "profile-cover-picture",
-                    data?.profile?.coverPicture,
+                    usersProfile?.profile?.coverPicture,
                     "profile-cover-picture"
                   )
                 }
@@ -159,16 +172,16 @@ export default function UserProfile({
             </Wrappers>
 
             {/* Bio */}
-            {data?.profile.bio && (
+            {usersProfile?.profile.bio && (
               <div className="mt-6 p-4 bg-cyan-800/50 rounded-lg">
-                <p className="text-cyan-50">{data?.profile.bio}</p>
+                <p className="text-cyan-50">{usersProfile?.profile.bio}</p>
               </div>
             )}
 
             {/* Gender Badge */}
             <div className="mt-4 flex justify-center md:justify-start">
               <span className="px-3 py-1 bg-cyan-700 text-cyan-100 rounded-full text-sm">
-                {data?.profile.gender}
+                {usersProfile?.profile.gender}
               </span>
             </div>
 

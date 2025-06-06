@@ -21,7 +21,7 @@ const useGetFriendRequests = () => {
         data: friendRequests,
         isLoading: isGettingFriendRequest
     } = useQuery({
-        queryKey: ['friend-request'],
+        queryKey: ['friend-requests'],
         queryFn: ()=>apiClient<Message[]>('/friend-requests')
     })
     return {friendRequests, isGettingFriendRequest};

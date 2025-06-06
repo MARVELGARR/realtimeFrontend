@@ -49,13 +49,13 @@ const AppSideBar = ({ className }: { className?: string }) => {
               </div>
             </Link>
           </MyToolTips>
-          <MyToolTips className="cursor-pointer" tips="Phone">
+          {/* <MyToolTips className="cursor-pointer" tips="Phone">
             <Link href="/Application/phone">
               <div className={`${pathName.includes("phone") ? " bg-green-200 shadow-green-300 shadow-xl" : ""} shadow-blue-500 p-2 bg-cyan-600  rounded-full shadow-2xl`}>
                 <PhoneCall className={`${pathName.includes("phone") ? "text-green-500" : ""}`} />
               </div>
             </Link>
-          </MyToolTips>
+          </MyToolTips> */}
         </Wrappers>
 
         <Wrappers className="w-full h-fit mb-4 mt-auto flex flex-col gap-3 items-center   ">

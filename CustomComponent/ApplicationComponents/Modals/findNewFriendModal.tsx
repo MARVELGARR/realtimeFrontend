@@ -149,7 +149,7 @@ const FindNewFriendModalCommand = () => {
                           <IoIosPersonAdd  className="cursor-pointer text-2xl text-cyan-900" />
                         </MyToolTips>
                       </div>
-                      <div onClick={()=>onOpen("users-profile", user! )} className=" cursor-pointer ">
+                      <div onClick={()=>onOpen("users-profile", user.id! )} className=" cursor-pointer ">
 
                         <MyToolTips className="cursor-pointer" tips={"view profile"}>
 
