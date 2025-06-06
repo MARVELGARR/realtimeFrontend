@@ -8,7 +8,7 @@ const useUpdatePrivacySettings = () => {
     const queryClient =  useQueryClient()
     
     const {mutateAsync: updatePrivacySetting, isPending: isUpdatingPrivacySetting} = useMutation({
-        mutationFn: (data: UserProfileSettingFormType)=>apiClient("/v1/update-privacy",{
+        mutationFn: (data: UserProfileSettingFormType)=>apiClient("/update-privacy",{
             method: "PATCH",
             body: {...data}
         }),

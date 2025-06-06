@@ -10,7 +10,7 @@ import useMyFriendList, {
 import useGroupProfile from "@/hooks/GroupHooks/useGroupProfile";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/utils/clientApi";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +19,9 @@ import MyPopOvers from "../utilityComponent/myPopOvers";
 import { StructuredModal } from "../ApplicationComponents/UiFramework/modal";
 import { CgProfile } from "react-icons/cg";
 import { useSheet } from "@/store/useSheetStore";
+import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
+import removeParticipant from "@/actions/GroupAction/removeParticipant";
+import { useQueryClient } from "@tanstack/react-query";
 
 const GroupProfileContent = ({ className }: { className?: string }) => {
   const searchQuery = useSearchParams();
@@ -29,6 +32,9 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
     UserWithProfile[]
   >([]);
 
+  const queryClient = useQueryClient()
+
+  const {user} = useUserSession()
   const handleSendFriendRequest = async (recieverId: string) => {
     try {
       const data = apiClient(`/send-friend-request/${recieverId}`, {
@@ -39,7 +45,7 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
     } catch (error) {}
   };
 
-  const {onOpen} = useSheet()
+  const { onOpen } = useSheet();
 
   const { isGettingMyFriendList, myFriendList } = useMyFriendList();
 
@@ -66,6 +72,25 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
         </div>
       </div>
     );
+  }
+
+  const myFriendsIds = myFriendList?.map((friends) => friends.user2.id);
+
+  const isMyFriend = (userId: string) => {
+    if (myFriendsIds?.includes(userId)) return false;
+    return true;
+  };
+
+
+  const isAdminId = groupProfile?.adminId === user?.id
+
+  const handleRemoveParticipant = async(groupId: string, participantId: string) =>{
+   await removeParticipant(groupId, participantId).then(()=>{
+    toast("participant removed")
+    queryClient.invalidateQueries({queryKey: ["group-profile", groupId]})
+   }).catch(()=>{
+    toast('failed to remove')
+   })
   }
 
   if (!groupProfile) return <div className="text-center py-4">Loading...</div>;
@@ -105,20 +130,15 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
             Participants ({groupProfile.participants.length})
           </h3>
 
-          <StructuredModal
-            className=""
-            trigger={
-                <div>Add</div>
-            }
-            >
-                 <ParticipantSelector
-                groupId={groupProfile.id}
-                potentialParticipants={myFriendList || []}
-                selectedParticipants={selectedParticipants}
-                onParticipantsChange={setSelectedParticipants}
-                maxParticipants={10} // Optional: set maximum participants
-              />
-            </StructuredModal>
+          <StructuredModal className="" trigger={<div>Add</div>}>
+            <ParticipantSelector
+              groupId={groupProfile.id}
+              potentialParticipants={myFriendList || []}
+              selectedParticipants={selectedParticipants}
+              onParticipantsChange={setSelectedParticipants}
+              maxParticipants={10} // Optional: set maximum participants
+            />
+          </StructuredModal>
         </div>
         <div className="text-cyan-500 ">
           {selectedParticipants.length > 0 && (
@@ -140,7 +160,7 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
           {groupProfile.participants.map((participant) => (
             <li
               key={participant.user.id}
-              className="flex items-center hover:bg-cyan-500 cursor-pointer space-x-3  dark:bg-gray-800 p-2 rounded-md"
+              className="flex items-center hover:bg-cyan-500  space-x-3  dark:bg-gray-800 p-2 rounded-md"
             >
               <Avatar className="w-8 h-8">
                 <AvatarImage
@@ -152,16 +172,24 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
                 </AvatarFallback>
               </Avatar>
               <div className="text-sm font-medium">{participant.user.name}</div>
-              <div className="">
-                <Plus
-                className="hover:text-cyan-900"
-                  onClick={() =>
-                    handleSendFriendRequest(participant.user.id as string)
-                  }
+              <div className=" ml-auto flex items-center gap-2">
+                {isMyFriend(participant?.user?.id as string) && participant?.user?.id !== user?.id &&  (
+                  <Plus
+                    className="hover:text-cyan-900 cursor-pointer"
+                    onClick={() =>
+                      handleSendFriendRequest(participant.user.id as string)
+                    }
+                  />
+                )}
+                <CgProfile
+                  className="hover:text-cyan-600 cursor-pointer"
+                  onClick={() => onOpen("users-profile", participant?.user.id)}
                 />
-                <CgProfile className="text-cyan-600"
-                  onClick={()=>onOpen("users-profile", participant.user.id)}
+                <Minus
+                className="text-red-500 hover:text-red-900 cursor-pointer"
+                  onClick={()=>handleRemoveParticipant(groupId as string, participant?.user.id)}
                 />
+              
               </div>
             </li>
           ))}
