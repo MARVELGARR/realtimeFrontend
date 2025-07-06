@@ -23,9 +23,10 @@ import { IoIosPersonAdd } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { useSheet } from "@/store/useSheetStore";
 import MyToolTips from "@/CustomComponent/utilityComponent/myToolTips";
-import { Gender } from '../../../types';
+import { Gender } from "../../../types";
 import useDebounce from "@/hooks/UtilityHooks/useDebounce";
 import Link from "next/link";
+import useAcceptFriendRequest from "@/hooks/friendsHooks/acceptFriendRequest";
 export interface UsersResponse {
   users: User[];
   totalCount: number;
@@ -43,23 +44,21 @@ export interface User {
   profile: UserProfile;
 }
 
-
-
 export interface UserProfile {
   profilePicture: string;
-  coverPicture: string
-  nickname: string,
-  phoneNumber: string
-  bio: string,
-  createdAt: Date,
+  coverPicture: string;
+  nickname: string;
+  phoneNumber: string;
+  bio: string;
+  createdAt: Date;
 
-  gender: Gender
+  gender: Gender;
   blockedBy: string[]; // assuming these are user IDs
 }
 
 const FindNewFriendModalCommand = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { isOpen, type, onClose } = useModal();
   const isModalOpen = isOpen && type === "find-new-friend";
@@ -72,6 +71,13 @@ const FindNewFriendModalCommand = () => {
   const handleClose = () => {
     onClose();
   };
+
+
+  const handleAddFriend = async(receiverId: string) =>{
+    await apiClient(`/send-friend-request/${receiverId}`,{
+      method: "GET"
+    })
+  }
 
   const limit = 3;
   const {
@@ -125,42 +131,46 @@ const FindNewFriendModalCommand = () => {
               {data?.pages?.map((page) =>
                 page.users?.map((user) => (
                   <Link href={`/Application/chat/${user.id}`}>
-                  <CommandItem
-                    key={user.id}
-                    className="cursor-pointer hover:bg-cyan-500/70"
-                    
-                  >
-                    <Avatar>
-                      <AvatarImage
-                        src={user.image || user.profile.profilePicture}
-                      />
-                      <AvatarFallback>
-                        <PersonStanding />
-                      </AvatarFallback>
-                    </Avatar>
+                    <CommandItem
+                      key={user.id}
+                      className="cursor-pointer hover:bg-cyan-500/70"
+                    >
+                      <Avatar>
+                        <AvatarImage
+                          src={user.image || user.profile.profilePicture}
+                        />
+                        <AvatarFallback>
+                          <PersonStanding />
+                        </AvatarFallback>
+                      </Avatar>
 
-                    <span className="">{user.name}</span>
+                      <span className="">{user.name}</span>
 
-                    <div className="ml-auto flex items-center gap-3">
+                      <div className="ml-auto flex items-center gap-3">
 
-                      <div  className="cursor-pointer">
+                          <div onClick={()=>handleAddFriend(user.id)} className="cursor-pointer">
+                            <MyToolTips
+                              className="cursor-pointer"
+                              tips="add friend"
+                            >
+                              <IoIosPersonAdd className="cursor-pointer text-2xl text-cyan-900" />
+                            </MyToolTips>
+                          </div>
+                        
 
-                        <MyToolTips className="cursor-pointer" tips="add friend">
-                          <IoIosPersonAdd  className="cursor-pointer text-2xl text-cyan-900" />
-                        </MyToolTips>
+                        <div
+                          onClick={() => onOpen("users-profile", user.id!)}
+                          className=" cursor-pointer "
+                        >
+                          <MyToolTips
+                            className="cursor-pointer"
+                            tips={"view profile"}
+                          >
+                            <CgProfile className=" text-[55rem] cursor-pointer text-cyan-900 " />
+                          </MyToolTips>
+                        </div>
                       </div>
-                      <div onClick={()=>onOpen("users-profile", user.id! )} className=" cursor-pointer ">
-
-                        <MyToolTips className="cursor-pointer" tips={"view profile"}>
-
-                            <CgProfile
-                              className=" text-[55rem] cursor-pointer text-cyan-900 "
-                            />
-                        </MyToolTips>
-                      </div>
-                    </div>
-
-                  </CommandItem>
+                    </CommandItem>
                   </Link>
                 ))
               )}

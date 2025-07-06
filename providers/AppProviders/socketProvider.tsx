@@ -7,12 +7,15 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 type SocketContextType = {
   socket: typeof socket;
   isOnline: boolean;
+  onlineUsers: string[]
 };
 
 const SocketContext = createContext<SocketContextType | null>(null);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [isOnline, setIsOnline] = useState(false);
+  
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [storedValue] = useLocalStorage<UserWithProfile | null>("user-session", null);
 
   // Emit user connection
@@ -33,20 +36,36 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [storedValue]);
 
-  // Listen for online confirmation
+  const handleIsOnline =(userIds: string[])=>{
+    return userIds.includes(storedValue?.id as UserWithProfile["id"])
+  }
+
   useEffect(() => {
-    socket.on("isOnline", (payload: { isOnline: boolean }) => {
-      console.log("📩 Received isOnline payload:", payload);
-      setIsOnline(payload.isOnline);
+    socket.on("online-users", (userIds: string[]) => {
+      setOnlineUsers(userIds);
+      if (storedValue?.id) {
+        const iAmOnline = handleIsOnline(userIds);
+        setIsOnline(iAmOnline);
+      }
     });
 
     return () => {
-      socket.off("isOnline");
+      socket.off("online-users");
+    };
+  }, [storedValue]);
+  
+  useEffect(() => {
+    socket.on("disconnect", () => {
+      setIsOnline(false);
+    });
+  
+    return () => {
+      socket.off("disconnect");
     };
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isOnline }}>
+    <SocketContext.Provider value={{ socket, isOnline, onlineUsers  }}>
       {children}
     </SocketContext.Provider>
   );
@@ -58,4 +77,5 @@ export const useSocket = () => {
     throw new Error("useSocket must be used within a SocketProvider");
   }
   return context;
+  
 };

@@ -1,28 +1,28 @@
 import { apiClient } from "@/utils/clientApi";
 import { useQuery } from "@tanstack/react-query";
-export interface UserProfile {
+interface Profile {
   profilePicture: string;
-  bio: string
+  bio: string;
 }
 
-export interface UserWithProfile {
+interface Friend {
   id: string;
   name: string;
   email: string;
   image: string;
-  profile: UserProfile;
+  profile: Profile;
 }
 
-export interface FriendshipWithUser2 {
-  user2: UserWithProfile;
+interface FriendsResponse {
+  friends: Friend[];
+  totalCount: number;
 }
-
 
 const useMyFriendList = () => {
 
     const {data: myFriendList, isLoading: isGettingMyFriendList} = useQuery({
         queryKey: ["friend-list"],
-        queryFn: ()=>apiClient<FriendshipWithUser2[]>("/my-friends",{
+        queryFn: ()=>apiClient<FriendsResponse>("/friends",{
             method: "GET",
 
         })

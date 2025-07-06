@@ -1,7 +1,7 @@
 import { UsersResponse } from '@/CustomComponent/ApplicationComponents/Modals/findNewFriendModal';
 import {create} from 'zustand';
 
-export type SheetType = "my-profile" | "users-profile" | "my-friends" | "group-profile-sheet";
+export type SheetType = "my-profile" | "users-profile" | "my-friends" | "group-profile-sheet" | "blocked-users";
 
 
 interface SheetStore {

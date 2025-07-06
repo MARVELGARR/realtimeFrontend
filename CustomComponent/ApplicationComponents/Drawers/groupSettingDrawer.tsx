@@ -3,17 +3,13 @@
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useDrawer } from "@/store/useDrawer";
-import UserProfileSettingForm from "../UserProfile/userProfileSettingsForm";
-import { Settings } from 'lucide-react';
+
 import GroupSettingsComponent from "@/CustomComponent/GroupComponents/groupSettingsComponent";
 
 const GroupSettingDrawer = () => {

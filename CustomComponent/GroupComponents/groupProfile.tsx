@@ -22,6 +22,7 @@ import { useSheet } from "@/store/useSheetStore";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
 import removeParticipant from "@/actions/GroupAction/removeParticipant";
 import { useQueryClient } from "@tanstack/react-query";
+import MyToolTips from "../utilityComponent/myToolTips";
 
 const GroupProfileContent = ({ className }: { className?: string }) => {
   const searchQuery = useSearchParams();
@@ -174,21 +175,30 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
               <div className="text-sm font-medium">{participant.user.name}</div>
               <div className=" ml-auto flex items-center gap-2">
                 {isMyFriend(participant?.user?.id as string) && participant?.user?.id !== user?.id &&  (
-                  <Plus
-                    className="hover:text-cyan-900 cursor-pointer"
-                    onClick={() =>
-                      handleSendFriendRequest(participant.user.id as string)
-                    }
-                  />
+                  <MyToolTips tips="Add Friend">
+
+                    <Plus
+                      className="hover:text-cyan-900 cursor-pointer"
+                      onClick={() =>
+                        handleSendFriendRequest(participant.user.id as string)
+                      }
+                    />
+                  </MyToolTips>
                 )}
+                <MyToolTips tips="View Profile">
+
                 <CgProfile
                   className="hover:text-cyan-600 cursor-pointer"
                   onClick={() => onOpen("users-profile", participant?.user.id)}
                 />
-                <Minus
-                className="text-red-500 hover:text-red-900 cursor-pointer"
-                  onClick={()=>handleRemoveParticipant(groupId as string, participant?.user.id)}
-                />
+                </MyToolTips>
+                <MyToolTips tips="Remove Participant">
+
+                  <Minus
+                  className="text-red-500 hover:text-red-900 cursor-pointer"
+                    onClick={()=>handleRemoveParticipant(groupId as string, participant?.user.id)}
+                  />
+                </MyToolTips>
               
               </div>
             </li>

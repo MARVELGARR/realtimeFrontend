@@ -3,12 +3,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarDays, Mail, Phone, UserPlus, UserX } from "lucide-react";
+import { CalendarDays, Mail, Phone, UserMinus, UserPlus, UserX } from "lucide-react";
 import { UsersResponse } from "../Modals/findNewFriendModal";
 import { useModal } from "@/store/useModalStore";
 import Wrappers from "@/CustomComponent/utilityComponent/wrappers";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/utils/clientApi";
+import useSendFriendRequest from "@/hooks/friendsHooks/sendFriendRequest";
+import { toast } from "sonner";
 
 interface UserProfile {
   profilePicture: string;
@@ -33,6 +35,15 @@ interface User {
   profile: UserProfile;
 }
 
+type friendshipsInitiated =        {
+  user1Id: string,
+  user2Id: string,
+}
+type friendshipsReceived =        {
+  user1Id: string,
+  user2Id: string,
+}
+
 
 type usersProfileProp = {
     id: string,
@@ -52,7 +63,9 @@ type usersProfileProp = {
         createdAt: string,
         birthDay: string,
         coverPicture: string
-    }
+    },
+    friendshipsInitiated: friendshipsInitiated[],
+    friendshipsReceived: friendshipsReceived[]
 }
 
 export default function UserProfile({
@@ -69,7 +82,10 @@ export default function UserProfile({
     });
   };
 
+  const queryClient = useQueryClient()
+
   const { onOpen } = useModal();
+  
 
   const {
     data: usersProfile ,
@@ -80,6 +96,53 @@ export default function UserProfile({
       method: "GET"
     })
   })
+
+  const recieverId = usersProfile?.id
+
+  const handleSendFriendRequest = async (recieverId: string) => {
+    try {
+      const data = apiClient(`/send-friend-request/${recieverId}`, {
+        method: "GET",
+      }).then(() => {
+        toast("friend request sent");
+      });
+    } catch (error){
+      toast("friend request failed")
+    }
+  };
+
+  const handleRemoveFriend = async (recieverId: string)=>{
+    try{
+      const data = apiClient(`/remove-friend/${recieverId}`,{
+        method: "DELETE"
+      }).then(()=>{
+        toast(('unfriend request was successful'))
+        queryClient.invalidateQueries({ queryKey: ["users-profile"] });
+        queryClient.invalidateQueries({ queryKey: ["convrsations"] });
+      }).catch(()=>{
+        toast('failed to unfriend')
+      })
+
+    }
+    catch(error){
+      console.error("failed to unfriend")
+    }
+  }
+  const handleBlockUser = async (recieverId: string) => {
+    try {
+      const data = apiClient(`/block/${recieverId}`, {
+        method: "GET",
+      }).then(() => {
+        toast("user has been blocked");
+        queryClient.invalidateQueries({ queryKey: ["users-profile"] });
+        queryClient.invalidateQueries({ queryKey: ["convrsations"] }); // review this code for the right query key
+      });
+    } catch (error) {
+      toast("error blocking user");
+    }
+  };
+  
+  const isAlreadyFriends = (usersProfile?.friendshipsInitiated?.length ?? 0) > 0 || (usersProfile?.friendshipsReceived?.length ?? 0) > 0
   
 
   return (
@@ -187,16 +250,25 @@ export default function UserProfile({
 
             {/* Action Buttons */}
             <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-3">
-              <Button className="bg-cyan-600 hover:bg-cyan-700">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Add friend
-              </Button>
-              <Button
-                variant="outline"
-                className="border-cyan-600 text-cyan-900 hover:bg-cyan-800"
-              >
-                <UserX className="mr-2 h-4 w-4" />
-                Block
+              {!isAlreadyFriends ? (
+                <Button onClick={()=>handleSendFriendRequest(recieverId as string)} className="bg-cyan-600 cursor-pointer hover:bg-cyan-700">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Add friend
+                </Button>
+              ): (
+                <Button onClick={()=>handleRemoveFriend(recieverId as string)} className="bg-cyan-600 cursor-pointer hover:bg-cyan-700">
+                  <UserMinus className="mr-2 h-4 w-4" />
+                  Remove friend
+                </Button>
+              )}
+              
+                <Button
+                  onClick={()=>handleBlockUser(recieverId as string)}
+                  variant="outline"
+                  className="border-cyan-600 cursor-pointer text-cyan-900 hover:bg-cyan-800"
+                >
+                  <UserX className="mr-2 h-4 w-4" />
+                  Block
               </Button>
             </div>
           </div>

@@ -44,6 +44,7 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
       fetchMessages()
     }
     queryClient.invalidateQueries({queryKey: ["convrsations"]})
+    queryClient.invalidateQueries({queryKey: ["message-count"]})
 
 
   }, [conversationId]);
@@ -56,6 +57,7 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
         setMessages((prev: any[]) => [...prev, message]);
       }
       queryClient.invalidateQueries({queryKey: ["convrsations"]})
+      queryClient.invalidateQueries({queryKey: ["message-count"]})
      
     };
 
@@ -64,6 +66,7 @@ const useChatSocket = ({ conversationId, setMessages }: useChatSocketProp) => {
       
       queryClient.invalidateQueries({queryKey: ["messages"]})
       queryClient.invalidateQueries({queryKey: ["convrsations"]})
+      queryClient.invalidateQueries({queryKey: ["message-count"]})
       clearSelections()
       toast("messages was deleted ")
     }

@@ -28,6 +28,7 @@ export function AvatarPopOverContent(){
     return (
         <div className="w-full p-1 flex flex-col ">
             <AvatarPopOverContentItems onClick={()=>onOpen("my-profile")} className="hover:bg-cyan-500">Profile</AvatarPopOverContentItems>
+            <AvatarPopOverContentItems onClick={()=>onOpen("blocked-users")}>Blocked Users</AvatarPopOverContentItems>
             <AvatarPopOverContentItems onClick={handleLogout} className="hover:bg-red-600">Logout</AvatarPopOverContentItems>
         </div>
     );
