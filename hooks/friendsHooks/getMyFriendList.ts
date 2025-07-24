@@ -13,7 +13,7 @@ interface Friend {
   profile: Profile;
 }
 
-interface FriendsResponse {
+export interface FriendsResponse {
   friends: Friend[];
   totalCount: number;
 }

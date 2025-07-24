@@ -1,5 +1,4 @@
 "use client";
-import { socket } from "@/configs/socket";
 import {
   ChatHeader,
   TextView,
@@ -9,9 +8,8 @@ import { ChatInput } from "@/CustomComponent/ChatComponent/chatView";
 import useChatSocket from "@/hooks/ChatHooks/useChatSocket";
 import useGetConvoDetails from "@/hooks/ChatHooks/useGetConvoDetails";
 import { useUserSession } from "@/providers/UserProvider/userSessionProvider";
-import { UserWithProfile } from "@/types";
 import { apiClient } from "@/utils/clientApi";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -36,17 +34,10 @@ const ChatViewPage = () => {
     const [messages, setMessages] = useState<messageProp[]>([])
   
 
-  if (!id) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        No User Found
-      </div>
-    );
-  }
 
   const {user} = useUserSession()
 
-  const { convoDetails, isGettingConvoDetails } = useGetConvoDetails(
+  const { convoDetails,  } = useGetConvoDetails(
     id as string
   );
 
@@ -63,7 +54,6 @@ const ChatViewPage = () => {
   const groudAdminId = convoDetails?.group?.adminId
 
   console.log(convoDetails)
-  const queryClient = useQueryClient()
 
 
   const limit = 9;
@@ -72,8 +62,6 @@ const ChatViewPage = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    isError,
-    error,
     isFetched, 
     
 
@@ -105,11 +93,18 @@ const ChatViewPage = () => {
   if (gottenMessages && !isLoading) {
     setMessages(gottenMessages); 
   }
-}, [isFetched, GottenMessages]);
+}, [isFetched,isLoading,GottenMessages]);
 
 //   const {sendMessage, isSendingMessage} = useSendMessage()
   const {sendMessage} = useChatSocket({ conversationId: id as string, setMessages,  });
 
+  if (!id) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        No User Found
+      </div>
+    );
+  }
 
   return (
     <div className='h-screen'>
@@ -126,7 +121,7 @@ const ChatViewPage = () => {
         ...newMessage, 
         conversationType: chatType === "DIRECT" ? "DIRECT" : "GROUP" 
       })}
-      currentUserId={user?.id!}
+      currentUserId={user!.id as string}
       conversationId={conversationId!}
       groupId={groupId}
       groupName={groupName}

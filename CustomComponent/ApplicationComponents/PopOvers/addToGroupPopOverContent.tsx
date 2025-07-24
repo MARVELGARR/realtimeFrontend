@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Search, UserPlus, X } from "lucide-react"
 import useAddParticipant from "@/hooks/GroupHooks/addParticipants"
 import { toast } from "sonner"
+import { FriendsResponse } from "@/hooks/friendsHooks/getMyFriendList"
 
 export interface UserProfile {
   profilePicture: string
@@ -25,13 +26,11 @@ export interface UserWithProfile {
   profile: UserProfile
 }
 
-export interface FriendshipWithUser2 {
-  user2: UserWithProfile
-}
+
 
 interface ParticipantSelectorProps {
     groupId: string
-  potentialParticipants: FriendshipWithUser2[]
+  potentialParticipants: FriendsResponse["friends"]
   selectedParticipants: UserWithProfile[]
   onParticipantsChange: (participants: UserWithProfile[]) => void
   maxParticipants?: number
@@ -65,14 +64,14 @@ export default function ParticipantSelector({
 
   // Filter out already selected participants
   const availableParticipants = potentialParticipants.filter(
-    (friendship) => !selectedParticipants.some((selected) => selected.id === friendship.user2.id),
+    (friendship) => !selectedParticipants.some((selected) => selected.id === friendship.id),
   )
 
   // Filter by search query
   const filteredParticipants = availableParticipants.filter(
     (friendship) =>
-      friendship.user2.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friendship.user2.email.toLowerCase().includes(searchQuery.toLowerCase()),
+      friendship.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friendship.email.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
   const handleParticipantToggle = (user: UserWithProfile, checked: boolean) => {
@@ -91,7 +90,7 @@ export default function ParticipantSelector({
   }
 
   const addAllFiltered = () => {
-    const usersToAdd = filteredParticipants.map((f) => f.user2)
+    const usersToAdd = filteredParticipants.map((f) => f)
     const remainingSlots = maxParticipants ? maxParticipants - selectedParticipants.length : usersToAdd.length
     const newParticipants = usersToAdd.slice(0, remainingSlots)
     onParticipantsChange([...selectedParticipants, ...newParticipants])
@@ -171,7 +170,7 @@ export default function ParticipantSelector({
             ) : (
               <div className="p-2">
                 {filteredParticipants.map((friendship) => {
-                  const user = friendship.user2
+                  const user = friendship
                   const isSelected = selectedParticipants.some((p) => p.id === user.id)
                   const isDisabled = !!maxParticipants && selectedParticipants.length >= (maxParticipants ?? 0) && !isSelected
 

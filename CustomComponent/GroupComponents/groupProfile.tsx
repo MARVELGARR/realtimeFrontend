@@ -4,9 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import useMyFriendList, {
-  UserWithProfile,
-} from "@/hooks/friendsHooks/getMyFriendList";
+import useMyFriendList, { FriendsResponse } from "@/hooks/friendsHooks/getMyFriendList";
 import useGroupProfile from "@/hooks/GroupHooks/useGroupProfile";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/utils/clientApi";
@@ -30,7 +28,7 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
   const { groupProfile } = useGroupProfile(groupId!);
 
   const [selectedParticipants, setSelectedParticipants] = useState<
-    UserWithProfile[]
+    FriendsResponse["friends"]
   >([]);
 
   const queryClient = useQueryClient()
@@ -75,12 +73,14 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
     );
   }
 
-  const myFriendsIds = myFriendList?.map((friends) => friends.user2.id);
+  const myFriendsIds = myFriendList?.friends.map((friends) => friends.id);
 
   const isMyFriend = (userId: string) => {
     if (myFriendsIds?.includes(userId)) return false;
     return true;
   };
+
+  const potentialParticipants = myFriendList?.friends
 
 
   const isAdminId = groupProfile?.adminId === user?.id
@@ -134,7 +134,7 @@ const GroupProfileContent = ({ className }: { className?: string }) => {
           <StructuredModal className="" trigger={<div>Add</div>}>
             <ParticipantSelector
               groupId={groupProfile.id}
-              potentialParticipants={myFriendList || []}
+              potentialParticipants={potentialParticipants || []}
               selectedParticipants={selectedParticipants}
               onParticipantsChange={setSelectedParticipants}
               maxParticipants={10} // Optional: set maximum participants
