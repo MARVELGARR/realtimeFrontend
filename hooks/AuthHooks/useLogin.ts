@@ -22,9 +22,9 @@ type ResponseUser = {
 
 type LoginUserResponse = {
 
-    message: string,
-    user: ResponseUser,
-    sessionId: string,
+     message: string,
+  user: ResponseUser,
+  redirectTo: string
 }
 
 
@@ -37,9 +37,7 @@ const useLogin = () => {
             method: "POST",
             body
         }),
-        onSettled: ()=>{
-            router.push("/login")
-        }
+        
     })
     return {Login, isLoggingIn};
 }
