@@ -105,6 +105,13 @@ const ChatViewPage = () => {
       </div>
     );
   }
+  if (!user) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        No User Found
+      </div>
+    );
+  }
 
   return (
     <div className='h-screen'>
@@ -121,7 +128,7 @@ const ChatViewPage = () => {
         ...newMessage, 
         conversationType: chatType === "DIRECT" ? "DIRECT" : "GROUP" 
       })}
-      currentUserId={user!.id as string}
+      currentUserId={user.id as string}
       conversationId={conversationId!}
       groupId={groupId}
       groupName={groupName}
