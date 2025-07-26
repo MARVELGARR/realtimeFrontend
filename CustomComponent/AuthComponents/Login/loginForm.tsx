@@ -84,7 +84,7 @@ const LoginForm = () => {
                 onClick: ()=> handleToHome()
             }
         })
-        window.location.href = data.redirectTo;
+        router.push(data.redirectTo)
     }).catch((error)=>{
 
     })
