@@ -3,7 +3,11 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const sessionID = request.cookies.get('sessionID')
-   console.log("sessionID in middleware:", sessionID)
+  if(!sessionID){
+    console.log("No sessionID found in cookies")
+  }
+
+   
 
   const { pathname } = request.nextUrl
 
