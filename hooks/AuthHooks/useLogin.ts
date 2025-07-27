@@ -23,7 +23,6 @@ type ResponseUser = {
 type LoginUserResponse = {
 
      message: string,
-  user: ResponseUser,
   redirectTo: string
 }
 

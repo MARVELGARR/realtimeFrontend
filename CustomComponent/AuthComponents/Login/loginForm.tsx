@@ -75,7 +75,7 @@ const LoginForm = () => {
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    Login(values).then(()=>{
+    Login(values).then((data)=>{
         toast("User has been logged in", {
             dismissible: true,
             description: `You are logged in`,
@@ -84,7 +84,7 @@ const LoginForm = () => {
                 onClick: ()=> handleToHome()
             }
         })
-        
+        router.push(data.redirectTo)
     }).catch((error)=>{
 
     })
