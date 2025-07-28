@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import getToken from './actions/AuthActions/getToken'
 
 export function middleware(request: NextRequest) {
-  const sessionID = request.cookies.get('sessionID')
+  const sessionID = getToken()
   if(!sessionID){
     console.log("No sessionID found in cookies")
   }
