@@ -72,28 +72,31 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   }, [storedValue]);
 
   // Heartbeat to maintain presence
-  useEffect(() => {
-    let heartbeatInterval: NodeJS.Timeout | null = null;
+useEffect(() => {
+  let heartbeatInterval: NodeJS.Timeout | null = null;
 
-    if (storedValue?.id) {
-      heartbeatInterval = setInterval(() => {
-        if (socket.connected) {
-          socket.emit("heartbeat", storedValue.id);
-          socket.emit("check-my-status", storedValue.id); // <-- this was missing
-        }
-      }, 10000); // every 10 seconds
-    }
-    const handleIsOnline = ({ isOnline }: { isOnline: boolean }) => {
-      setIsOnline(isOnline);
-    };
+  const userId = storedValue?.id;
+  if (userId) {
+    heartbeatInterval = setInterval(() => {
+      if (socket.connected) {
+        socket.emit("heartbeat", userId);
+        socket.emit("check-my-status", userId);
+      }
+    }, 10000);
+  }
 
-    socket.on("isOnline", handleIsOnline);
+  const handleIsOnline = ({ isOnline }: { isOnline: boolean }) => {
+    setIsOnline(isOnline);
+  };
 
-    return () => {
-      if (heartbeatInterval) clearInterval(heartbeatInterval);
-      socket.off("isOnline", handleIsOnline);
-    };
-  }, [storedValue]);
+  socket.on("isOnline", handleIsOnline);
+
+  return () => {
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    socket.off("isOnline", handleIsOnline);
+  };
+}, [storedValue?.id]);
+
 
   return (
     <SocketContext.Provider value={{ socket, isOnline, onlineUsers }}>
