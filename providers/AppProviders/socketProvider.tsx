@@ -2,7 +2,13 @@
 import { socket } from "@/configs/socket";
 import { useLocalStorage } from "@/hooks/LocalHooks/useLocalStorage";
 import { UserWithProfile } from "@/types";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type SocketContextType = {
   socket: typeof socket;
@@ -15,7 +21,10 @@ const SocketContext = createContext<SocketContextType | null>(null);
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [isOnline, setIsOnline] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [storedValue] = useLocalStorage<UserWithProfile | null>("user-session", null);
+  const [storedValue] = useLocalStorage<UserWithProfile | null>(
+    "user-session",
+    null
+  );
 
   // Handle user connection
   useEffect(() => {
@@ -75,14 +84,14 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       }, 10000); // every 10 seconds
     }
     const handleIsOnline = ({ isOnline }: { isOnline: boolean }) => {
-    setIsOnline(isOnline);
-  };
+      setIsOnline(isOnline);
+    };
 
-  socket.on("isOnline", handleIsOnline);
+    socket.on("isOnline", handleIsOnline);
 
     return () => {
       if (heartbeatInterval) clearInterval(heartbeatInterval);
-       socket.off("isOnline", handleIsOnline);
+      socket.off("isOnline", handleIsOnline);
     };
   }, [storedValue]);
 
