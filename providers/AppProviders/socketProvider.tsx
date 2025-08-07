@@ -70,6 +70,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       heartbeatInterval = setInterval(() => {
         if (socket.connected) {
           socket.emit("heartbeat", storedValue.id);
+          socket.emit("check-my-status", storedValue.id); // <-- this was missing
         }
       }, 10000); // every 10 seconds
     }
