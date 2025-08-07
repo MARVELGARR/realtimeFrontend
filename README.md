@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📡 Realtime Frontend
 
-## Getting Started
+A realtime-ready frontend application built with **Next.js**, **Socket.IO**, and **TypeScript**. This project demonstrates seamless online presence tracking, user connectivity status, and real-time communication with a backend socket server.
 
-First, run the development server:
+🌐 **Live Demo**: [https://realtime-frontend-olive.vercel.app](https://realtime-frontend-olive.vercel.app)
+
+🧠 **Backend Repo (Optional)**: [realtimeBackend](https://github.com/MARVELGARR/realtimeBackend) *(if available)*
+
+---
+
+## ✨ Features
+
+- 🔌 **Realtime Presence Detection** — Tracks and displays which users are currently online.
+- 💬 **Socket.IO Integration** — Robust websocket handling with reconnection and heartbeat mechanisms.
+- 📦 **Persistent User Sessions** — Uses local storage to persist user login and maintain state.
+- ✅ **Heartbeat System** — Keeps the server in sync with client activity and online status.
+- 🛠️ Built with **Next.js 14**, **TypeScript**, and **Context API**.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/) (v16+)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install) or `npm`
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/MARVELGARR/realtimeFrontend.git
+cd realtimeFrontend
+yarn install   # or npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file at the root of your project and add:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_API_URL_WBESOCKET=your-backend-domain.com
+```
 
-## Learn More
+Make sure the backend Socket.IO server is live and CORS-enabled.
 
-To learn more about Next.js, take a look at the following resources:
+### Run Development Server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔁 Socket Events Overview
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Event             | Direction     | Description                                   |
+|------------------|---------------|-----------------------------------------------|
+| `user-connected` | Client → Server | Sent when user connects                       |
+| `heartbeat`      | Client → Server | Periodic ping to keep the connection alive    |
+| `check-my-status`| Client → Server | Ask server if the user is still online        |
+| `isOnline`       | Server → Client | Response with the current online status       |
+| `online-users`   | Server → Client | Broadcasted list of online user IDs           |
+
+---
+
+## 🧩 Project Structure
+
+```
+.
+├── configs/
+│   └── socket.ts        # Socket.IO client instance
+├── hooks/
+│   └── useLocalStorage/ # Hook to persist user session
+├── context/
+│   └── SocketProvider   # Context for realtime data
+├── pages/               # Next.js pages
+└── types/               # TypeScript types
+```
+
+---
+
+## 🧪 Demo Credentials (Optional)
+
+To simulate user sessions, you can manually set a `user-session` in `localStorage` using your browser console:
+
+```js
+localStorage.setItem('user-session', JSON.stringify({ id: 'user-id-123' }));
+```
+
+Then refresh the page.
+
+---
+
+## 📸 Screenshots
+
+> (Add a few screenshots or screen recordings here if possible)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js
+- **Language**: TypeScript
+- **Sockets**: Socket.IO
+- **Storage**: LocalStorage (via custom hook)
+- **Deployment**: Vercel
+
+---
+
+## 📬 Contributing
+
+Pull requests are welcome! For major changes, open an issue first to discuss what you'd like to change.
+
+---
+
+## 📝 License
+
+[MIT](https://choosealicense.com/licenses/mit/)
