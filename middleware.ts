@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Protect /Application/* routes
-  if (pathname.startsWith('/Application')) {
+  if (pathname.startsWith('/Application') || pathname === '/') {
     if (!sessionID) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
